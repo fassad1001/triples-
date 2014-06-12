@@ -19,6 +19,8 @@ private slots:
     void testQhash();
     void testQhash_data();
 
+    void testOperatorEquals();
+    void testOperatorEquals_data();
 };
 
 #endif // TTRIPLES_H

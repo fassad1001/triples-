@@ -4,34 +4,19 @@ Pair::Pair()
 {
 }
 
-Pair::Pair(const QString &first, const QString &second)
+QString Pair::first() const
 {
-
+    return first_;
 }
 
-QSet<Pair> Pair::subjectAndPredicatesFor(const QString &object)
+QString Pair::second() const
 {
-
-}
-
-QSet<Pair> Pair::predicatesAndObjects(const QString &object)
-{
-
-}
-
-QSet<Pair> Pair::subjectsAndObjects(const QString &object)
-{
-
-}
-
-bool Pair::contains(const Triple &triple)
-{
-
+    return second_;
 }
 
 bool Pair::operator ==(Pair &p)
 {
-    if (first_ == p.first_ && second_ == p.second_)
+    if (first() == p.first() && second() == p.second())
     {
         return 1;
     }

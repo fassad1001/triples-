@@ -1,6 +1,7 @@
 #include "TTriples.h"
 
 #include "Triple.h"
+
 #include <QtTest/QtTest>
 
 TTriples::TTriples()
@@ -99,5 +100,43 @@ void TTriples::testQhash_data()
 
     QTest::newRow("no null") << (QString().append("1"))
                           << (QString().append("2"))
-                             << (QString().append("3"));
+                          << (QString().append("3"));
+}
+
+void TTriples::testOperatorEquals()
+{
+    QFETCH(Triple, input1);
+    QFETCH(Triple, input2);
+
+    QFETCH(bool, output);
+
+    QCOMPARE(input1 == input2,output);
+}
+
+void TTriples::testOperatorEquals_data()
+{
+    QTest::addColumn< Triple > ("input1");
+    QTest::addColumn< Triple > ("input2");
+    QTest::addColumn< bool > ("output");
+
+    QTest::newRow("1 no null no null") << (Triple("1","2","3"))
+                                <<(Triple("1","2","3"))
+                                  <<(true);
+
+    QTest::newRow("2 null") << (Triple("","",""))
+                                <<(Triple("","",""))
+                                  <<(true);
+
+    QTest::newRow("3 null no null") << (Triple("","",""))
+                                <<(Triple("1","2","3"))
+                                  <<(false);
+
+    QTest::newRow("4 no null null") << (Triple("1","2","3"))
+                                <<(Triple("","",""))
+                                  <<(false);
+
+    QTest::newRow("5 no null no null") << (Triple("1","2","3"))
+                                <<(Triple("5","5","5"))
+                                  <<(false);
+
 }

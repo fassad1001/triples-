@@ -2,6 +2,8 @@
 
 #define TRIPLE_H
 
+#include "Pair.h"
+
 #include <QtCore>
 
 class Triple
@@ -15,12 +17,15 @@ public:
     QString object() const;
 
     QString toString() const;
+    bool operator ==(const Triple &p);
 
 private:
     QString subject_;
     QString predicate_;
     QString object_;
 };
+
+Q_DECLARE_METATYPE(Triple)
 
 inline uint qHash(const Triple &triple)
 {

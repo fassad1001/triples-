@@ -7,10 +7,9 @@ class Pair
 public:
     Pair();
     Pair(const QString &first, const QString &second);
-    QSet<Pair> subjectAndPredicatesFor(const QString &object);
-    QSet<Pair> predicatesAndObjects(const QString &object);
-    QSet<Pair> subjectsAndObjects(const QString &object);
-    bool contains(const Triple &triple);
+    QString first() const;
+    QString second() const;
+
     bool operator ==(Pair &p);
 
 private:

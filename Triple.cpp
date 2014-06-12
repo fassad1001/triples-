@@ -1,6 +1,5 @@
 #include "Triple.h"
 
-
 Triple::Triple()
 {
 
@@ -35,4 +34,16 @@ QString Triple::toString() const
     QString result;
     result.append("(").append(this->subject()).append(",").append(this->predicate()).append(",").append(this->object()).append(")");
     return result;
+}
+
+bool Triple::operator ==(const Triple &t)
+{
+    if (subject()==t.subject()&&predicate()==t.predicate()&&object()==t.object())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
