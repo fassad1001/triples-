@@ -22,4 +22,9 @@ private:
     QString object_;
 };
 
+inline uint qHash(const Triple &triple)
+{
+    return qHash(triple.toString());
+}
+
 #endif // TRIPLE_H

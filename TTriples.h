@@ -16,6 +16,9 @@ private slots:
     void testToString();
     void testToString_data();
 
+    void testQhash();
+    void testQhash_data();
+
 };
 
 #endif // TTRIPLES_H

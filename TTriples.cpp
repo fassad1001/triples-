@@ -55,5 +55,49 @@ void TTriples::testToString_data()
     QTest::newRow("null") << (QString().append(""))
                           << (QString().append(""))
                              << (QString().append(""))
-                                << (QString().append("(,,)"));
+                             << (QString().append("(,,)"));
+}
+
+void TTriples::testQhash()
+{
+    QFETCH(QString, str1);
+    QFETCH(QString, str2);
+    QFETCH(QString, str3);
+
+    QCOMPARE(qHash(Triple(str1,str2,str3)),qHash(Triple(str1,str2,str3).toString()));
+}
+
+void TTriples::testQhash_data()
+{
+    QTest::addColumn< QString > ("str1");
+    QTest::addColumn< QString > ("str2");
+    QTest::addColumn< QString > ("str3");
+
+    QTest::newRow("no null") << (QString().append(""))
+                          << (QString().append(""))
+                             << (QString().append(""));
+
+    QTest::newRow("no null") << (QString().append(""))
+                          << (QString().append("2"))
+                             << (QString().append("3"));
+
+    QTest::newRow("no null") << (QString().append("1"))
+                          << (QString().append(""))
+                             << (QString().append("3"));
+
+    QTest::newRow("no null") << (QString().append("1"))
+                          << (QString().append("2"))
+                             << (QString().append(""));
+
+    QTest::newRow("no null") << (QString().append(""))
+                          << (QString().append(""))
+                             << (QString().append("3"));
+
+    QTest::newRow("no null") << (QString().append("1"))
+                          << (QString().append(""))
+                             << (QString().append(""));
+
+    QTest::newRow("no null") << (QString().append("1"))
+                          << (QString().append("2"))
+                             << (QString().append("3"));
 }
