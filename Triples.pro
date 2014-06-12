@@ -18,9 +18,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     Triple.cpp \
     TTriples.cpp \
-    TripleStorage.cpp
+    TripleStorage.cpp \
+    Pair.cpp
 
 HEADERS += \
     Triple.h \
     TTriples.h \
-    TripleStorage.h
+    TripleStorage.h \
+    Pair.h
