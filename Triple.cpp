@@ -31,19 +31,12 @@ QString Triple::object() const
 
 QString Triple::toString() const
 {
-    QString result;
-    result.append("(").append(this->subject()).append(",").append(this->predicate()).append(",").append(this->object()).append(")");
-    return result;
+    return QString("(") + subject_ + "," + predicate_ + "," + object_ + ")";
 }
 
-bool Triple::operator ==(const Triple &t)
+bool Triple::operator ==(const Triple &triple) const
 {
-    if (subject()==t.subject()&&predicate()==t.predicate()&&object()==t.object())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return subject_ == triple.subject_
+            && predicate_== triple.predicate_
+            && object_ == triple.object_;
 }

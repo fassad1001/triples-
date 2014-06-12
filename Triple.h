@@ -17,7 +17,7 @@ public:
     QString object() const;
 
     QString toString() const;
-    bool operator ==(const Triple &p);
+    bool operator ==(const Triple &triple) const;
 
 private:
     QString subject_;
