@@ -4,6 +4,12 @@ Pair::Pair()
 {
 }
 
+Pair::Pair(const QString &first, const QString &second)
+{
+    first_=first;
+    second_=second;
+}
+
 QString Pair::first() const
 {
     return first_;

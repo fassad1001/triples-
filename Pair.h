@@ -16,5 +16,5 @@ private:
     QString first_;
     QString second_;
 };
-
+Q_DECLARE_METATYPE(Pair)
 #endif // PAIR_H

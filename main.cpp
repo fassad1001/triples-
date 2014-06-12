@@ -4,6 +4,8 @@
 
 #include "TTriples.h"
 
+#include "TPair.h"
+
 #include "main.h"
 
 int main(int argc, char *argv[])
@@ -12,6 +14,9 @@ int main(int argc, char *argv[])
 
     TTriples Ttriples;
     QTest::qExec(&Ttriples);
+
+    TPair pair;
+    QTest::qExec(&pair);
 
     return 0;
 }
