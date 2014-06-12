@@ -19,10 +19,14 @@ SOURCES += main.cpp \
     Triple.cpp \
     TTriples.cpp \
     TripleStorage.cpp \
-    Pair.cpp
+    Pair.cpp \
+    TPair.cpp \
+    TTripleStorage.cpp
 
 HEADERS += \
     Triple.h \
     TTriples.h \
     TripleStorage.h \
-    Pair.h
+    Pair.h \
+    TPair.h \
+    TTripleStorage.h
