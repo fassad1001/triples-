@@ -7,8 +7,8 @@
 class TripleStorage
 {
 public:
-    TripleStorage(const QSet<Triple> &triples);
     TripleStorage();
+    TripleStorage(const QSet<Triple> &triples);
     void addTriple(const Triple& triple);
     QSet<QString> objectsFor(const QString &subject, const QString &predicate);
     QSet<QString> subjectsFor(const QString &subject, const QString &predicate);

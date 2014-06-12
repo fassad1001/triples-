@@ -11,17 +11,7 @@ public:
     QSet<Pair> predicatesAndObjects(const QString &object);
     QSet<Pair> subjectsAndObjects(const QString &object);
     bool contains(const Triple &triple);
-    bool operator ==(Pair &p)
-    {
-        if (first_ == p.first_ && second_ == p.second_)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
+    bool operator ==(Pair &p);
 
 private:
     QString first_;
