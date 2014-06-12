@@ -16,7 +16,6 @@ private slots:
     void testToString();
     void testToString_data();
 
-
 };
 
 #endif // TTRIPLES_H

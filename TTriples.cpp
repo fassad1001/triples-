@@ -9,6 +9,7 @@ TTriples::TTriples()
 
 void TTriples::testToString()
 {
+
     QFETCH(QString, str1);
     QFETCH(QString, str2);
     QFETCH(QString, str3);

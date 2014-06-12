@@ -4,15 +4,13 @@
 
 #include "TTriples.h"
 
-inline uint qHash(const Triple &triple)
-{
-    return (QCryptographicHash::hash(QByteArray().append(triple.toString()),QCryptographicHash::Sha3_384).toUInt());
-}
+#include "main.h"
 
 int main(int argc, char *argv[])
 {
     // этот гадёныш всегда ноль возвращает! =(
-//    qWarning()<<(QCryptographicHash::hash(QByteArray().append("fewfdwfds"),QCryptographicHash::Sha256).toUInt());
+    //    qWarning()<<(QCryptographicHash::hash(QByteArray().append("fewfdwfds"),QCryptographicHash::Sha256).toUInt());
+    qWarning()<<qHash(Triple("1","5","fdsfsd"));
 
     QCoreApplication a(argc, argv);
 

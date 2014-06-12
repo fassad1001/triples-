@@ -21,4 +21,5 @@ SOURCES += main.cpp \
 
 HEADERS += \
     Triple.h \
-    TTriples.h
+    TTriples.h \
+    main.h
