@@ -27,7 +27,7 @@ QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &p
     return result;
 }
 
-QSet<QString> TripleStorage::subjectsFor(const QString &object, const QString &predicate)
+QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString &object)
 {
     QSet<QString> result;
     foreach (Triple tr, triples_)
