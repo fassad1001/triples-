@@ -40,3 +40,37 @@ bool Triple::operator ==(const Triple &triple) const
             && predicate_== triple.predicate_
             && object_ == triple.object_;
 }
+
+bool Triple::equalsBySubjectAndObject(const Triple &triple)
+{
+    return subject_ == triple.subject_
+            && object_ == triple.object();
+}
+
+bool Triple::equalsBySubjectAndPredicate(const Triple &triple)
+{
+    return subject_ == triple.subject_
+            && predicate_== triple.predicate_;
+}
+
+bool Triple::equalsByObjectAndPredicate(const Triple &triple)
+{
+    return predicate_== triple.predicate_
+            && object_ == triple.object_;
+}
+
+bool Triple::equalsBySubject(const Triple &triple)
+{
+    return subject_ == triple.subject_;
+}
+
+bool Triple::equalsByObject(const Triple &triple)
+{
+    return object_ == triple.object_;
+}
+
+bool Triple::equalsByPredicate(const Triple &triple)
+{
+    return predicate_== triple.predicate_;
+}
+

@@ -19,6 +19,14 @@ public:
     QString toString() const;
     bool operator ==(const Triple &triple) const;
 
+    bool equalsBySubjectAndObject(const Triple &triple);
+    bool equalsBySubjectAndPredicate(const Triple &triple);
+    bool equalsByObjectAndPredicate(const Triple &triple);
+
+    bool equalsBySubject(const Triple &triple);
+    bool equalsByObject(const Triple &triple);
+    bool equalsByPredicate(const Triple &triple);
+
 private:
     QString subject_;
     QString predicate_;
