@@ -199,12 +199,97 @@ void TTripleStorage::testPredicatesAndObjects_data()
 
 void TTripleStorage::testSubjectsAndObjects()
 {
+    QFETCH(TripleStorage, input0);
+    QFETCH(QString, input1);
 
+    QFETCH(QSet<Pair>, output);
+
+    QCOMPARE(input0.subjectsAndObjects(input1),output);
 }
 
 void TTripleStorage::testSubjectsAndObjects_data()
 {
+    QTest::addColumn <TripleStorage> ("input0");
+    QTest::addColumn <QString> ("input1");
+    QTest::addColumn <QSet<Pair> > ("output");
 
+    QTest::newRow("blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")))
+                                          <<("")
+                                              <<(QSet<Pair>()
+                                                 <<Pair("","")
+                                                 <<Pair("","")
+                                                 <<Pair("","")
+                                                 <<Pair("","")
+                                                 <<Pair("","")
+                                                 <<Pair("","")
+                                                 );
+
+    QTest::newRow("blank & not blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("","","")
+                                        <<Triple("5","5","5")
+                                        <<Triple("4","5","5")
+                                        <<Triple("6","5","5")
+                                        <<Triple("","","")
+                                        <<Triple("","","")))
+                                          <<("5")
+                                              <<(QSet<Pair>()
+                                                 <<Pair("5","5")
+                                                 <<Pair("4","5")
+                                                 <<Pair("6","5")
+                                                 );
+
+    QTest::newRow("not blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("5","4","4")
+                                        <<Triple("2","15","5")
+                                        <<Triple("4","15","5")
+                                        <<Triple("6","15","5")
+                                        <<Triple("4","4","4")
+                                        <<Triple("5","5","4")))
+                                          <<("15")
+                                              <<(QSet<Pair>()
+                                                 <<Pair("2","5")
+                                                 <<Pair("4","5")
+                                                 <<Pair("6","5")
+                                                 );
+
+    QTest::newRow("blank = false") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")))
+                                          <<("4")
+                                              <<(QSet<Pair>()
+                                                 );
+
+    QTest::newRow("blank & not blank = false") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("","","")
+                                        <<Triple("1","2","5")
+                                        <<Triple("3","5","5")
+                                        <<Triple("5","6","5")
+                                        <<Triple("","","")
+                                        <<Triple("","","")))
+                                          <<("4")
+                                              <<(QSet<Pair>()
+                                                 );
+
+    QTest::newRow("not blank = false") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("5","5","4")
+                                        <<Triple("1","2","5")
+                                        <<Triple("3","4","5")
+                                        <<Triple("5","6","5")
+                                        <<Triple("5","4","4")
+                                        <<Triple("4","5","4")))
+                                          <<("15")
+                                              <<(QSet<Pair>()
+                                                 );
 }
 
 void TTripleStorage::testContains()
