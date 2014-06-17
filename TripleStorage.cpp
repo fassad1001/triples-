@@ -16,15 +16,80 @@ void TripleStorage::addTriple(const Triple &triple)
 
 QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &predicate)
 {
-
+    QSet<QString> result;
+    foreach (Triple tr, triples_)
+    {
+        if (tr.equalsBySubjectAndPredicate(Triple(subject,predicate,"")))
+        {
+            result<<tr.object();
+        }
+    }
+    return result;
 }
 
-QSet<QString> TripleStorage::subjectsFor(const QString &subject, const QString &predicate)
+QSet<QString> TripleStorage::subjectsFor(const QString &object, const QString &predicate)
 {
-
+    QSet<QString> result;
+    foreach (Triple tr, triples_)
+    {
+        if (tr.equalsByObjectAndPredicate(Triple("",predicate,object)))
+        {
+            result<<tr.subject();
+        }
+    }
+    return result;
 }
 
-QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString &predicate)
+QSet<QString> TripleStorage::predicatesFor(const QString &object, const QString &subject)
 {
-
+    QSet<QString> result;
+    foreach (Triple tr, triples_)
+    {
+        if (tr.equalsBySubjectAndObject(Triple(subject,"",object)))
+        {
+            result<<tr.predicate();
+        }
+    }
+    return result;
 }
+
+QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object)
+{
+    QSet<Pair> result;
+    foreach (Triple tr, triples_)
+    {
+        if (tr.equalsByObject(Triple("","",object)))
+        {
+            result<<Pair(tr.subject(),tr.predicate());
+        }
+    }
+    return result;
+}
+
+QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject)
+{
+    QSet<Pair> result;
+    foreach (Triple tr, triples_)
+    {
+        if (tr.equalsBySubject(Triple(subject,"","")))
+        {
+            result<<Pair(tr.predicate(),tr.object());
+        }
+    }
+    return result;
+}
+
+QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate)
+{
+    QSet<Pair> result;
+    foreach (Triple tr, triples_)
+    {
+        if (tr.equalsByPredicate(Triple("",predicate,"")))
+        {
+            result<<Pair(tr.subject(),tr.object());
+        }
+    }
+    return result;
+}
+
+

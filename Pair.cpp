@@ -20,7 +20,12 @@ QString Pair::second() const
     return second_;
 }
 
-bool Pair::operator ==(Pair &p)
+QString Pair::toString() const
+{
+    return QString ("(")+first_+","+second_+")";
+}
+
+bool Pair::operator ==(const Pair &p) const
 {
     if (first() == p.first() && second() == p.second())
     {

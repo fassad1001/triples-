@@ -1,7 +1,9 @@
 #ifndef PAIR_H
+
 #define PAIR_H
+
 #include <QtCore>
-#include "Triple.h"
+
 class Pair
 {
 public:
@@ -10,11 +12,21 @@ public:
     QString first() const;
     QString second() const;
 
-    bool operator ==(Pair &p);
+    QString toString() const;
+
+    bool operator ==(const Pair &p) const;
 
 private:
     QString first_;
     QString second_;
 };
+
+
+inline uint qHash(const Pair &pair)
+{
+    return qHash(pair.toString());
+}
+
+
 Q_DECLARE_METATYPE(Pair)
 #endif // PAIR_H
