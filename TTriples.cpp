@@ -157,23 +157,21 @@ void TTriples::testForEqualObjects_data()
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("3","4","5"))
+    QTest::newRow("not null & not null = true") << (Triple("3","4","5"))
                                 <<(Triple("5","5","5"))
                                   <<(true);
-
-    QTest::newRow("1 no null no null") << (Triple("3","4","5"))
+    QTest::newRow("not null & not null = false") << (Triple("3","4","5"))
                                 <<(Triple("5","5","6"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("3","4",""))
+    QTest::newRow("not null & null = false") << (Triple("3","4",""))
                                 <<(Triple("5","6","5"))
                                   <<(false);
-
-    QTest::newRow("1 no null no null") << (Triple("3","4","5"))
+    QTest::newRow("null & not null = false") << (Triple("3","4","5"))
                                 <<(Triple("5","6",""))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("3","4",""))
+    QTest::newRow("null & null = true") << (Triple("3","4",""))
                                 <<(Triple("5","6",""))
                                   <<(true);
 
@@ -197,21 +195,21 @@ void TTriples::testForEqualSubjects_data()
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & not null = true") << (Triple("5","4","6"))
                                 <<(Triple("5","7","8"))
                                   <<(true);
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
                                 <<(Triple("6","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
                                 <<(Triple("","7","8"))
                                   <<(false);
-    QTest::newRow("1 no null no null") << (Triple("","4","6"))
+    QTest::newRow("null & not null = false") << (Triple("","4","6"))
                                 <<(Triple("5","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("","4","6"))
+    QTest::newRow("null & null = true") << (Triple("","4","6"))
                                 <<(Triple("","7","8"))
                                   <<(true);
 }
@@ -232,21 +230,21 @@ void TTriples::testForEqualPredicates_data()
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("5","5","6"))
+    QTest::newRow("not null & not null = true") << (Triple("5","5","6"))
                                 <<(Triple("9","5","8"))
                                   <<(true);
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
                                 <<(Triple("9","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
                                 <<(Triple("9","","8"))
                                   <<(false);
-    QTest::newRow("1 no null no null") << (Triple("5","","6"))
+    QTest::newRow("null & not null = false") << (Triple("5","","6"))
                                 <<(Triple("9","4","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","","6"))
+    QTest::newRow("null & null = true") << (Triple("5","","6"))
                                 <<(Triple("5","","8"))
                                   <<(true);
 }
@@ -267,21 +265,21 @@ void TTriples::testForEqualBySubjectAndObject_data()
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","8"))
+    QTest::newRow("not null & not null = true") << (Triple("5","4","8"))
                                 <<(Triple("5","7","8"))
                                   <<(true);
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
                                 <<(Triple("6","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
                                 <<(Triple("","7",""))
                                   <<(false);
-    QTest::newRow("1 no null no null") << (Triple("","4",""))
+    QTest::newRow("null & not null = false") << (Triple("","4",""))
                                 <<(Triple("5","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("","4",""))
+    QTest::newRow("null & null = true") << (Triple("","4",""))
                                 <<(Triple("","7",""))
                                   <<(true);
 }
@@ -302,21 +300,21 @@ void TTriples::testForEqualBySubjectsAndPredicates_data()
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("5","5","6"))
+    QTest::newRow("not null & not null = true") << (Triple("5","5","6"))
                                 <<(Triple("5","5","8"))
                                   <<(true);
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
                                 <<(Triple("9","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
                                 <<(Triple("","","8"))
                                   <<(false);
-    QTest::newRow("1 no null no null") << (Triple("","","6"))
+    QTest::newRow("null & not null = false") << (Triple("","","6"))
                                 <<(Triple("9","4","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("","","6"))
+    QTest::newRow("null & null = true") << (Triple("","","6"))
                                 <<(Triple("","","8"))
                                   <<(true);
 }
@@ -337,21 +335,21 @@ void TTriples::testForEqualByObjectsAndPredicates_data()
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("5","5","6"))
+    QTest::newRow("not null & not null = true") << (Triple("5","5","6"))
                                 <<(Triple("9","5","6"))
                                   <<(true);
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
                                 <<(Triple("9","7","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","4","6"))
+    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
                                 <<(Triple("9","",""))
                                   <<(false);
-    QTest::newRow("1 no null no null") << (Triple("5","",""))
+    QTest::newRow("null & not null = false") << (Triple("5","",""))
                                 <<(Triple("9","4","8"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Triple("5","",""))
+    QTest::newRow("null & null = true") << (Triple("5","",""))
                                 <<(Triple("9","",""))
                                   <<(true);
 }
