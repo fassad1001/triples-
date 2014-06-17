@@ -25,13 +25,13 @@ private slots:
     void testContains_data();
 
     void testObjectsFor();
-    void testObjectsFor_test();
+    void testObjectsFor_data();
 
     void testSubjectsFor();
-    void testSubjectsFor_test();
+    void testSubjectsFor_data();
 
     void testPredicatesFor();
-    void testPredicatesFor_test();
+    void testPredicatesFor_data();
 };
 
 #endif // TTRIPLESTORAGE_H

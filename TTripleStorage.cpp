@@ -7,10 +7,13 @@ TTripleStorage::TTripleStorage()
 void TTripleStorage::testSubjectAndPredicatesFor()
 {
 
+
 }
 
 void TTripleStorage::testSubjectAndPredicatesFor_data()
 {
+
+
 
 }
 
@@ -49,7 +52,7 @@ void TTripleStorage::testObjectsFor()
 
 }
 
-void TTripleStorage::testObjectsFor_test()
+void TTripleStorage::testObjectsFor_data()
 {
 
 }
@@ -59,7 +62,7 @@ void TTripleStorage::testSubjectsFor()
 
 }
 
-void TTripleStorage::testSubjectsFor_test()
+void TTripleStorage::testSubjectsFor_data()
 {
 
 }
@@ -69,7 +72,7 @@ void TTripleStorage::testPredicatesFor()
 
 }
 
-void TTripleStorage::testPredicatesFor_test()
+void TTripleStorage::testPredicatesFor_data()
 {
 
 }

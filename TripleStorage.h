@@ -2,6 +2,7 @@
 
 #define TRIPLESTORAGE_H
 
+
 #include "Triple.h"
 
 #include "Pair.h"

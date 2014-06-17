@@ -6,6 +6,8 @@
 
 #include "TPair.h"
 
+#include "TTripleStorage.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +18,9 @@ int main(int argc, char *argv[])
 
     TPair pair;
     QTest::qExec(&pair);
+
+    TTripleStorage TtripleStorage;
+    QTest::qExec(&TtripleStorage);
 
     return 0;
 }
