@@ -27,7 +27,7 @@ QString Pair::toString() const
 
 bool Pair::operator ==(const Pair &p) const
 {
-    if (first() == p.first() && second() == p.second())
+    if (first_ == p.first() && second_ == p.second())
     {
         return 1;
     }
