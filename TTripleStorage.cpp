@@ -182,6 +182,54 @@ void TTripleStorage::testSubjectsFor_data()
                                               <<(QSet<QString>()
                                                  <<"4"
                                                  <<"5");
+
+    QTest::newRow("blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("1","5","5")
+                                        <<Triple("2","4","4")
+                                        <<Triple("3","4","4")
+                                        <<Triple("4","5","5")
+                                        <<Triple("5","5","5")
+                                        <<Triple("6","5","5")))
+                                          <<("5")
+                                            <<("5")
+                                              <<(QSet<QString>()
+                                                 <<"1"
+                                                 <<"4"
+                                                 <<"5"
+                                                 <<"6");
+    QTest::newRow("blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")
+                                        <<Triple("","","")))
+                                          <<("9")
+                                            <<("9")
+                                              <<(QSet<QString>());
+
+    QTest::newRow("blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("1","","")
+                                        <<Triple("2","","")
+                                        <<Triple("3","","")
+                                        <<Triple("4","5","5")
+                                        <<Triple("5","5","5")
+                                        <<Triple("6","","")))
+                                          <<("9")
+                                            <<("9")
+                                              <<(QSet<QString>());
+
+    QTest::newRow("blank = true") << (TripleStorage(QSet<Triple>()
+                                        <<Triple("1","5","5")
+                                        <<Triple("2","4","4")
+                                        <<Triple("3","4","4")
+                                        <<Triple("4","5","5")
+                                        <<Triple("5","5","5")
+                                        <<Triple("6","5","5")))
+                                          <<("9")
+                                            <<("9")
+                                              <<(QSet<QString>());
+
 }
 
 void TTripleStorage::testPredicatesFor()
