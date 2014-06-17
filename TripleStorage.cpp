@@ -40,7 +40,7 @@ QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString
     return result;
 }
 
-QSet<QString> TripleStorage::predicatesFor(const QString &object, const QString &subject)
+QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString &object)
 {
     QSet<QString> result;
     foreach (Triple tr, triples_)

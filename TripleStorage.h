@@ -17,7 +17,7 @@ public:
 
     QSet<QString> objectsFor(const QString &subject, const QString &predicate);
     QSet<QString> subjectsFor(const QString &predicate, const QString &object);
-    QSet<QString> predicatesFor(const QString &object, const QString &subject);
+    QSet<QString> predicatesFor(const QString &subject, const QString &object);
 
     QSet<Pair> subjectAndPredicatesFor(const QString &object);
     QSet<Pair> predicatesAndObjects(const QString &subject);
