@@ -14,7 +14,7 @@ void TripleStorage::addTriple(const Triple &triple)
     triples_.insert(triple);
 }
 
-QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &predicate)
+QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &predicate) const
 {
     QSet<QString> result;
     foreach (Triple tr, triples_)
@@ -27,7 +27,7 @@ QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &p
     return result;
 }
 
-QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString &object)
+QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString &object) const
 {
     QSet<QString> result;
     foreach (Triple tr, triples_)
@@ -40,7 +40,7 @@ QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString
     return result;
 }
 
-QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString &object)
+QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString &object) const
 {
     QSet<QString> result;
     foreach (Triple tr, triples_)
@@ -53,7 +53,7 @@ QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString
     return result;
 }
 
-QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object)
+QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object) const
 {
     QSet<Pair> result;
     foreach (Triple tr, triples_)
@@ -66,7 +66,7 @@ QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object)
     return result;
 }
 
-QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject)
+QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject) const
 {
     QSet<Pair> result;
     foreach (Triple tr, triples_)
@@ -79,7 +79,7 @@ QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject)
     return result;
 }
 
-QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate)
+QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate) const
 {
     QSet<Pair> result;
     foreach (Triple tr, triples_)
@@ -90,6 +90,17 @@ QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate)
         }
     }
     return result;
+}
+
+bool TripleStorage::contains(const Triple &triple) const
+{
+    foreach (Triple tr, triples_)
+    {
+        if (tr == triple)
+        {
+            return true;
+        }
+    }
 }
 
 

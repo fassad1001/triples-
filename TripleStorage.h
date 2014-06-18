@@ -15,15 +15,15 @@ public:
 
     void addTriple(const Triple &triple);
 
-    QSet<QString> objectsFor(const QString &subject, const QString &predicate);
-    QSet<QString> subjectsFor(const QString &predicate, const QString &object);
-    QSet<QString> predicatesFor(const QString &subject, const QString &object);
+    QSet<QString> objectsFor(const QString &subject, const QString &predicate) const;
+    QSet<QString> subjectsFor(const QString &predicate, const QString &object) const;
+    QSet<QString> predicatesFor(const QString &subject, const QString &object) const;
 
-    QSet<Pair> subjectAndPredicatesFor(const QString &object);
-    QSet<Pair> predicatesAndObjects(const QString &subject);
-    QSet<Pair> subjectsAndObjects(const QString &predicate);
+    QSet<Pair> subjectAndPredicatesFor(const QString &object) const;
+    QSet<Pair> predicatesAndObjects(const QString &subject) const;
+    QSet<Pair> subjectsAndObjects(const QString &predicate) const;
 
-    bool contains(const Triple &triple);
+    bool contains(const Triple &triple) const;
 private:
     QSet<Triple> triples_;
 };
