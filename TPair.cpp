@@ -4,7 +4,7 @@ TPair::TPair()
 {
 }
 
-void TPair::testEquals()
+void TPair::TestEquals()
 {
     QFETCH(Pair, input1);
     QFETCH(Pair, input2);
@@ -14,7 +14,8 @@ void TPair::testEquals()
     QCOMPARE(input1 == input2,output);
 }
 
-void TPair::testEquals_data()
+//
+void TPair::TestEquals_data()
 {
     QTest::addColumn <Pair> ("input1");
     QTest::addColumn <Pair> ("input2");
@@ -22,28 +23,28 @@ void TPair::testEquals_data()
     QTest::addColumn <bool> ("output");
 
 
-    QTest::newRow("1 no null no null") << (Pair("1","2"))
-                                <<(Pair("1","2"))
+    QTest::newRow("TestNum1") << (Pair("1", "2"))
+                                <<(Pair("1", "2"))
                                   <<(true);
 
-    QTest::newRow("1 no null no null") << (Pair("5","2"))
-                                <<(Pair("1","2"))
+    QTest::newRow("TestNum2") << (Pair("5", "2"))
+                                <<(Pair("1", "2"))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Pair("",""))
-                                <<(Pair("",""))
+    QTest::newRow("TestNum3") << (Pair("", ""))
+                                <<(Pair("", ""))
                                   <<(true);
 
-    QTest::newRow("1 no null no null") << (Pair("5",""))
-                                <<(Pair("",""))
+    QTest::newRow("TestNum4") << (Pair("5", ""))
+                                <<(Pair("", ""))
                                   <<(false);
 
-    QTest::newRow("1 no null no null") << (Pair("5",""))
-                                <<(Pair("5",""))
+    QTest::newRow("TestNum5") << (Pair("5", ""))
+                                <<(Pair("5", ""))
                                   <<(true);
 
-    QTest::newRow("1 no null no null") << (Pair("","5"))
-                                <<(Pair("","5"))
+    QTest::newRow("TestNum6") << (Pair("", "5"))
+                                <<(Pair("", "5"))
                                   <<(true);
 }
 

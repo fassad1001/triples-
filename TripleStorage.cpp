@@ -19,7 +19,7 @@ QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &p
     QSet<QString> result;
     foreach (Triple tr, triples_)
     {
-        if (tr.equalsBySubjectAndPredicate(Triple(subject,predicate,"")))
+        if (tr.equalsBySubjectAndPredicate(Triple(subject, predicate, "")))
         {
             result<<tr.object();
         }
@@ -32,7 +32,7 @@ QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString
     QSet<QString> result;
     foreach (Triple tr, triples_)
     {
-        if (tr.equalsByObjectAndPredicate(Triple("",predicate,object)))
+        if (tr.equalsByObjectAndPredicate(Triple("", predicate, object)))
         {
             result<<tr.subject();
         }
@@ -45,7 +45,7 @@ QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString
     QSet<QString> result;
     foreach (Triple tr, triples_)
     {
-        if (tr.equalsBySubjectAndObject(Triple(subject,"",object)))
+        if (tr.equalsBySubjectAndObject(Triple(subject, "", object)))
         {
             result<<tr.predicate();
         }
@@ -58,7 +58,7 @@ QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object) const
     QSet<Pair> result;
     foreach (Triple tr, triples_)
     {
-        if (tr.equalsByObject(Triple("","",object)))
+        if (tr.equalsByObject(Triple("", "", object)))
         {
             result<<Pair(tr.subject(),tr.predicate());
         }
@@ -71,9 +71,9 @@ QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject) const
     QSet<Pair> result;
     foreach (Triple tr, triples_)
     {
-        if (tr.equalsBySubject(Triple(subject,"","")))
+        if (tr.equalsBySubject(Triple(subject, "", "")))
         {
-            result<<Pair(tr.predicate(),tr.object());
+            result << Pair(tr.predicate(),tr.object());
         }
     }
     return result;
@@ -94,13 +94,7 @@ QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate) const
 
 bool TripleStorage::contains(const Triple &triple) const
 {
-    foreach (Triple tr, triples_)
-    {
-        if (tr == triple)
-        {
-            return true;
-        }
-    }
+    return triples_.contains(triple);
 }
 
 

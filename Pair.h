@@ -9,6 +9,7 @@ class Pair
 public:
     Pair();
     Pair(const QString &first, const QString &second);
+
     QString first() const;
     QString second() const;
 

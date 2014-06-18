@@ -13,32 +13,32 @@ public:
     TTriples();
 private slots:
     //тесты
-    void testToString();
-    void testToString_data();
+    void TestToString();
+    void TestToString_data();
 
-    void testQhash();
-    void testQhash_data();
+    void TestQhash();
+    void TestQhash_data();
 
-    void testOperatorEquals();
-    void testOperatorEquals_data();
+    void TestOperatorEquals();
+    void TestOperatorEquals_data();
 
-    void testForEqualObjects();
-    void testForEqualObjects_data();
+    void TestForEqualObjects();
+    void TestForEqualObjects_data();
 
-    void testForEqualSubjects();
-    void testForEqualSubjects_data();
+    void TestForEqualSubjects();
+    void TestForEqualSubjects_data();
 
-    void testForEqualPredicates();
-    void testForEqualPredicates_data();
+    void TestForEqualPredicates();
+    void TestForEqualPredicates_data();
 
-    void testForEqualBySubjectAndObject();
-    void testForEqualBySubjectAndObject_data();
+    void TestForEqualBySubjectAndObject();
+    void TestForEqualBySubjectAndObject_data();
 
-    void testForEqualBySubjectsAndPredicates();
-    void testForEqualBySubjectsAndPredicates_data();
+    void TestForEqualBySubjectsAndPredicates();
+    void TestForEqualBySubjectsAndPredicates_data();
 
-    void testForEqualByObjectsAndPredicates();
-    void testForEqualByObjectsAndPredicates_data();
+    void TestForEqualByObjectsAndPredicates();
+    void TestForEqualByObjectsAndPredicates_data();
 };
 
 #endif // TTRIPLES_H

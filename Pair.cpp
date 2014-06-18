@@ -4,10 +4,10 @@ Pair::Pair()
 {
 }
 
-Pair::Pair(const QString &first, const QString &second)
+Pair::Pair(const QString &first, const QString &second) :
+   first_(first),
+   second_(second)
 {
-    first_=first;
-    second_=second;
 }
 
 QString Pair::first() const
@@ -22,17 +22,10 @@ QString Pair::second() const
 
 QString Pair::toString() const
 {
-    return QString ("(")+first_+","+second_+")";
+    return "(" + first_ + "," + second_ + ")";
 }
 
 bool Pair::operator ==(const Pair &p) const
 {
-    if (first_ == p.first() && second_ == p.second())
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    return first_ == p.first_ && second_ == p.second_;
 }

@@ -1,65 +1,46 @@
 #include "TTriples.h"
 
-#include "Triple.h"
-
 #include <QtTest/QtTest>
 
 TTriples::TTriples()
 {
 }
 
-void TTriples::testToString()
+void TTriples::TestToString()
 {
+    QFETCH(Triple, triple);
 
-    QFETCH(QString, str1);
-    QFETCH(QString, str2);
-    QFETCH(QString, str3);
+    QFETCH(QString, result);
 
-    QFETCH(QString, output);
-
-    QCOMPARE(Triple(str1,str2,str3).toString(), output);
+    QCOMPARE(triple.toString(), result);
 }
 
-void TTriples::testToString_data()
+void TTriples::TestToString_data()
 {
-    QTest::addColumn< QString > ("str1");
-    QTest::addColumn< QString > ("str2");
-    QTest::addColumn< QString > ("str3");
+    QTest::addColumn< Triple > ("triple");
 
-    QTest::addColumn< QString > ("output");
+    QTest::addColumn< QString > ("result");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append("2"))
-                             << (QString().append("3"))
-                                << (QString().append("(1,2,3)"));
+    QTest::newRow("TestNum1") << (Triple("1", "2", "3" ))
+                                << ("(1,2,3)");
 
-    QTest::newRow("no null") << (QString().append(""))
-                          << (QString().append("2"))
-                             << (QString().append("3"))
-                                << (QString().append("(,2,3)"));
+    QTest::newRow("TestNum2") << (Triple("", "2", "3"))
+                                << ("(,2,3)");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append(""))
-                             << (QString().append("3"))
-                                << (QString().append("(1,,3)"));
+    QTest::newRow("TestNum3") << (Triple("1", "", "3"))
+                                << ("(1,,3)");
 
-    QTest::newRow("no null") << (QString().append(""))
-                          << (QString().append(""))
-                             << (QString().append("3"))
-                                << (QString().append("(,,3)"));
+    QTest::newRow("TestNum4") << (Triple("", "", "3"))
+                              << ("(,,3)");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append(""))
-                             << (QString().append(""))
-                                << (QString().append("(1,,)"));
+    QTest::newRow("TestNum5") << (Triple("1", "", ""))
+                              << ("(1,,)");
 
-    QTest::newRow("null") << (QString().append(""))
-                          << (QString().append(""))
-                             << (QString().append(""))
-                             << (QString().append("(,,)"));
+    QTest::newRow("TestNum6") << (Triple("", "", ""))
+                              << ("(,,)");
 }
 
-void TTriples::testQhash()
+void TTriples::TestQhash()
 {
     QFETCH(QString, str1);
     QFETCH(QString, str2);
@@ -68,80 +49,80 @@ void TTriples::testQhash()
     QCOMPARE(qHash(Triple(str1,str2,str3)),qHash(Triple(str1,str2,str3).toString()));
 }
 
-void TTriples::testQhash_data()
+void TTriples::TestQhash_data()
 {
     QTest::addColumn< QString > ("str1");
     QTest::addColumn< QString > ("str2");
     QTest::addColumn< QString > ("str3");
 
-    QTest::newRow("no null") << (QString().append(""))
-                          << (QString().append(""))
-                             << (QString().append(""));
+    QTest::newRow("TestNum1") << ("")
+                          << ("")
+                             << ("");
 
-    QTest::newRow("no null") << (QString().append(""))
-                          << (QString().append("2"))
-                             << (QString().append("3"));
+    QTest::newRow("TestNum2") << ("")
+                          << ("")
+                             << ("");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append(""))
-                             << (QString().append("3"));
+    QTest::newRow("TestNum3") << ("")
+                          << ("")
+                             << ("");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append("2"))
-                             << (QString().append(""));
+    QTest::newRow("TestNum4") << ("")
+                          << ("")
+                             << ("");
 
-    QTest::newRow("no null") << (QString().append(""))
-                          << (QString().append(""))
-                             << (QString().append("3"));
+    QTest::newRow("TestNum5") << ("")
+                          << ("")
+                             << ("");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append(""))
-                             << (QString().append(""));
+    QTest::newRow("TestNum6") << ("")
+                          << ("")
+                             << ("");
 
-    QTest::newRow("no null") << (QString().append("1"))
-                          << (QString().append("2"))
-                          << (QString().append("3"));
+    QTest::newRow("TestNum7") << ("")
+                          << ("")
+                          << ("");
 }
 
-void TTriples::testOperatorEquals()
+void TTriples::TestOperatorEquals()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1 == input2,output);
+    QCOMPARE(input1 == input2, output);
 }
 
-void TTriples::testOperatorEquals_data()
+void TTriples::TestOperatorEquals_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("1 no null no null") << (Triple("1","2","3"))
-                                <<(Triple("1","2","3"))
+    QTest::newRow("TestNum1") << (Triple("1", "2", "3"))
+                                <<(Triple("1", "2", "3"))
                                   <<(true);
 
-    QTest::newRow("2 null") << (Triple("","",""))
-                                <<(Triple("","",""))
+    QTest::newRow("TestNum2") << (Triple("", "", ""))
+                                <<(Triple("", "", ""))
                                   <<(true);
 
-    QTest::newRow("3 null no null") << (Triple("","",""))
-                                <<(Triple("1","2","3"))
+    QTest::newRow("TestNum3") << (Triple("", "", ""))
+                                <<(Triple("1", "2", "3"))
                                   <<(false);
 
-    QTest::newRow("4 no null null") << (Triple("1","2","3"))
-                                <<(Triple("","",""))
+    QTest::newRow("TestNum4") << (Triple("1", "2", "3"))
+                                <<(Triple("", "", ""))
                                   <<(false);
 
-    QTest::newRow("5 no null no null") << (Triple("1","2","3"))
-                                <<(Triple("5","5","5"))
+    QTest::newRow("TestNum5") << (Triple("1", "2", "3"))
+                                <<(Triple("5", "5", "5"))
                                   <<(false);
 
 }
 
-void TTriples::testForEqualObjects()
+void TTriples::TestForEqualObjects()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
@@ -151,27 +132,27 @@ void TTriples::testForEqualObjects()
     QCOMPARE(input1.equalsByObject(input2),output);
 }
 
-void TTriples::testForEqualObjects_data()
+void TTriples::TestForEqualObjects_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("not null & not null = true") << (Triple("3","4","5"))
+    QTest::newRow("TestNum1") << (Triple("3","4","5"))
                                 <<(Triple("5","5","5"))
                                   <<(true);
-    QTest::newRow("not null & not null = false") << (Triple("3","4","5"))
+    QTest::newRow("TestNum2") << (Triple("3","4","5"))
                                 <<(Triple("5","5","6"))
                                   <<(false);
 
-    QTest::newRow("not null & null = false") << (Triple("3","4",""))
+    QTest::newRow("TestNum3") << (Triple("3","4",""))
                                 <<(Triple("5","6","5"))
                                   <<(false);
-    QTest::newRow("null & not null = false") << (Triple("3","4","5"))
+    QTest::newRow("TestNum4") << (Triple("3","4","5"))
                                 <<(Triple("5","6",""))
                                   <<(false);
 
-    QTest::newRow("null & null = true") << (Triple("3","4",""))
+    QTest::newRow("TestNum5") << (Triple("3","4",""))
                                 <<(Triple("5","6",""))
                                   <<(true);
 
@@ -179,42 +160,42 @@ void TTriples::testForEqualObjects_data()
 
 }
 
-void TTriples::testForEqualSubjects()
+void TTriples::TestForEqualSubjects()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsBySubject(input2),output);
+    QCOMPARE(input1.equalsBySubject(input2), output);
 }
 
-void TTriples::testForEqualSubjects_data()
+void TTriples::TestForEqualSubjects_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("not null & not null = true") << (Triple("5","4","6"))
+    QTest::newRow("TestNum1") << (Triple("5","4","6"))
                                 <<(Triple("5","7","8"))
                                   <<(true);
-    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
+    QTest::newRow("TestNum2") << (Triple("5","4","6"))
                                 <<(Triple("6","7","8"))
                                   <<(false);
 
-    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
+    QTest::newRow("TestNum3") << (Triple("5","4","6"))
                                 <<(Triple("","7","8"))
                                   <<(false);
-    QTest::newRow("null & not null = false") << (Triple("","4","6"))
+    QTest::newRow("TestNum4") << (Triple("","4","6"))
                                 <<(Triple("5","7","8"))
                                   <<(false);
 
-    QTest::newRow("null & null = true") << (Triple("","4","6"))
+    QTest::newRow("TestNum5") << (Triple("","4","6"))
                                 <<(Triple("","7","8"))
                                   <<(true);
 }
 
-void TTriples::testForEqualPredicates()
+void TTriples::TestForEqualPredicates()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
@@ -224,32 +205,32 @@ void TTriples::testForEqualPredicates()
     QCOMPARE(input1.equalsByPredicate(input2),output);
 }
 
-void TTriples::testForEqualPredicates_data()
+void TTriples::TestForEqualPredicates_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("not null & not null = true") << (Triple("5","5","6"))
-                                <<(Triple("9","5","8"))
+    QTest::newRow("TestNum1") << (Triple("5", "5", "6"))
+                                <<(Triple("9", "5", "8"))
                                   <<(true);
-    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
-                                <<(Triple("9","7","8"))
+    QTest::newRow("TestNum2") << (Triple("5", "4", "6"))
+                                <<(Triple("9", "7", "8"))
                                   <<(false);
 
-    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
-                                <<(Triple("9","","8"))
+    QTest::newRow("TestNum3") << (Triple("5", "4", "6"))
+                                <<(Triple("9", "", "8"))
                                   <<(false);
-    QTest::newRow("null & not null = false") << (Triple("5","","6"))
-                                <<(Triple("9","4","8"))
+    QTest::newRow("TestNum4") << (Triple("5", "", "6"))
+                                <<(Triple("9", "4", "8"))
                                   <<(false);
 
-    QTest::newRow("null & null = true") << (Triple("5","","6"))
-                                <<(Triple("5","","8"))
+    QTest::newRow("TestNum5") << (Triple("5", "", "6"))
+                                <<(Triple("5", "", "8"))
                                   <<(true);
 }
 
-void TTriples::testForEqualBySubjectAndObject()
+void TTriples::TestForEqualBySubjectAndObject()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
@@ -259,32 +240,32 @@ void TTriples::testForEqualBySubjectAndObject()
     QCOMPARE(input1.equalsBySubjectAndObject(input2),output);
 }
 
-void TTriples::testForEqualBySubjectAndObject_data()
+void TTriples::TestForEqualBySubjectAndObject_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("not null & not null = true") << (Triple("5","4","8"))
-                                <<(Triple("5","7","8"))
+    QTest::newRow("TestNum1") << (Triple("5", "4", "8"))
+                                <<(Triple("5", "7", "8"))
                                   <<(true);
-    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
-                                <<(Triple("6","7","8"))
+    QTest::newRow("TestNum2") << (Triple("5", "4", "6"))
+                                <<(Triple("6", "7", "8"))
                                   <<(false);
 
-    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
-                                <<(Triple("","7",""))
+    QTest::newRow("TestNum3") << (Triple("5", "4", "6"))
+                                <<(Triple("", "7", ""))
                                   <<(false);
-    QTest::newRow("null & not null = false") << (Triple("","4",""))
-                                <<(Triple("5","7","8"))
+    QTest::newRow("TestNum4") << (Triple("", "4", ""))
+                                <<(Triple("5", "7", "8"))
                                   <<(false);
 
-    QTest::newRow("null & null = true") << (Triple("","4",""))
-                                <<(Triple("","7",""))
+    QTest::newRow("TestNum5") << (Triple("", "4", ""))
+                                <<(Triple("", "7", ""))
                                   <<(true);
 }
 
-void TTriples::testForEqualBySubjectsAndPredicates()
+void TTriples::TestForEqualBySubjectsAndPredicates()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
@@ -294,32 +275,32 @@ void TTriples::testForEqualBySubjectsAndPredicates()
     QCOMPARE(input1.equalsBySubjectAndPredicate(input2),output);
 }
 
-void TTriples::testForEqualBySubjectsAndPredicates_data()
+void TTriples::TestForEqualBySubjectsAndPredicates_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("not null & not null = true") << (Triple("5","5","6"))
-                                <<(Triple("5","5","8"))
+    QTest::newRow("TestNum1") << (Triple("5", "5", "6"))
+                                <<(Triple("5", "5", "8"))
                                   <<(true);
-    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
-                                <<(Triple("9","7","8"))
+    QTest::newRow("TestNum2") << (Triple("5", "4", "6"))
+                                <<(Triple("9", "7", "8"))
                                   <<(false);
 
-    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
-                                <<(Triple("","","8"))
+    QTest::newRow("TestNum3") << (Triple("5", "4", "6"))
+                                <<(Triple("", "", "8"))
                                   <<(false);
-    QTest::newRow("null & not null = false") << (Triple("","","6"))
-                                <<(Triple("9","4","8"))
+    QTest::newRow("TestNum4") << (Triple("", "", "6"))
+                                <<(Triple("9", "4", "8"))
                                   <<(false);
 
-    QTest::newRow("null & null = true") << (Triple("","","6"))
-                                <<(Triple("","","8"))
+    QTest::newRow("TestNum5") << (Triple("", "", "6"))
+                                <<(Triple("", "", "8"))
                                   <<(true);
 }
 
-void TTriples::testForEqualByObjectsAndPredicates()
+void TTriples::TestForEqualByObjectsAndPredicates()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
@@ -329,27 +310,27 @@ void TTriples::testForEqualByObjectsAndPredicates()
     QCOMPARE(input1.equalsByObjectAndPredicate(input2),output);
 }
 
-void TTriples::testForEqualByObjectsAndPredicates_data()
+void TTriples::TestForEqualByObjectsAndPredicates_data()
 {
     QTest::addColumn< Triple > ("input1");
     QTest::addColumn< Triple > ("input2");
     QTest::addColumn< bool > ("output");
 
-    QTest::newRow("not null & not null = true") << (Triple("5","5","6"))
-                                <<(Triple("9","5","6"))
+    QTest::newRow("TestNum1") << (Triple("5", "5", "6"))
+                                <<(Triple("9", "5", "6"))
                                   <<(true);
-    QTest::newRow("not null & not null = false") << (Triple("5","4","6"))
-                                <<(Triple("9","7","8"))
+    QTest::newRow("TestNum2") << (Triple("5", "4", "6"))
+                                <<(Triple("9", "7", "8"))
                                   <<(false);
 
-    QTest::newRow("not null & null = false") << (Triple("5","4","6"))
-                                <<(Triple("9","",""))
+    QTest::newRow("TestNum3") << (Triple("5", "4", "6"))
+                                <<(Triple("9", "", ""))
                                   <<(false);
-    QTest::newRow("null & not null = false") << (Triple("5","",""))
-                                <<(Triple("9","4","8"))
+    QTest::newRow("TestNum4") << (Triple("5", "", ""))
+                                <<(Triple("9", "4", "8"))
                                   <<(false);
 
-    QTest::newRow("null & null = true") << (Triple("5","",""))
-                                <<(Triple("9","",""))
+    QTest::newRow("TestNum5") << (Triple("5", "", ""))
+                                <<(Triple("9", "", ""))
                                   <<(true);
 }

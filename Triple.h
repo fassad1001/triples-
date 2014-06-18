@@ -4,8 +4,6 @@
 
 #include "Pair.h"
 
-#include <QtCore>
-
 class Triple
 {
 public:
@@ -19,13 +17,13 @@ public:
     QString toString() const;
     bool operator ==(const Triple &triple) const;
 
-    bool equalsBySubjectAndObject(const Triple &triple);
-    bool equalsBySubjectAndPredicate(const Triple &triple);
-    bool equalsByObjectAndPredicate(const Triple &triple);
+    bool equalsBySubjectAndObject(const Triple &triple) const;
+    bool equalsBySubjectAndPredicate(const Triple &triple) const;
+    bool equalsByObjectAndPredicate(const Triple &triple) const;
 
-    bool equalsBySubject(const Triple &triple);
-    bool equalsByObject(const Triple &triple);
-    bool equalsByPredicate(const Triple &triple);
+    bool equalsBySubject(const Triple &triple) const;
+    bool equalsByObject(const Triple &triple) const;
+    bool equalsByPredicate(const Triple &triple) const;
 
 private:
     QString subject_;
@@ -39,5 +37,6 @@ inline uint qHash(const Triple &triple)
 {
     return qHash(triple.toString());
 }
+
 
 #endif // TRIPLE_H
