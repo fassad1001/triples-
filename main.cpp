@@ -27,84 +27,89 @@ int main(int argc, char *argv[])
     qsrand(42);
 
     int dataSize;
-    const int sparseness = 1000;
+    int sparseness = 1000;
 
     int funcChoose;
 
     BenchmarkResult bench;
+
     for(funcChoose = 1; funcChoose <= 6; funcChoose++)
     {
-        for (dataSize = 1000; dataSize <=1000000; dataSize*=10)
+        for (sparseness = 100; sparseness <= 10000; sparseness*=10)
         {
-            const QSet<Triple> triples = Triple::randoms(dataSize, sparseness);
-            const int inputSize = 100;
-
-            QString funcName;
-
-            int averageTime = 0;
-            for(int i = 0; i < inputSize; i++)
+            for (dataSize = 1000; dataSize <=1000000; dataSize*=10)
             {
-                const QString randNumber = QString::number(qrand() % dataSize);
-                const TripleStorage storage(triples);
+                const QSet<Triple> triples = Triple::randoms(dataSize, sparseness);
+                const int inputSize = 100;
 
-                QSet<Pair> pairs;
-                QSet<QString> strings;
+                QString funcName;
 
-                QTime time;
-                time.start();
-
-                switch (funcChoose)
+                int averageTime = 0;
+                for(int i = 0; i < inputSize; i++)
                 {
-                case 1:
-                    qWarning()<<"subjectsAndObjects";
-                    funcName = "subjectsAndObjects";
-                    pairs = storage.subjectsAndObjects(randNumber);
-                    break;
-                case 2:
-                    qWarning()<<"predicatesAndObjects";
-                    funcName = "predicatesAndObjects";
-                    pairs = storage.predicatesAndObjects(randNumber);
-                    break;
-                case 3:
-                    qWarning()<<"subjectAndPredicatesFor";
-                    funcName = "subjectAndPredicatesFor";
-                    pairs = storage.subjectAndPredicatesFor(randNumber);
-                    break;
-                case 4:
-                    qWarning()<<"objectsFor";
-                    funcName = "objectsFor";
-                    strings = storage.objectsFor(randNumber, QString::number(qrand() % dataSize));
-                    break;
-                case 5:
-                    qWarning()<<"subjectsFor";
-                    funcName = "subjectsFor";
-                    strings = storage.subjectsFor(randNumber, QString::number(qrand() % dataSize));
-                    break;
-                case 6:
-                    qWarning()<<"predicatesFor";
-                    funcName = "predicatesFor";
-                    strings = storage.predicatesFor(randNumber, QString::number(qrand() % dataSize));
-                    break;
-                }
+                    const QString randNumber = QString::number(qrand() % dataSize);
+                    const TripleStorage storage(triples);
 
-                averageTime += time.elapsed();
-                pairs.clear();
-            }
+                    QSet<Pair> pairs;
+                    QSet<QString> strings;
+
+                    QTime time;
+                    time.start();
+
+                    switch (funcChoose)
+                    {
+                    case 1:
+
+                        funcName = "subjectsAndObjects";
+                        pairs = storage.subjectsAndObjects(randNumber);
+                        break;
+                    case 2:
+
+                        funcName = "predicatesAndObjects";
+                        pairs = storage.predicatesAndObjects(randNumber);
+                        break;
+                    case 3:
+
+                        funcName = "subjectAndPredicatesFor";
+                        pairs = storage.subjectAndPredicatesFor(randNumber);
+                        break;
+                    case 4:
+
+                        funcName = "objectsFor";
+                        strings = storage.objectsFor(randNumber, QString::number(qrand() % dataSize));
+                        break;
+                    case 5:
+
+                        funcName = "subjectsFor";
+                        strings = storage.subjectsFor(randNumber, QString::number(qrand() % dataSize));
+                        break;
+                    case 6:
+
+                        funcName = "predicatesFor";
+                        strings = storage.predicatesFor(randNumber, QString::number(qrand() % dataSize));
+                        break;
+                    }
+
+                    averageTime += time.elapsed();
+                    pairs.clear();
+                }
                 averageTime /= inputSize;
 
                 const QString dataName = "ds: " + QString::number(dataSize)
-                + " s: " + QString::number(sparseness)
-                + " is: " + QString::number(inputSize);
+                        + " s: " + QString::number(sparseness)
+                        + " is: " + QString::number(inputSize);
 
                 bench.setTime(funcName, dataName, averageTime);
             }
-            }
+        }
+
+    }
 
 
 
-                qWarning() << bench.toString();
+    qWarning() << bench.toString();
 
-                bench.writeFile("D:/отчёты/benchmark.csv");
+    bench.writeFile("D:/отчёты/benchmark.csv");
 
-                return 0;
-            }
+    return 0;
+}
