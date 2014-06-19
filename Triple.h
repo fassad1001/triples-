@@ -25,6 +25,9 @@ public:
     bool equalsByObject(const Triple &triple) const;
     bool equalsByPredicate(const Triple &triple) const;
 
+    static Triple random(const int maxValue);
+    static QSet<Triple> randoms(const int number, const int maxValue);
+
 private:
     QString subject_;
     QString predicate_;

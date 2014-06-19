@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     TripleStorage.cpp \
     Pair.cpp \
     TPair.cpp \
-    TTripleStorage.cpp
+    TTripleStorage.cpp \
+    BenchmarkResult.cpp
 
 HEADERS += \
     Triple.h \
@@ -29,4 +30,5 @@ HEADERS += \
     TripleStorage.h \
     Pair.h \
     TPair.h \
-    TTripleStorage.h
+    TTripleStorage.h \
+    BenchmarkResult.h
