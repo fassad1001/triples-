@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
     TOntology ontology;
     QTest::qExec(&ontology);
 
-    qWarning()<<Ontology().IS_VALUE;
 
 //    qsrand(42);
 

@@ -63,4 +63,25 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
     return instanses;
 }
 
+QSet<QString> Ontology::allClasses() const
+{
+    return subjectsFor(Ontology().IS_VALUE, Ontology().CLASS_VALUE);
+}
+
+QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
+{
+    return objectsFor(instanceName, Ontology().IS_VALUE);
+}
+
+QSet<QString> Ontology::subClasses(const QString &className) const
+{
+    //подклассы className
+    return objectsFor(className, Ontology().CONTAINS_VALUE);
+}
+
+QSet<QString> Ontology::superClasses(const QString &className) const
+{
+    return subjectsFor(Ontology().CONTAINS_VALUE, className);
+}
+
 
