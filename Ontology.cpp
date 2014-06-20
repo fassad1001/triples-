@@ -69,6 +69,38 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
     return objectsFor(instanceName, Ontology().IS_VALUE);
 }
 
+QSet<QString> Ontology::classesForInstances(const QString &instanceNames) const
+{
+    QSet<QString> classes;
+    //сбор всех возможных классов
+    QSet<QString> musters;
+    foreach(QString instanceName, instanceNames)
+    {
+        muster += classesForInstance(instanceName);
+    }
+    bool is_uniq = true;
+    //перебираем образцы на предмет их одновременности нахождения в искомом
+    foreach (QString muster, musters)
+    {
+        is_uniq = true;
+        //по возможности помечаем элемент как неуникальный для двух элементов одновременно
+        foreach(QString instanceName, instanceNames)
+        {
+            if (!classesForInstance(instanceName).contains(muster))
+            {
+                is_uniq = false;
+            }
+        }
+        //если элемент после проверки остался уникальным для всего перебранного то записываем его
+        //как удавшийся, то есть в результат
+        if (is_uniq == true)
+        {
+            classes += muster;
+        }
+    }
+    return classes;
+}
+
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
     //подклассы className
