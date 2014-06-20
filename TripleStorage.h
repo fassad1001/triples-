@@ -24,7 +24,7 @@ public:
     QSet<Pair> subjectsAndObjects(const QString &predicate) const;
 
     bool contains(const Triple &triple) const;
-private:
+protected:
     QSet<Triple> triples_;
 };
 Q_DECLARE_METATYPE(TripleStorage)

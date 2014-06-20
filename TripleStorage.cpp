@@ -4,9 +4,9 @@ TripleStorage::TripleStorage()
 {
 }
 
-TripleStorage::TripleStorage(const QSet<Triple> &triples)
+TripleStorage::TripleStorage(const QSet<Triple> &triples) :
+    triples_(triples)
 {
-    triples_ = triples;
 }
 
 void TripleStorage::addTriple(const Triple &triple)

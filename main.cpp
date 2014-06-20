@@ -10,6 +10,9 @@
 
 #include "BenchmarkResult.h"
 
+#include "TOntology.h"
+
+
 
 int main(int argc, char *argv[])
 {
@@ -21,95 +24,99 @@ int main(int argc, char *argv[])
     //    TPair pair;
     //    QTest::qExec(&pair);
 
-    //    TTripleStorage TtripleStorage;
-    //    QTest::qExec(&TtripleStorage);
+//        TTripleStorage TtripleStorage;
+//        QTest::qExec(&TtripleStorage);
+    TOntology ontology;
+    QTest::qExec(&ontology);
 
-    qsrand(42);
+    qWarning()<<Ontology().IS_VALUE;
 
-    int dataSize;
-    int sparseness = 1000;
+//    qsrand(42);
 
-    int funcChoose;
+//    int dataSize;
+//    int sparseness = 1000;
 
-    BenchmarkResult bench;
+//    int funcChoose;
 
-    for(funcChoose = 1; funcChoose <= 6; funcChoose++)
-    {
-        for (sparseness = 100; sparseness <= 10000; sparseness*=10)
-        {
-            for (dataSize = 1000; dataSize <=1000000; dataSize*=10)
-            {
-                const QSet<Triple> triples = Triple::randoms(dataSize, sparseness);
-                const int inputSize = 100;
+//    BenchmarkResult bench;
 
-                QString funcName;
+//    for(funcChoose = 1; funcChoose <= 6; funcChoose++)
+//    {
+//        for (sparseness = 100; sparseness <= 10000; sparseness*=10)
+//        {
+//            for (dataSize = 1000; dataSize <=1000000; dataSize*=10)
+//            {
+//                const QSet<Triple> triples = Triple::randoms(dataSize, sparseness);
+//                const int inputSize = 100;
 
-                int averageTime = 0;
-                for(int i = 0; i < inputSize; i++)
-                {
-                    const QString randNumber = QString::number(qrand() % dataSize);
-                    const TripleStorage storage(triples);
+//                QString funcName;
 
-                    QSet<Pair> pairs;
-                    QSet<QString> strings;
+//                int averageTime = 0;
+//                for(int i = 0; i < inputSize; i++)
+//                {
+//                    const QString randNumber = QString::number(qrand() % dataSize);
+//                    const TripleStorage storage(triples);
 
-                    QTime time;
-                    time.start();
+//                    QSet<Pair> pairs;
+//                    QSet<QString> strings;
 
-                    switch (funcChoose)
-                    {
-                    case 1:
+//                    QTime time;
+//                    time.start();
 
-                        funcName = "subjectsAndObjects";
-                        pairs = storage.subjectsAndObjects(randNumber);
-                        break;
-                    case 2:
+//                    switch (funcChoose)
+//                    {
+//                    case 1:
 
-                        funcName = "predicatesAndObjects";
-                        pairs = storage.predicatesAndObjects(randNumber);
-                        break;
-                    case 3:
+//                        funcName = "subjectsAndObjects";
+//                        pairs = storage.subjectsAndObjects(randNumber);
+//                        break;
+//                    case 2:
 
-                        funcName = "subjectAndPredicatesFor";
-                        pairs = storage.subjectAndPredicatesFor(randNumber);
-                        break;
-                    case 4:
+//                        funcName = "predicatesAndObjects";
+//                        pairs = storage.predicatesAndObjects(randNumber);
+//                        break;
+//                    case 3:
 
-                        funcName = "objectsFor";
-                        strings = storage.objectsFor(randNumber, QString::number(qrand() % dataSize));
-                        break;
-                    case 5:
+//                        funcName = "subjectAndPredicatesFor";
+//                        pairs = storage.subjectAndPredicatesFor(randNumber);
+//                        break;
+//                    case 4:
 
-                        funcName = "subjectsFor";
-                        strings = storage.subjectsFor(randNumber, QString::number(qrand() % dataSize));
-                        break;
-                    case 6:
+//                        funcName = "objectsFor";
+//                        strings = storage.objectsFor(randNumber, QString::number(qrand() % dataSize));
+//                        break;
+//                    case 5:
 
-                        funcName = "predicatesFor";
-                        strings = storage.predicatesFor(randNumber, QString::number(qrand() % dataSize));
-                        break;
-                    }
+//                        funcName = "subjectsFor";
+//                        strings = storage.subjectsFor(randNumber, QString::number(qrand() % dataSize));
+//                        break;
+//                    case 6:
 
-                    averageTime += time.elapsed();
-                    pairs.clear();
-                }
-                averageTime /= inputSize;
+//                        funcName = "predicatesFor";
+//                        strings = storage.predicatesFor(randNumber, QString::number(qrand() % dataSize));
+//                        break;
+//                    }
 
-                const QString dataName = "ds: " + QString::number(dataSize)
-                        + " s: " + QString::number(sparseness)
-                        + " is: " + QString::number(inputSize);
+//                    averageTime += time.elapsed();
+//                    pairs.clear();
+//                }
+//                averageTime /= inputSize;
 
-                bench.setTime(funcName, dataName, averageTime);
-            }
-        }
+//                const QString dataName = "ds: " + QString::number(dataSize)
+//                        + " s: " + QString::number(sparseness)
+//                        + " is: " + QString::number(inputSize);
 
-    }
+//                bench.setTime(funcName, dataName, averageTime);
+//            }
+//        }
+
+//    }
 
 
 
-    qWarning() << bench.toString();
+//    qWarning() << bench.toString();
 
-    bench.writeFile("D:/отчёты/benchmark.csv");
+//    bench.writeFile("D:/отчёты/benchmark.csv");
 
     return 0;
 }

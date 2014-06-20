@@ -22,7 +22,9 @@ SOURCES += main.cpp \
     Pair.cpp \
     TPair.cpp \
     TTripleStorage.cpp \
-    BenchmarkResult.cpp
+    BenchmarkResult.cpp \
+    Ontology.cpp \
+    TOntology.cpp
 
 HEADERS += \
     Triple.h \
@@ -31,4 +33,6 @@ HEADERS += \
     Pair.h \
     TPair.h \
     TTripleStorage.h \
-    BenchmarkResult.h
+    BenchmarkResult.h \
+    Ontology.h \
+    TOntology.h
