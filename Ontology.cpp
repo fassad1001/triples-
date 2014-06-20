@@ -187,4 +187,44 @@ QSet<QString> Ontology::mainSuperClass(const QStringList &instances) const
     return minimalClass;
 }
 
+bool Ontology::isValid() const
+{
+    QSet<QString> level;
+    QSet<QString> classes = allClasses();
+    //ищу вершинки
+    foreach (QString class_, classes)
+    {
+        if (superClasses(class_).size() != 0)
+        {
+            levels << class_;
+        }
+    }
+    /получаю
+}
+
+bool Ontology::isValid(const QSet<QString> &classes, const int &lvl) const
+{
+    QSet<QString> levelItems;
+    QSet<QString> classes = allClasses();
+    QSetIterator<QSet<QString> *> i(levelItems)
+    //ищу вершинки на выходе получаю список вершинок определенного уровня
+    foreach (QString class_, classes)
+    {
+        if (superClasses(class_).size() != 0)
+        {
+            levels << class_;
+        }
+    }
+    //для каждой из найденных вершин уровня 0 делаю проверку универсальную
+    //
+    foreach (QString levelItem, levels)
+    {
+        if (superClasses(class_).size() != 0)
+        {
+            levels << class_;
+        }
+    }
+
+}
+
 
