@@ -264,4 +264,14 @@ void TOntology::TestClassesForInstances_data()
                                      );
 }
 
+void TOntology::TestMainSuperClass()
+{
+
+}
+
+void TOntology::TestMainSuperClass_data()
+{
+
+}
+
 

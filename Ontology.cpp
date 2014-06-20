@@ -151,4 +151,40 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
     return minimalClass;
 }
 
+QSet<QString> Ontology::mainSuperClass(const QStringList &instances) const
+{
+    int minSuper;
+    bool minIsSet;
+    QSet<QString> minimalClass;
+    //установил метку "минимум установлен" на ложь
+    minIsSet = false;
+    //перебираю все классы которые являются общими для набора элементов
+    QSet<QString> classes;
+    classes = classesForInstances(instances);
+    foreach (QString class_, classes)
+    {
+        if (!minIsSet)
+        {
+            minSuper = subClasses(class_).size();
+            minIsSet = true;
+        }
+        //если у интересующего нас класса меньше суперклассов то это хорошо то мы запоминаем это число
+        //и запоминаем этот класс
+        if (superClasses(class_).size() < minSuper)
+        {
+            minSuper = subClasses(class_).size();
+            minimalClass = QSet<QString>() << class_;
+        }
+    }
+    foreach (QString class_, classes)
+    {
+        if (superClasses(class_).size() == minSuper)
+        {
+            minSuper = subClasses(class_).size();
+            minimalClass += class_;
+        }
+    }
+    return minimalClass;
+}
+
 

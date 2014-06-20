@@ -23,6 +23,7 @@ public:
     QSet<QString> subClasses(const QString &className) const;
     QSet<QString> superClasses(const QString &className) const;
     QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;
+    QSet<QString> mainSuperClass(const QStringList &instances) const;
 
 };
 
