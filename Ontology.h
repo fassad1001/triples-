@@ -19,7 +19,7 @@ public:
     QSet<QString> allClassInstances(const QStringList &classNames) const;
     QSet<QString> allClasses() const;
     QSet<QString> classesForInstance(const QString &instanceName) const;
-    QSet<QString> classesForInstances(const QString &instanceNames) const;
+    QSet<QString> classesForInstances(const QStringList &instanceNames) const;
     QSet<QString> subClasses(const QString &className) const;
     QSet<QString> superClasses(const QString &className) const;
 

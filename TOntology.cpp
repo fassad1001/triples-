@@ -231,3 +231,15 @@ void TOntology::TestSuperClasses_data()
                                      <<"558"
                                      );
 }
+
+void TOntology::TestClassesForInstances()
+{
+
+}
+
+void TOntology::TestClassesForInstances_data()
+{
+
+}
+
+

@@ -69,7 +69,7 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
     return objectsFor(instanceName, Ontology().IS_VALUE);
 }
 
-QSet<QString> Ontology::classesForInstances(const QString &instanceNames) const
+QSet<QString> Ontology::classesForInstances(const QStringList &instanceNames) const
 {
     QSet<QString> classes;
     //сбор всех возможных классов
