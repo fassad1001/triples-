@@ -32,14 +32,10 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
     //все экземпляры, которые входят в каждый класс из classNames
     QSet<QString> muster;
     QSet<QString> instanses;
-    int length = subjectsFor(Ontology().IS_VALUE, classNames.at(0)).size();
     //нахожу максимально длинный список
     foreach (QString className, classNames)
     {
-        if (subjectsFor(Ontology().IS_VALUE, className).size() > length)
-        {
-            muster = subjectsFor(Ontology().IS_VALUE, className);
-        }
+        muster += subjectsFor(Ontology().IS_VALUE, className);
     }
     bool is_uniq;
     //иду по всем элементам образца
