@@ -266,11 +266,75 @@ void TOntology::TestClassesForInstances_data()
 
 void TOntology::TestMainSuperClass()
 {
+    QFETCH(Ontology, ontology);
+    QFETCH(QString, instance1);
+    QFETCH(QString, instance2);
 
+    QFETCH(QSet<QString>, classes);
+
+    QCOMPARE(ontology.mainSuperClass(instance1, instance2), classes);
 }
 
 void TOntology::TestMainSuperClass_data()
 {
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QString> ("instance1");
+    QTest::addColumn <QString> ("instance2");
+
+    QTest::addColumn <QSet<QString> > ("classes");
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           <<Triple("a",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("b",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("c",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("d",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("e",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("1",Ontology().IS_VALUE,"f")
+                                           <<Triple("2",Ontology().IS_VALUE,"f")
+                                           <<Triple("1",Ontology().IS_VALUE,"g")
+                                           <<Triple("2",Ontology().IS_VALUE,"g")
+                                           ))
+                                   <<("1")
+                                     <<("2")
+                                  <<(QSet<QString>()
+                                     <<"f"
+                                     );
+}
+
+void TOntology::TestMainSuperClass2()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QStringList, instances);
+
+    QFETCH(QSet<QString>, classes);
+
+    QCOMPARE(ontology.mainSuperClass(instances), classes);
+}
+
+void TOntology::TestMainSuperClass2_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QStringList> ("instances");
+
+    QTest::addColumn <QSet<QString> > ("classes");
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           <<Triple("a",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("b",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("c",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("d",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("e",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("1",Ontology().IS_VALUE,"f")
+                                           <<Triple("2",Ontology().IS_VALUE,"f")
+                                           <<Triple("1",Ontology().IS_VALUE,"g")
+                                           <<Triple("2",Ontology().IS_VALUE,"g")
+                                           ))
+                                   <<(QStringList()
+                                     <<"1"
+                                        <<"2")
+                                  <<(QSet<QString>()
+                                     <<"f"
+                                     );
 
 }
 

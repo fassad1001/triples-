@@ -39,6 +39,9 @@ private slots:
 
     void TestMainSuperClass();
     void TestMainSuperClass_data();
+
+    void TestMainSuperClass2();
+    void TestMainSuperClass2_data();
 };
 
 #endif // TONTOLOGY_H

@@ -129,14 +129,14 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
     {
         if (!minIsSet)
         {
-            minSuper = subClasses(class_).size();
+            minSuper = superClasses(class_).size();
             minIsSet = true;
         }
         //если у интересующего нас класса меньше суперклассов то это хорошо то мы запоминаем это число
         //и запоминаем этот класс
         if (superClasses(class_).size() < minSuper)
         {
-            minSuper = subClasses(class_).size();
+            minSuper = superClasses(class_).size();
             minimalClass = QSet<QString>() << class_;
         }
     }
@@ -144,8 +144,8 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
     {
         if (superClasses(class_).size() == minSuper)
         {
-            minSuper = subClasses(class_).size();
-            minimalClass += class_;
+            minSuper = superClasses(class_).size();
+            minimalClass << class_;
         }
     }
     return minimalClass;
@@ -165,14 +165,14 @@ QSet<QString> Ontology::mainSuperClass(const QStringList &instances) const
     {
         if (!minIsSet)
         {
-            minSuper = subClasses(class_).size();
+            minSuper = superClasses(class_).size();
             minIsSet = true;
         }
         //если у интересующего нас класса меньше суперклассов то это хорошо то мы запоминаем это число
         //и запоминаем этот класс
         if (superClasses(class_).size() < minSuper)
         {
-            minSuper = subClasses(class_).size();
+            minSuper = superClasses(class_).size();
             minimalClass = QSet<QString>() << class_;
         }
     }
@@ -180,8 +180,8 @@ QSet<QString> Ontology::mainSuperClass(const QStringList &instances) const
     {
         if (superClasses(class_).size() == minSuper)
         {
-            minSuper = subClasses(class_).size();
-            minimalClass += class_;
+            minSuper = superClasses(class_).size();
+            minimalClass << class_;
         }
     }
     return minimalClass;
