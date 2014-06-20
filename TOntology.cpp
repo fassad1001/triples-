@@ -336,6 +336,26 @@ void TOntology::TestMainSuperClass2_data()
                                      <<"f"
                                      );
 
+    QTest::newRow("TestNum2") << (Ontology(QSet<Triple>()
+                                           <<Triple("a",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("b",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("c",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("d",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("e",Ontology().CONTAINS_VALUE,"g")
+                                           <<Triple("d",Ontology().CONTAINS_VALUE,"f")
+                                           <<Triple("1",Ontology().IS_VALUE,"f")
+                                           <<Triple("2",Ontology().IS_VALUE,"f")
+                                           <<Triple("1",Ontology().IS_VALUE,"g")
+                                           <<Triple("2",Ontology().IS_VALUE,"g")
+                                           ))
+                                   <<(QStringList()
+                                     <<"1"
+                                        <<"2")
+                                  <<(QSet<QString>()
+                                     <<"f"
+                                     <<"g"
+                                     );
+
 }
 
 
