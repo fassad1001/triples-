@@ -234,12 +234,34 @@ void TOntology::TestSuperClasses_data()
 
 void TOntology::TestClassesForInstances()
 {
+    QFETCH(Ontology, ontology);
+    QFETCH(QStringList, instanceNames);
 
+    QFETCH(QSet<QString>, classes);
+
+    QCOMPARE(ontology.classesForInstances(instanceNames), classes);
 }
 
 void TOntology::TestClassesForInstances_data()
 {
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QStringList> ("instanceNames");
 
+    QTest::addColumn <QSet<QString> > ("classes");
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           <<Triple("123",Ontology().IS_VALUE,"556")
+                                           <<Triple("555",Ontology().IS_VALUE,"556")
+                                           <<Triple("555",Ontology().IS_VALUE,"557")
+                                           <<Triple("555",Ontology().IS_VALUE,"558")
+                                           ))
+                                   <<(QStringList()
+                                      <<"123"
+                                      <<"555"
+                                         )
+                                  <<(QSet<QString>()
+                                     <<"556"
+                                     );
 }
 
 

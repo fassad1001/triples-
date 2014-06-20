@@ -76,7 +76,7 @@ QSet<QString> Ontology::classesForInstances(const QStringList &instanceNames) co
     QSet<QString> musters;
     foreach(QString instanceName, instanceNames)
     {
-        muster += classesForInstance(instanceName);
+        musters += classesForInstance(instanceName);
     }
     bool is_uniq = true;
     //перебираем образцы на предмет их одновременности нахождения в искомом
