@@ -255,4 +255,9 @@ bool Ontology::isValid(const QSet<QString> checkClasses) const
 
 }
 
+bool Ontology::isMinimal() const
+{
+
+}
+
 

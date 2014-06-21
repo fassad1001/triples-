@@ -46,6 +46,8 @@ private slots:
     void TestIsValid();
     void TestIsValid_data();
 
+    void TestIsMinimal();
+    void TestIsMinimal_data();
 };
 
 #endif // TONTOLOGY_H

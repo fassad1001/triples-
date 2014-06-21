@@ -26,6 +26,7 @@ public:
     QSet<QString> mainSuperClass(const QStringList &instances) const;
     bool isValid() const;
     bool isValid(const QSet<QString> checkClasses) const;
+    bool isMinimal() const;
 
 };
 

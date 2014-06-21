@@ -406,4 +406,19 @@ void TOntology::TestIsValid_data()
 
 }
 
+void TOntology::TestIsMinimal()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(bool, isItMinimal);
+
+    QCOMPARE(ontology.isMinimal(),isItMinimal);
+}
+
+void TOntology::TestIsMinimal_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <bool> ("isItMinimal");
+
+}
+
 
