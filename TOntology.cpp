@@ -358,4 +358,52 @@ void TOntology::TestMainSuperClass2_data()
 
 }
 
+void TOntology::TestIsValid()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(bool, isItValid);
+
+    QCOMPARE(ontology.isValid(),isItValid);
+}
+
+void TOntology::TestIsValid_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <bool> ("isItValid");
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"b")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"a")
+                                           << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           ))
+                                 <<false;
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"b")
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("c", Ontology().CONTAINS_VALUE,"d")
+                                           << Triple("d", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           ))
+                                 <<false;
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"b")
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("c", Ontology().CONTAINS_VALUE,"d")
+                                           << Triple("c", Ontology().CONTAINS_VALUE,"f")
+                                           << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("f", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           ))
+                                 <<true;
+
+}
+
 

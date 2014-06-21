@@ -189,41 +189,69 @@ QSet<QString> Ontology::mainSuperClass(const QStringList &instances) const
 
 bool Ontology::isValid() const
 {
-    QSet<QString> level;
     QSet<QString> classes = allClasses();
-    //ищу вершинки
-    foreach (QString class_, classes)
+    //ищу вершинки на выходе получаю список вершинок определенного уровня
+    bool hasEnd;
+    QSet<QString> levelItems;
+    hasEnd = false;
+    foreach (QString class__, classes)
     {
-        if (superClasses(class_).size() != 0)
+        foreach (QString class_, subClasses(class__))
         {
-            levels << class_;
+            if (subClasses(class_).contains(class__))
+            {
+                return false;
+            }
+        }
+        //если это верхний класс в иерархии
+        if (superClasses(class__).size() == 0)
+        {
+            //запоминаем его как элемент набора верхних классов
+            levelItems += class__;
+        }
+        else
+        {
+            hasEnd = true;
         }
     }
-    /получаю
+    if (hasEnd)
+    {
+        return true;
+    }
+    isValid(levelItems);
+
 }
 
-bool Ontology::isValid(const QSet<QString> &classes, const int &lvl) const
+bool Ontology::isValid(const QSet<QString> checkClasses) const
 {
-    QSet<QString> levelItems;
-    QSet<QString> classes = allClasses();
-    QSetIterator<QSet<QString> *> i(levelItems)
-    //ищу вершинки на выходе получаю список вершинок определенного уровня
-    foreach (QString class_, classes)
+    QSet<QString> classes_next;
+    bool hasEnd;
+    hasEnd = false;
+    foreach (QString class__, checkClasses)
     {
-        if (superClasses(class_).size() != 0)
+        //если есть подклассы
+        if(subClasses(class__).size() != 0)
         {
-            levels << class_;
+            //для каждого подкласса делаю проверку
+            foreach (QString class_, subClasses(class__))
+            {
+                if (subClasses(class_).contains(class__))
+                {
+                    return false;
+                }
+            }
+            classes_next += subClasses(class__);
+        }
+        else
+        {
+            hasEnd = true;
         }
     }
-    //для каждой из найденных вершин уровня 0 делаю проверку универсальную
-    //
-    foreach (QString levelItem, levels)
+    if (hasEnd)
     {
-        if (superClasses(class_).size() != 0)
-        {
-            levels << class_;
-        }
+        return true;
     }
+    isValid(classes_next);
 
 }
 
