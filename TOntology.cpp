@@ -447,7 +447,7 @@ void TOntology::TestIsMinimal_data()
     QTest::addColumn <Ontology> ("ontology");
     QTest::addColumn <bool> ("isItMinimal");
 
-    QTest::newRow("TestNum3") << (Ontology(QSet<Triple>()
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
                                            << Triple("a", Ontology().CONTAINS_VALUE,"b")
                                            << Triple("b", Ontology().CONTAINS_VALUE,"d")
                                            << Triple("b", Ontology().CONTAINS_VALUE,"c")
@@ -455,7 +455,20 @@ void TOntology::TestIsMinimal_data()
                                            << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
-                                           << Triple("b", Ontology().IS_VALUE, "t")
+                                           << Triple("t", Ontology().IS_VALUE, "b")
+                                           ))
+                                 <<true;
+
+    QTest::newRow("TestNum2") << (Ontology(QSet<Triple>()
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"b")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"d")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("t", Ontology().IS_VALUE, "b")
+                                           << Triple("t", Ontology().IS_VALUE, "d")
                                            ))
                                  <<false;
 

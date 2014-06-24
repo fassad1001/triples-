@@ -278,6 +278,26 @@ bool Ontology::isMinimal() const
         QSet<QString> classes = classesForInstance(instance);
         foreach (QString class__, classes)
         {
+           if (!subClasses(class__).empty())
+           {
+               foreach (QString subclass, subClasses(class__))
+               {
+                   if (classesForInstance(instance).contains(subclass))
+                   {
+                       return false;
+                   }
+               }
+           }
+           if (!superClasses(class__).empty())
+           {
+               foreach (QString superclass, superClasses(class__))
+               {
+                   if (classesForInstance(instance).contains(superclass))
+                   {
+                       return false;
+                   }
+               }
+           }
            if ((!subClasses(class__).empty()
                    && isMinimalDown(instance, subClasses(class__)) == false)
                    || (!superClasses(class__).empty()
@@ -289,6 +309,7 @@ bool Ontology::isMinimal() const
            {
                return true;
            }
+
         }
         //для каждого смотрим его класс и для этого класса смотрим все его подклассы для каждого подкласса
         //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
@@ -339,7 +360,7 @@ bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &level
     foreach (QString class__, levelItems)
     {
         //если есть подклассы
-        if(subClasses(class__).size() != 0)
+        if(!subClasses(class__).empty())
         {
             //для каждого подкласса делаю проверку
             foreach (QString class_, subClasses(class__))
