@@ -596,13 +596,16 @@ void TOntology::TestGetNotMinimalInstances_data()
                                            << Triple("j", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("k", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("l", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("t", Ontology().IS_VALUE, "e")
                                            << Triple("t", Ontology().IS_VALUE, "i")
-                                           << Triple("t", Ontology().IS_VALUE, "j")
-                                           << Triple("tt", Ontology().IS_VALUE, "i")
-                                           << Triple("tt", Ontology().IS_VALUE, "k")
+                                           << Triple("tt", Ontology().IS_VALUE, "h")
+                                           << Triple("tt", Ontology().IS_VALUE, "b")
                                            << Triple("wolf", Ontology().IS_VALUE, "j")
                                            ))
-                                 << (QSet<QString>());
+                                 << (QSet<QString>()
+                                     <<"t"
+                                     <<"tt"
+                                     );
 }
 
 
