@@ -379,7 +379,7 @@ void TOntology::TestIsValid_data()
                                            ))
                                  <<false;
 
-    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+    QTest::newRow("TestNum2") << (Ontology(QSet<Triple>()
                                            << Triple("a", Ontology().CONTAINS_VALUE,"b")
                                            << Triple("a", Ontology().CONTAINS_VALUE,"c")
                                            << Triple("c", Ontology().CONTAINS_VALUE,"d")
@@ -391,15 +391,17 @@ void TOntology::TestIsValid_data()
                                            ))
                                  <<false;
 
-    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+    QTest::newRow("TestNum3") << (Ontology(QSet<Triple>()
                                            << Triple("a", Ontology().CONTAINS_VALUE,"b")
-                                           << Triple("a", Ontology().CONTAINS_VALUE,"c")
-                                           << Triple("c", Ontology().CONTAINS_VALUE,"d")
-                                           << Triple("c", Ontology().CONTAINS_VALUE,"f")
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"d")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("d", Ontology().CONTAINS_VALUE,"f")
+                                           << Triple("d", Ontology().CONTAINS_VALUE,"e")
                                            << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("e", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("f", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            ))
                                  <<true;
@@ -418,6 +420,8 @@ void TOntology::TestIsMinimal_data()
 {
     QTest::addColumn <Ontology> ("ontology");
     QTest::addColumn <bool> ("isItMinimal");
+
+
 
 }
 
