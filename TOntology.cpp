@@ -527,7 +527,8 @@ void TOntology::TestIsMinimal_data()
                                            << Triple("j", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("k", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("l", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
-                                           << Triple("t", Ontology().IS_VALUE, "c")
+                                           << Triple("t", Ontology().IS_VALUE, "i")
+                                           << Triple("t", Ontology().IS_VALUE, "j")
                                            << Triple("road", Ontology().IS_VALUE, "b")
                                            ))
                                  <<true;
@@ -536,12 +537,72 @@ void TOntology::TestIsMinimal_data()
 
 void TOntology::TestMinimalize()
 {
+    QFETCH(Ontology, ontology1);
+    QFETCH(Ontology, ontology2);
 
+    ontology1.minimalize();
+
+    QCOMPARE(ontology1, ontology2);
 }
 
 void TOntology::TestMinimalize_data()
 {
+    QTest::addColumn <Ontology> ("ontology1");
+    QTest::addColumn <Ontology> ("ontology2");
 
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           <<Triple("", "", "")
+                                           ))
+                                 << (Ontology(QSet<Triple>()
+                                              <<Triple("", "", "")
+                                              ));
+}
+
+void TOntology::TestGetNotMinimalInstances()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QSet<QString>, minimalInstances);
+
+    QCOMPARE(ontology.getNotMinimalInstances(), minimalInstances);
+}
+
+void TOntology::TestGetNotMinimalInstances_data()
+{
+
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QSet<QString> > ("minimalInstances");
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"b")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"d")
+                                           << Triple("c", Ontology().CONTAINS_VALUE,"e")
+                                           << Triple("c", Ontology().CONTAINS_VALUE,"f")
+                                           << Triple("d", Ontology().CONTAINS_VALUE,"g")
+                                           << Triple("d", Ontology().CONTAINS_VALUE,"h")
+                                           << Triple("e", Ontology().CONTAINS_VALUE,"i")
+                                           << Triple("f", Ontology().CONTAINS_VALUE,"j")
+                                           << Triple("g", Ontology().CONTAINS_VALUE,"k")
+                                           << Triple("h", Ontology().CONTAINS_VALUE,"l")
+                                           << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("e", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("f", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("g", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("h", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("i", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("j", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("k", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("l", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("t", Ontology().IS_VALUE, "i")
+                                           << Triple("t", Ontology().IS_VALUE, "j")
+                                           << Triple("tt", Ontology().IS_VALUE, "i")
+                                           << Triple("tt", Ontology().IS_VALUE, "k")
+                                           << Triple("wolf", Ontology().IS_VALUE, "j")
+                                           ))
+                                 << (QSet<QString>());
 }
 
 

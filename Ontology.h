@@ -30,7 +30,9 @@ public:
     bool isMinimal() const;
     bool isMinimalUp(const QString &instance, const QSet<QString> &levelItems) const;
     bool isMinimalDown(const QString &instance, const QSet<QString> &levelItems) const;
+    QSet<QString> getNotMinimalInstances() const;
     void minimalize();
+    bool operator ==(const Ontology &o) const;
 
 };
 

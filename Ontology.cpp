@@ -379,9 +379,59 @@ bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &level
     return isMinimalDown(instance, classes_next);
 }
 
+QSet<QString> Ontology::getNotMinimalInstances() const
+{
+    QSet<QString> instancesNotMin;
+    QSet<QString> allinstances = allInstances();
+    foreach (QString instance, allinstances)
+    {
+        QSet<QString> instanceClasses = classesForInstance(instance);
+        foreach (QString instanceClass, instanceClasses)
+        {
+           if (!subClasses(instanceClass).empty())
+           {
+               if ((subClasses(instanceClass) + classesForInstance(instance)).size()
+                       < subClasses(instanceClass).size() + classesForInstance(instance).size())
+               {
+                   instancesNotMin += instance;
+               }
+           }
+
+           if (!superClasses(instanceClass).empty())
+           {
+               if ((superClasses(instanceClass) + classesForInstance(instance)).size()
+                       < superClasses(instanceClass).size() + classesForInstance(instance).size())
+               {
+                   instancesNotMin += instance;
+               }
+           }
+        }
+
+        const bool minimalDown = isMinimalDown(instance, classesForInstance(instance));
+        const bool minimalUp = isMinimalUp(instance, classesForInstance(instance));
+
+
+        if (!minimalDown || !minimalUp)
+        {
+            instancesNotMin += instance;
+        }
+        //для каждого смотрим его класс и для этого класса смотрим все его подклассы для каждого подкласса
+        //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
+
+        //для каждого смотри его класс и если у класса есть суперклассы то мы смотрим есть ли у суперкласса
+        //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
+    }
+    return instancesNotMin;
+}
+
 void Ontology::minimalize()
 {
 
+}
+
+bool Ontology::operator ==(const Ontology &o) const
+{
+    return triples_ == o.triples_;
 }
 
 
