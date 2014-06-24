@@ -426,7 +426,6 @@ QSet<QString> Ontology::getNotMinimalInstances() const
 
 void Ontology::minimalize()
 {
-
 }
 
 bool Ontology::operator ==(const Ontology &o) const
