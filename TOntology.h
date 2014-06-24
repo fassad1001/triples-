@@ -51,6 +51,9 @@ private slots:
 
     void TestIsMinimal();
     void TestIsMinimal_data();
+
+    void TestMinimalize();
+    void TestMinimalize_data();
 };
 
 #endif // TONTOLOGY_H

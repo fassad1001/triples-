@@ -30,6 +30,7 @@ public:
     bool isMinimal() const;
     bool isMinimalUp(const QString &instance, const QSet<QString> &levelItems) const;
     bool isMinimalDown(const QString &instance, const QSet<QString> &levelItems) const;
+    void minimalize();
 
 };
 

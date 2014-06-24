@@ -528,9 +528,19 @@ void TOntology::TestIsMinimal_data()
                                            << Triple("k", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("l", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
                                            << Triple("t", Ontology().IS_VALUE, "c")
-                                           << Triple("t", Ontology().IS_VALUE, "b")
+                                           << Triple("road", Ontology().IS_VALUE, "b")
                                            ))
-                                 <<false;
+                                 <<true;
+
+}
+
+void TOntology::TestMinimalize()
+{
+
+}
+
+void TOntology::TestMinimalize_data()
+{
 
 }
 
