@@ -233,7 +233,7 @@ bool Ontology::isValid() const
     {
         return true;
     }
-    isValid(levelItems);
+    return isValid(levelItems);
 
 }
 
@@ -266,7 +266,7 @@ bool Ontology::isValid(const QSet<QString> checkClasses) const
     {
         return true;
     }
-    isValid(classes_next);
+    return isValid(classes_next);
 
 }
 
@@ -275,22 +275,26 @@ bool Ontology::isMinimal() const
     QSet<QString> allinstances = allInstances();
     foreach (QString instance, allinstances)
     {
-        QSet<QString> classes = classesForInstance(instance);
-        foreach (QString class__, classes)
+        QSet<QString> instanceClasses = classesForInstance(instance);
+        foreach (QString instanceClass, instanceClasses)
         {
-           if (!subClasses(class__).empty())
+           if (!subClasses(instanceClass).empty())
            {
-               foreach (QString subclass, subClasses(class__))
+               foreach (QString subclass, subClasses(instanceClass))
                {
+                   qWarning() << "1:" << subclass << subClasses(instanceClass) << ";" << classesForInstance(instance);
+                   qWarning() << "1:" << classesForInstance(instance) << " contains? " << subclass;
                    if (classesForInstance(instance).contains(subclass))
                    {
+                       qWarning() << "1:" << classesForInstance(instance) << " contains " << subclass;
                        return false;
                    }
                }
            }
-           if (!superClasses(class__).empty())
+
+           if (!superClasses(instanceClass).empty())
            {
-               foreach (QString superclass, superClasses(class__))
+               foreach (QString superclass, superClasses(instanceClass))
                {
                    if (classesForInstance(instance).contains(superclass))
                    {
@@ -298,18 +302,22 @@ bool Ontology::isMinimal() const
                    }
                }
            }
-           if ((!subClasses(class__).empty()
-                   && isMinimalDown(instance, subClasses(class__)) == false)
-                   || (!superClasses(class__).empty()
-                       && isMinimalUp(instance, superClasses(class__)) == false))
-           {
-               return false;
-           }
-           else
-           {
-               return true;
-           }
+        }
 
+        const bool minimalDown = isMinimalDown(instance, classesForInstance(instance));
+        const bool minimalUp = isMinimalUp(instance, classesForInstance(instance));
+
+        qWarning() << minimalDown << minimalUp;
+
+        if (!minimalDown || !minimalUp)
+        {
+            qWarning() << "point 1";
+            return false;
+        }
+        else
+        {
+            qWarning() << "point 2";
+            return true;
         }
         //для каждого смотрим его класс и для этого класса смотрим все его подклассы для каждого подкласса
         //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
@@ -328,13 +336,15 @@ bool Ontology::isMinimalUp(const QString &instance, const QSet<QString> &levelIt
     foreach (QString class__, levelItems)
     {
         //если есть подклассы
-        if(superClasses(class__).size() != 0)
+        if(!superClasses(class__).empty())
         {
             //для каждого подкласса делаю проверку
             foreach (QString class_, superClasses(class__))
             {
-                if (classesForInstance(instance).contains(class__))
+                qWarning() << "1/1:" << classesForInstance(instance) << " contains? " << class_ << ";" << classesForInstance(instance).contains(class_);
+                if (classesForInstance(instance).contains(class_))
                 {
+                    qWarning() << "return false";
                     return false;
                 }
             }
@@ -349,7 +359,8 @@ bool Ontology::isMinimalUp(const QString &instance, const QSet<QString> &levelIt
     {
         return true;
     }
-    isMinimalUp(instance, classes_next);
+    qWarning() << "return isMinimalUp";
+    return isMinimalUp(instance, classes_next);
 }
 
 bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &levelItems) const
@@ -365,7 +376,7 @@ bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &level
             //для каждого подкласса делаю проверку
             foreach (QString class_, subClasses(class__))
             {
-                if (classesForInstance(instance).contains(class__))
+                if (classesForInstance(instance).contains(class_))
                 {
                     return false;
                 }
@@ -381,7 +392,7 @@ bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &level
     {
         return true;
     }
-    isMinimalDown(instance, classes_next);
+    return isMinimalDown(instance, classes_next);
 }
 
 
