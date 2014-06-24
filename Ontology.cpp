@@ -319,7 +319,6 @@ bool Ontology::isMinimal() const
         //для каждого смотри его класс и если у класса есть суперклассы то мы смотрим есть ли у суперкласса
         //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
     }
-
 }
 
 bool Ontology::isMinimalUp(const QString &instance, const QSet<QString> &levelItems) const
@@ -332,14 +331,19 @@ bool Ontology::isMinimalUp(const QString &instance, const QSet<QString> &levelIt
         //если есть подклассы
         if(!superClasses(class__).empty())
         {
-            //для каждого подкласса делаю проверку
-            foreach (QString class_, superClasses(class__))
+            if ((superClasses(class__) + classesForInstance(instance)).size()
+                    < superClasses(class__).size() + classesForInstance(instance).size())
             {
-                if (classesForInstance(instance).contains(class_))
-                {
-                    return false;
-                }
+                return false;
             }
+            //для каждого подкласса делаю проверку
+//            foreach (QString class_, superClasses(class__))
+//            {
+//                if (classesForInstance(instance).contains(class_))
+//                {
+//                    return false;
+//                }
+//            }
             classes_next += superClasses(class__);
         }
         else
@@ -364,14 +368,19 @@ bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &level
         //если есть подклассы
         if(!subClasses(class__).empty())
         {
-            //для каждого подкласса делаю проверку
-            foreach (QString class_, subClasses(class__))
+            if ((subClasses(class__) + classesForInstance(instance)).size()
+                    < subClasses(class__).size() + classesForInstance(instance).size())
             {
-                if (classesForInstance(instance).contains(class_))
-                {
-                    return false;
-                }
+                return false;
             }
+            //для каждого подкласса делаю проверку
+//            foreach (QString class_, subClasses(class__))
+//            {
+//                if (classesForInstance(instance).contains(class_))
+//                {
+//                    return false;
+//                }
+//            }
             classes_next += subClasses(class__);
         }
         else
