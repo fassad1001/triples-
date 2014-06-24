@@ -18,6 +18,7 @@ public:
     QSet<QString> anyClassInstances(const QStringList &classNames) const;
     QSet<QString> allClassInstances(const QStringList &classNames) const;
     QSet<QString> allClasses() const;
+    QSet<QString> allInstances() const;
     QSet<QString> classesForInstance(const QString &instanceName) const;
     QSet<QString> classesForInstances(const QStringList &instanceNames) const;
     QSet<QString> subClasses(const QString &className) const;
@@ -27,6 +28,8 @@ public:
     bool isValid() const;
     bool isValid(const QSet<QString> checkClasses) const;
     bool isMinimal() const;
+    bool isMinimalUp(const QString &instance, const QSet<QString> &levelItems) const;
+    bool isMinimalDown(const QString &instance, const QSet<QString> &levelItems) const;
 
 };
 

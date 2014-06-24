@@ -25,6 +25,9 @@ private slots:
     void TestAllClasses();
     void TestAllClasses_data();
 
+    void TestAllInstances();
+    void TestAllInstances_data();
+
     void TestClassesForInstance();
     void TestClassesForInstance_data();
 

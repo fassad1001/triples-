@@ -139,6 +139,32 @@ void TOntology::TestAllClasses_data()
                                      );
 }
 
+void TOntology::TestAllInstances()
+{
+    QFETCH(Ontology, ontology);
+
+    QFETCH(QSet<QString>, allInstances);
+
+    QCOMPARE(ontology.allInstances(), allInstances);
+}
+
+void TOntology::TestAllInstances_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+
+    QTest::addColumn <QSet<QString> > ("allInstances");
+
+    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
+                                           <<Triple("cat", Ontology().IS_VALUE,"animal")
+                                           <<Triple("dog", Ontology().IS_VALUE,"animal")
+                                           <<Triple("animal", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           ))
+                                  <<(QSet<QString>()
+                                     <<"cat"
+                                     <<"dog"
+                                     );
+}
+
 void TOntology::TestClassesForInstance()
 {
     QFETCH(Ontology, ontology);
@@ -421,7 +447,17 @@ void TOntology::TestIsMinimal_data()
     QTest::addColumn <Ontology> ("ontology");
     QTest::addColumn <bool> ("isItMinimal");
 
-
+    QTest::newRow("TestNum3") << (Ontology(QSet<Triple>()
+                                           << Triple("a", Ontology().CONTAINS_VALUE,"b")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"d")
+                                           << Triple("b", Ontology().CONTAINS_VALUE,"c")
+                                           << Triple("a", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("c", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("d", Ontology().IS_VALUE, Ontology().CLASS_VALUE)
+                                           << Triple("b", Ontology().IS_VALUE, "t")
+                                           ))
+                                 <<false;
 
 }
 

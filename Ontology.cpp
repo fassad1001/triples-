@@ -64,6 +64,21 @@ QSet<QString> Ontology::allClasses() const
     return subjectsFor(Ontology().IS_VALUE, Ontology().CLASS_VALUE);
 }
 
+QSet<QString> Ontology::allInstances() const
+{
+    QSet<QString> instances;
+    QSet<Pair> a = subjectsAndObjects(Ontology().IS_VALUE);
+    foreach (Pair p, a)
+    {
+        if (p.second() != Ontology().CLASS_VALUE
+        && contains(Triple(p.second(), Ontology().IS_VALUE, Ontology().CLASS_VALUE)))
+        {
+            instances << p.first();
+        }
+    }
+    return instances;
+}
+
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
     return objectsFor(instanceName, Ontology().IS_VALUE);
@@ -257,7 +272,95 @@ bool Ontology::isValid(const QSet<QString> checkClasses) const
 
 bool Ontology::isMinimal() const
 {
+    QSet<QString> allinstances = allInstances();
+    foreach (QString instance, allinstances)
+    {
+        QSet<QString> classes = classesForInstance(instance);
+        foreach (QString class__, classes)
+        {
+           if ((!subClasses(class__).empty()
+                   && isMinimalDown(instance, subClasses(class__)) == false)
+                   || (!superClasses(class__).empty()
+                       && isMinimalUp(instance, superClasses(class__)) == false))
+           {
+               return false;
+           }
+           else
+           {
+               return true;
+           }
+        }
+        //для каждого смотрим его класс и для этого класса смотрим все его подклассы для каждого подкласса
+        //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
 
+        //для каждого смотри его класс и если у класса есть суперклассы то мы смотрим есть ли у суперкласса
+        //просматриваем наличие инстанса и если этот тот инстанс то возарвщаем ложь иначе возвращаем правду
+    }
+
+}
+
+bool Ontology::isMinimalUp(const QString &instance, const QSet<QString> &levelItems) const
+{
+    QSet<QString> classes_next;
+    bool hasEnd;
+    hasEnd = false;
+    foreach (QString class__, levelItems)
+    {
+        //если есть подклассы
+        if(superClasses(class__).size() != 0)
+        {
+            //для каждого подкласса делаю проверку
+            foreach (QString class_, superClasses(class__))
+            {
+                if (classesForInstance(instance).contains(class__))
+                {
+                    return false;
+                }
+            }
+            classes_next += superClasses(class__);
+        }
+        else
+        {
+            hasEnd = true;
+        }
+    }
+    if (hasEnd)
+    {
+        return true;
+    }
+    isMinimalUp(instance, classes_next);
+}
+
+bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &levelItems) const
+{
+    QSet<QString> classes_next;
+    bool hasEnd;
+    hasEnd = false;
+    foreach (QString class__, levelItems)
+    {
+        //если есть подклассы
+        if(subClasses(class__).size() != 0)
+        {
+            //для каждого подкласса делаю проверку
+            foreach (QString class_, subClasses(class__))
+            {
+                if (classesForInstance(instance).contains(class__))
+                {
+                    return false;
+                }
+            }
+            classes_next += subClasses(class__);
+        }
+        else
+        {
+            hasEnd = true;
+        }
+    }
+    if (hasEnd)
+    {
+        return true;
+    }
+    isMinimalDown(instance, classes_next);
 }
 
 
