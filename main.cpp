@@ -112,7 +112,6 @@ int main(int argc, char *argv[])
 //    }
 
 
-
 //    qWarning() << bench.toString();
 
 //    bench.writeFile("D:/отчёты/benchmark.csv");

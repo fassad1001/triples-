@@ -52,6 +52,9 @@ private slots:
     void TestIsMinimal();
     void TestIsMinimal_data();
 
+    void TestGetClassLvl_data();
+    void TestGetClassLvl();
+
     void TestMinimalize();
     void TestMinimalize_data();
 

@@ -9,9 +9,9 @@
 class Ontology : public TripleStorage
 {
 public:
-    const QString IS_VALUE;
-    const QString CONTAINS_VALUE;
-    const QString CLASS_VALUE;
+    static const QString IS;
+    static const QString CONTAINS;
+    static const QString CLASS;
     Ontology();
     Ontology(QSet<Triple> storage);
     QSet<QString> classInstances(const QString &className) const;
@@ -30,12 +30,12 @@ public:
     bool isMinimal() const;
     bool isMinimalUp(const QString &instance, const QSet<QString> &levelItems) const;
     bool isMinimalDown(const QString &instance, const QSet<QString> &levelItems) const;
+    int getClassLvl(const QString &className) const;
     QSet<QString> getNotMinimalInstances() const;
     void minimalize();
     bool operator ==(const Ontology &o) const;
 
 };
-
 Q_DECLARE_METATYPE(Ontology)
 
 #endif // ONTOLOGY_H

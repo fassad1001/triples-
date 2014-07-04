@@ -1,9 +1,10 @@
 #include "Ontology.h"
 
-Ontology::Ontology() :
-    IS_VALUE("is"),
-    CONTAINS_VALUE("contains"),
-    CLASS_VALUE("class")
+const QString Ontology::IS = "is";
+const QString Ontology::CONTAINS = "contains";
+const QString Ontology::CLASS = "class";
+
+Ontology::Ontology()
 {
 }
 
@@ -14,13 +15,29 @@ Ontology::Ontology(QSet<Triple> storage) :
 
 QSet<QString> Ontology::classInstances(const QString &className) const
 {
-    return subjectsFor(Ontology().IS_VALUE, className);
+    QSet<QString> classesForCicle;
+    QSet<QString> resultInstances;
+    QSet<QString> classesForRes;
+    classesForCicle += className;
+    resultInstances += subjectsFor(Ontology::IS, className);
+    while(!classesForCicle.empty())
+    {
+        foreach(QString classForCicle, classesForCicle)
+        {
+            foreach(QString classf, subClasses(classForCicle))
+            {
+                resultInstances += subjectsFor(Ontology::IS, classf);
+            }
+            classesForCicle = subClasses(classForCicle);
+        }
+    }
+    return resultInstances;
 }
 
 QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 {
     QSet<QString> instanses;
-    foreach (QString className, classNames)
+    foreach(const QString &className, classNames)
     {
         instanses += classInstances(className);
     }
@@ -29,13 +46,15 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
+    // !!! ПЕРЕПИСАТЬ ИСПОЛЬЗУЯ ОПЕРАТОР ПЕРЕСЕЧЕНИЯ МНОЖЕСТВ И МЕТОД classInstances
+
     //все экземпляры, которые входят в каждый класс из classNames
     QSet<QString> muster;
     QSet<QString> instanses;
     //нахожу максимально длинный список
     foreach (QString className, classNames)
     {
-        muster += subjectsFor(Ontology().IS_VALUE, className);
+        muster += subjectsFor(Ontology::IS, className);
     }
     bool is_uniq;
     //иду по всем элементам образца
@@ -45,7 +64,7 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
         //для элемента образца ставлю метку если он не присутствует хотябы в одном списке
         foreach (QString className, classNames)
         {
-            if (!subjectsFor(Ontology().IS_VALUE, className).contains(musterElement))
+            if (!subjectsFor(Ontology::IS, className).contains(musterElement))
             {
                 is_uniq = false;
             }
@@ -61,19 +80,21 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 
 QSet<QString> Ontology::allClasses() const
 {
-    return subjectsFor(Ontology().IS_VALUE, Ontology().CLASS_VALUE);
+    return subjectsFor(Ontology::IS, Ontology::CLASS);
 }
 
 QSet<QString> Ontology::allInstances() const
 {
+    // !!!! ИЗНАЧАЛЬНО ПОЛУЧИТЬ МНОЖЕСТВО ВСЕХ КЛАССОВ И С ПОМЩЬЮ НЕГО ПРОВЕРЯТЬ ЯВЛЯЕТСЯ ЛИ ОБЪЕКТ КЛАССОМ
     QSet<QString> instances;
-    QSet<Pair> a = subjectsAndObjects(Ontology().IS_VALUE);
-    foreach (Pair p, a)
+    qWarning()<<"classes"<<allClasses();
+    foreach(QString classf, allClasses())
     {
-        if (p.second() != Ontology().CLASS_VALUE
-        && contains(Triple(p.second(), Ontology().IS_VALUE, Ontology().CLASS_VALUE)))
+        qWarning()<<"))"<<objectsFor(Ontology::IS, classf);
+        foreach (QString instance, subjectsFor(Ontology::IS, classf))
         {
-            instances << p.first();
+            qWarning()<<"+"<<instance;
+            instances += instance;
         }
     }
     return instances;
@@ -81,7 +102,7 @@ QSet<QString> Ontology::allInstances() const
 
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
-    return objectsFor(instanceName, Ontology().IS_VALUE);
+    return objectsFor(instanceName, Ontology::IS);
 }
 
 QSet<QString> Ontology::classesForInstances(const QStringList &instanceNames) const
@@ -119,16 +140,17 @@ QSet<QString> Ontology::classesForInstances(const QStringList &instanceNames) co
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
     //подклассы className
-    return objectsFor(className, Ontology().CONTAINS_VALUE);
+    return objectsFor(className, Ontology::CONTAINS);
 }
 
 QSet<QString> Ontology::superClasses(const QString &className) const
 {
-    return subjectsFor(Ontology().CONTAINS_VALUE, className);
+    return subjectsFor(Ontology::CONTAINS, className);
 }
 
 QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QString &instanceName2) const
 {
+    // ПОЛУЧИТЬ ВСЕ КЛАССЫ ДЛЯ instanceName1 И instanceName2, НАЙТИ ИХ ПЕРЕСЕЧЕНИЕ, В ПЕРЕСЕЧЕНИИ НАЙТИ МИНИМАЛЬНЫЕ КЛАССЫ ЧЕРЕЗ ФУНКЦИЮ qSort
     int minSuper;
     bool minIsSet;
     QStringList instances;
@@ -204,6 +226,8 @@ QSet<QString> Ontology::mainSuperClass(const QStringList &instances) const
 
 bool Ontology::isValid() const
 {
+    // ПОСТРОИТЬ ТРАНЗИТИВНОЕ ЗАМЫКАНИЕ, ОПРЕДЕЛИТЬ НАЛИЧИЕ ЦИКЛОВ В ГАФЕ
+
     QSet<QString> classes = allClasses();
     //ищу вершинки на выходе получаю список вершинок определенного уровня
     bool hasEnd;
@@ -242,20 +266,20 @@ bool Ontology::isValid(const QSet<QString> checkClasses) const
     QSet<QString> classes_next;
     bool hasEnd;
     hasEnd = false;
-    foreach (QString class__, checkClasses)
+    foreach (QString checkClass, checkClasses)
     {
         //если есть подклассы
-        if(subClasses(class__).size() != 0)
+        if(subClasses(checkClass).size() != 0)
         {
             //для каждого подкласса делаю проверку
-            foreach (QString class_, subClasses(class__))
+            foreach (QString class_, subClasses(checkClass))
             {
-                if (subClasses(class_).contains(class__))
+                if (subClasses(class_).contains(checkClass))
                 {
                     return false;
                 }
             }
-            classes_next += subClasses(class__);
+            classes_next += subClasses(checkClass);
         }
         else
         {
@@ -278,27 +302,27 @@ bool Ontology::isMinimal() const
         QSet<QString> instanceClasses = classesForInstance(instance);
         foreach (QString instanceClass, instanceClasses)
         {
-           if (!subClasses(instanceClass).empty())
-           {
-               foreach (QString subclass, subClasses(instanceClass))
-               {
-                   if (classesForInstance(instance).contains(subclass))
-                   {
-                       return false;
-                   }
-               }
-           }
+            if (!subClasses(instanceClass).empty())
+            {
+                foreach (QString subclass, subClasses(instanceClass))
+                {
+                    if (classesForInstance(instance).contains(subclass))
+                    {
+                        return false;
+                    }
+                }
+            }
 
-           if (!superClasses(instanceClass).empty())
-           {
-               foreach (QString superclass, superClasses(instanceClass))
-               {
-                   if (classesForInstance(instance).contains(superclass))
-                   {
-                       return false;
-                   }
-               }
-           }
+            if (!superClasses(instanceClass).empty())
+            {
+                foreach (QString superclass, superClasses(instanceClass))
+                {
+                    if (classesForInstance(instance).contains(superclass))
+                    {
+                        return false;
+                    }
+                }
+            }
         }
 
         const bool minimalDown = isMinimalDown(instance, classesForInstance(instance));
@@ -379,6 +403,46 @@ bool Ontology::isMinimalDown(const QString &instance, const QSet<QString> &level
     return isMinimalDown(instance, classes_next);
 }
 
+int Ontology::getClassLvl(const QString &className) const
+{
+    QSet<QString> headerClasses;
+    QSet<QString> classes = allClasses();
+    foreach (QString classf, classes)
+    {
+        if (superClasses(classf).empty())
+        {
+            headerClasses += classf;
+        }
+    }
+    QSet<QString> classesForCycle = headerClasses;
+    QSet<QString> classesForTest;
+    int level = 0;
+    if (classesForCycle.contains(className))
+    {
+        return level;
+    }
+    level ++;
+    while(!classesForCycle.empty())
+    {
+
+        foreach(QString classf, classesForCycle)
+        {
+            classesForTest += subClasses(classf);
+        }
+        if (classesForTest.contains(className))
+        {
+            return level;
+        }
+        level ++;
+        classesForTest.clear();
+        foreach(QString classf, classesForCycle)
+        {
+            classesForCycle += subClasses(classf);
+        }
+    }
+    return -1;
+}
+
 QSet<QString> Ontology::getNotMinimalInstances() const
 {
     QSet<QString> instancesNotMin;
@@ -388,23 +452,23 @@ QSet<QString> Ontology::getNotMinimalInstances() const
         QSet<QString> instanceClasses = classesForInstance(instance);
         foreach (QString instanceClass, instanceClasses)
         {
-           if (!subClasses(instanceClass).empty())
-           {
-               if ((subClasses(instanceClass) + classesForInstance(instance)).size()
-                       < subClasses(instanceClass).size() + classesForInstance(instance).size())
-               {
-                   instancesNotMin += instance;
-               }
-           }
+            if (!subClasses(instanceClass).empty())
+            {
+                if ((subClasses(instanceClass) + classesForInstance(instance)).size()
+                        < subClasses(instanceClass).size() + classesForInstance(instance).size())
+                {
+                    instancesNotMin += instance;
+                }
+            }
 
-           if (!superClasses(instanceClass).empty())
-           {
-               if ((superClasses(instanceClass) + classesForInstance(instance)).size()
-                       < superClasses(instanceClass).size() + classesForInstance(instance).size())
-               {
-                   instancesNotMin += instance;
-               }
-           }
+            if (!superClasses(instanceClass).empty())
+            {
+                if ((superClasses(instanceClass) + classesForInstance(instance)).size()
+                        < superClasses(instanceClass).size() + classesForInstance(instance).size())
+                {
+                    instancesNotMin += instance;
+                }
+            }
         }
 
         const bool minimalDown = isMinimalDown(instance, classesForInstance(instance));
@@ -426,6 +490,45 @@ QSet<QString> Ontology::getNotMinimalInstances() const
 
 void Ontology::minimalize()
 {
+    QString minimalLvlClass;
+    bool start = false;
+    foreach(QString notMinimalInstance, getNotMinimalInstances())
+    {
+        foreach(QString className, classesForInstance(notMinimalInstance))
+        {
+            if(!start)
+            {
+                minimalLvlClass = className;
+                start = true;
+            }
+            else
+            {
+                if (getClassLvl(className) < getClassLvl(minimalLvlClass))
+                {
+                    minimalLvlClass = className;
+                }
+            }
+        }
+        start = false;
+        QSet<QString> classes = classesForInstance(notMinimalInstance) -= minimalLvlClass;
+        qWarning()<<classes;
+        qWarning()<<"before"<<classesForInstance(notMinimalInstance);
+        foreach(Triple tr, triples_)
+        {
+            qWarning()<<tr.toString();
+        }
+        foreach(QString className, classes)
+        {
+            qWarning()<<"remove:"<<notMinimalInstance<<";"<<Ontology::IS<<";"<<className;
+            triples_ -= Triple(notMinimalInstance, Ontology::IS, className);
+        }
+        qWarning()<<"after"<<classesForInstance(notMinimalInstance);
+        qWarning()<<"result";
+        foreach(Triple tr, triples_)
+        {
+            qWarning()<<tr.toString();
+        }
+    }
 }
 
 bool Ontology::operator ==(const Ontology &o) const
