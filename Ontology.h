@@ -25,6 +25,7 @@ public:
     QSet<QString> superClasses(const QString &className) const;
     QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;
     QSet<QString> mainSuperClass(const QStringList &instances) const;
+    int CompareClassesMainSuper(const QString &className1, const QString &className2) const;
     bool isValid() const;
     bool isValid(const QSet<QString> checkClasses) const;
     bool isMinimal() const;

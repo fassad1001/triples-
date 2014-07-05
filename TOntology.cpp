@@ -215,14 +215,14 @@ void TOntology::TestAllClasses_data()
                               <<(QSet<QString>()
                                  );
 
-    QTest::newRow("Empty-ontology") << (Ontology(QSet<Triple>()
+    QTest::newRow("ontology-with-1-class") << (Ontology(QSet<Triple>()
                                                  <<Triple("class1", Ontology::IS, Ontology::CLASS)
                                            ))
                               <<(QSet<QString>()
                                  <<"class1"
                                  );
 
-    QTest::newRow("Empty-ontology") << (Ontology(QSet<Triple>()
+    QTest::newRow("ontology-with-inheritance") << (Ontology(QSet<Triple>()
                                                  <<Triple("class1", Ontology::IS, Ontology::CLASS)
                                                  <<Triple("class2", Ontology::IS, Ontology::CLASS)
                                                  <<Triple("class1", Ontology::CONTAINS, "class2")
@@ -376,17 +376,52 @@ void TOntology::TestSubClasses_data()
 
     QTest::addColumn <QSet<QString> > ("subClasses");
 
-    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
-                                           <<Triple("123",Ontology::CONTAINS,"123")
-                                           <<Triple("555",Ontology::CONTAINS,"556")
-                                           <<Triple("555",Ontology::CONTAINS,"557")
-                                           <<Triple("555",Ontology::CONTAINS,"558")
+    QTest::newRow("empty-ontology") << (Ontology(QSet<Triple>()
                                            ))
-                              <<"555"
+                              <<"class1"
                              <<(QSet<QString>()
-                                <<"556"
-                                <<"557"
-                                <<"558"
+                                );
+
+    QTest::newRow("ontology-without-classes") << (Ontology(QSet<Triple>()
+                                           <<Triple("class1",Ontology::CONTAINS,"class2")
+                                           <<Triple("class2",Ontology::CONTAINS,"class3")
+                                           <<Triple("instance1",Ontology::IS,"class1")
+                                           <<Triple("instance2",Ontology::IS,"class2")
+                                           ))
+                              <<"class2"
+                             <<(QSet<QString>()
+                                );
+
+    QTest::newRow("ontology-with-1-class") << (Ontology(QSet<Triple>()
+                                           <<Triple("instance1",Ontology::IS,"class1")
+                                           <<Triple("instance2",Ontology::IS,"class2")
+                                           <<Triple("class1",Ontology::IS,Ontology::CLASS)
+                                           ))
+                              <<"class1"
+                             <<(QSet<QString>()
+                                );
+
+    QTest::newRow("ontology-with-2-classes") << (Ontology(QSet<Triple>()
+                                           <<Triple("instance1",Ontology::IS,"class1")
+                                           <<Triple("instance2",Ontology::IS,"class2")
+                                           <<Triple("class1",Ontology::IS,Ontology::CLASS)
+                                           <<Triple("class2",Ontology::IS,Ontology::CLASS)
+                                           ))
+                              <<"class1"
+                             <<(QSet<QString>()
+                                );
+
+    QTest::newRow("ontology-with-2-classes-and-inheritance") << (Ontology(QSet<Triple>()
+                                           <<Triple("class1",Ontology::CONTAINS,"class2")
+                                           <<Triple("class2",Ontology::CONTAINS,"class3")
+                                           <<Triple("instance1",Ontology::IS,"class1")
+                                           <<Triple("instance2",Ontology::IS,"class2")
+                                           <<Triple("class1",Ontology::IS,Ontology::CLASS)
+                                           <<Triple("class2",Ontology::IS,Ontology::CLASS)
+                                           ))
+                              <<"class1"
+                             <<(QSet<QString>()
+                                <<"class2"
                                 );
 
     //тест для пустой онтологии; для онтологии без классов; для онтологии с одним классом; для онтологии с двумя классами;для онтологии с наследуемыми классами
@@ -442,15 +477,22 @@ void TOntology::TestClassesForInstances_data()
 
     QTest::addColumn <QSet<QString> > ("classes");
 
-    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
-                                           <<Triple("123",Ontology::IS,"556")
-                                           <<Triple("555",Ontology::IS,"556")
-                                           <<Triple("555",Ontology::IS,"557")
-                                           <<Triple("555",Ontology::IS,"558")
+    QTest::newRow("empty-ontology") << (Ontology(QSet<Triple>()
                                            ))
                               <<(QStringList()
-                                 <<"123"
-                                 <<"555"
+                                 )
+                             <<(QSet<QString>()
+                                );
+
+    QTest::newRow("ontology-witout-classes") << (Ontology(QSet<Triple>()
+                                           <<Triple("instance1",Ontology::IS,"class1")
+                                           <<Triple("instance2",Ontology::IS,"class2")
+                                           <<Triple("instance3",Ontology::IS,"class3")
+                                           <<Triple("instance4",Ontology::IS,"class4")
+                                           ))
+                              <<(QStringList()
+                                 <<"instance1"
+                                 <<"instance2"
                                  )
                              <<(QSet<QString>()
                                 <<"556"
@@ -476,22 +518,27 @@ void TOntology::TestMainSuperClass_data()
 
     QTest::addColumn <QSet<QString> > ("classes");
 
-    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
-                                           <<Triple("a",Ontology::CONTAINS,"f")
-                                           <<Triple("b",Ontology::CONTAINS,"f")
-                                           <<Triple("c",Ontology::CONTAINS,"g")
-                                           <<Triple("d",Ontology::CONTAINS,"g")
-                                           <<Triple("e",Ontology::CONTAINS,"g")
-                                           <<Triple("1",Ontology::IS,"f")
-                                           <<Triple("2",Ontology::IS,"f")
-                                           <<Triple("1",Ontology::IS,"g")
-                                           <<Triple("2",Ontology::IS,"g")
+    QTest::newRow("empty-ontology") << (Ontology(QSet<Triple>()
                                            ))
                               <<("1")
                              <<("2")
                             <<(QSet<QString>()
-                               <<"f"
                                );
+
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QString> ("instance1");
+    QTest::addColumn <QString> ("instance2");
+
+    QTest::addColumn <QSet<QString> > ("classes");
+
+    QTest::newRow("ontology-without-class-decraration") << (Ontology(QSet<Triple>()
+                                           <<Triple()
+                                           ))
+                              <<("1")
+                             <<("2")
+                            <<(QSet<QString>()
+                               );
+
     //для пустой онтотологии; для онтологии без объявления классов; для одного, двух, трёх, минимальных классов; для отсутвующего минимального класса
 }
 
