@@ -12,26 +12,26 @@ class TTripleStorage : public QObject
 public:
     TTripleStorage();
 private slots:
-    void TestSubjectAndPredicatesFor();
     void TestSubjectAndPredicatesFor_data();
+    void TestSubjectAndPredicatesFor();
 
-    void TestPredicatesAndObjects();
     void TestPredicatesAndObjects_data();
+    void TestPredicatesAndObjects();
 
-    void TestSubjectsAndObjects();
     void TestSubjectsAndObjects_data();
+    void TestSubjectsAndObjects();
 
-    void TestContains();
     void TestContains_data();
+    void TestContains();
 
-    void TestObjectsFor();
     void TestObjectsFor_data();
+    void TestObjectsFor();
 
-    void TestSubjectsFor();
     void TestSubjectsFor_data();
+    void TestSubjectsFor();
 
-    void TestPredicatesFor();
     void TestPredicatesFor_data();
+    void TestPredicatesFor();
 };
 
 #endif // TTRIPLESTORAGE_H

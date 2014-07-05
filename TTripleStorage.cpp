@@ -5,16 +5,6 @@ TTripleStorage::TTripleStorage()
 
 }
 
-void TTripleStorage::TestSubjectAndPredicatesFor()
-{
-    QFETCH(TripleStorage, storage);
-    QFETCH(QString, qstring);
-
-    QFETCH(QSet<Pair>, qset);
-
-    QCOMPARE(storage.subjectAndPredicatesFor(qstring),qset);
-}
-
 void TTripleStorage::TestSubjectAndPredicatesFor_data()
 {
     QTest::addColumn <TripleStorage> ("storage");
@@ -101,14 +91,14 @@ void TTripleStorage::TestSubjectAndPredicatesFor_data()
 
 }
 
-void TTripleStorage::TestPredicatesAndObjects()
+void TTripleStorage::TestSubjectAndPredicatesFor()
 {
     QFETCH(TripleStorage, storage);
     QFETCH(QString, qstring);
 
     QFETCH(QSet<Pair>, qset);
 
-    QCOMPARE(storage.predicatesAndObjects(qstring),qset);
+    QCOMPARE(storage.subjectAndPredicatesFor(qstring),qset);
 }
 
 void TTripleStorage::TestPredicatesAndObjects_data()
@@ -197,14 +187,14 @@ void TTripleStorage::TestPredicatesAndObjects_data()
 
 }
 
-void TTripleStorage::TestSubjectsAndObjects()
+void TTripleStorage::TestPredicatesAndObjects()
 {
     QFETCH(TripleStorage, storage);
     QFETCH(QString, qstring);
 
     QFETCH(QSet<Pair>, qset);
 
-    QCOMPARE(storage.subjectsAndObjects(qstring),qset);
+    QCOMPARE(storage.predicatesAndObjects(qstring),qset);
 }
 
 void TTripleStorage::TestSubjectsAndObjects_data()
@@ -293,14 +283,14 @@ void TTripleStorage::TestSubjectsAndObjects_data()
                                          );
 }
 
-void TTripleStorage::TestContains()
+void TTripleStorage::TestSubjectsAndObjects()
 {
     QFETCH(TripleStorage, storage);
-    QFETCH(Triple, triple);
+    QFETCH(QString, qstring);
 
-    QFETCH(bool, result);
+    QFETCH(QSet<Pair>, qset);
 
-    QCOMPARE(storage.contains(triple),result);
+    QCOMPARE(storage.subjectsAndObjects(qstring),qset);
 }
 
 void TTripleStorage::TestContains_data()
@@ -340,15 +330,14 @@ void TTripleStorage::TestContains_data()
                        <<(true);
 }
 
-void TTripleStorage::TestObjectsFor()
+void TTripleStorage::TestContains()
 {
     QFETCH(TripleStorage, storage);
-    QFETCH(QString, qstring1);
-    QFETCH(QString, qstring2);
+    QFETCH(Triple, triple);
 
-    QFETCH(QSet<QString>, result);
+    QFETCH(bool, result);
 
-    QCOMPARE(storage.objectsFor(qstring1,qstring2), result);
+    QCOMPARE(storage.contains(triple),result);
 }
 
 void TTripleStorage::TestObjectsFor_data()
@@ -428,7 +417,7 @@ void TTripleStorage::TestObjectsFor_data()
                                             <<(QSet<QString>());
 }
 
-void TTripleStorage::TestSubjectsFor()
+void TTripleStorage::TestObjectsFor()
 {
     QFETCH(TripleStorage, storage);
     QFETCH(QString, qstring1);
@@ -436,11 +425,11 @@ void TTripleStorage::TestSubjectsFor()
 
     QFETCH(QSet<QString>, result);
 
-    QCOMPARE(storage.subjectsFor(qstring1,qstring2),result);
+    QCOMPARE(storage.objectsFor(qstring1,qstring2), result);
 }
 
 void TTripleStorage::TestSubjectsFor_data()
-{   
+{
     QTest::addColumn <TripleStorage> ("storage");
     QTest::addColumn <QString> ("qstring1");
     QTest::addColumn <QString> ("qstring2");
@@ -462,7 +451,7 @@ void TTripleStorage::TestSubjectsFor_data()
                                    <<""
                                    <<""
                                    <<"");
-    
+
     QTest::newRow("TestNum2") << (TripleStorage(QSet<Triple>()
                                                     <<Triple("1","","")
                                                     <<Triple("2","","")
@@ -525,7 +514,7 @@ void TTripleStorage::TestSubjectsFor_data()
 
 }
 
-void TTripleStorage::TestPredicatesFor()
+void TTripleStorage::TestSubjectsFor()
 {
     QFETCH(TripleStorage, storage);
     QFETCH(QString, qstring1);
@@ -533,7 +522,7 @@ void TTripleStorage::TestPredicatesFor()
 
     QFETCH(QSet<QString>, result);
 
-    QCOMPARE(storage.predicatesFor(qstring1,qstring2),result);
+    QCOMPARE(storage.subjectsFor(qstring1,qstring2),result);
 }
 
 void TTripleStorage::TestPredicatesFor_data()
@@ -621,3 +610,15 @@ void TTripleStorage::TestPredicatesFor_data()
                                  <<("9")
                                 <<(QSet<QString>());
 }
+
+void TTripleStorage::TestPredicatesFor()
+{
+    QFETCH(TripleStorage, storage);
+    QFETCH(QString, qstring1);
+    QFETCH(QString, qstring2);
+
+    QFETCH(QSet<QString>, result);
+
+    QCOMPARE(storage.predicatesFor(qstring1,qstring2),result);
+}
+

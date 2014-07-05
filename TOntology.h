@@ -13,53 +13,53 @@ public:
     TOntology();
 private slots: 
     //функции тестирования
-    void TestClassInstances();
     void TestClassInstances_data();
-    
-    void TestAnyClassInstances();
+    void TestClassInstances();
+
     void TestAnyClassInstances_data();
+    void TestAnyClassInstances();
     
-    void TestAllClassInstances();
     void TestAllClassInstances_data();
+    void TestAllClassInstances();
 
-    void TestAllClasses();
     void TestAllClasses_data();
+    void TestAllClasses();
 
-    void TestAllInstances();
     void TestAllInstances_data();
+    void TestAllInstances();
 
-    void TestClassesForInstance();
     void TestClassesForInstance_data();
+    void TestClassesForInstance();
 
-    void TestSubClasses();
     void TestSubClasses_data();
+    void TestSubClasses();
 
-    void TestSuperClasses();
     void TestSuperClasses_data();
+    void TestSuperClasses();
 
-    void TestClassesForInstances();
     void TestClassesForInstances_data();
+    void TestClassesForInstances();
 
-    void TestMainSuperClass();
     void TestMainSuperClass_data();
+    void TestMainSuperClass();
 
-    void TestMainSuperClass2();
     void TestMainSuperClass2_data();
+    void TestMainSuperClass2();
 
-    void TestIsValid();
     void TestIsValid_data();
+    void TestIsValid();
 
-    void TestIsMinimal();
     void TestIsMinimal_data();
+    void TestIsMinimal();
 
     void TestGetClassLvl_data();
     void TestGetClassLvl();
 
-    void TestMinimalize();
     void TestMinimalize_data();
+    void TestMinimalize();
 
-    void TestGetNotMinimalInstances();
     void TestGetNotMinimalInstances_data();
+    void TestGetNotMinimalInstances();
 };
 
 #endif // TONTOLOGY_H

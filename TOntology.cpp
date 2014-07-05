@@ -4,16 +4,6 @@ TOntology::TOntology()
 {
 }
 
-void TOntology::TestClassInstances()
-{
-    QFETCH(Ontology, ontology);
-    QFETCH(QString, className);
-    
-    QFETCH(QSet<QString>, classInstances);
-
-    QCOMPARE(ontology.classInstances(className), classInstances);
-}
-
 void TOntology::TestClassInstances_data()
 {
     QTest::addColumn <Ontology> ("ontology");
@@ -112,14 +102,14 @@ void TOntology::TestClassInstances_data()
     //запрос к пустой онтологии;класс без экземпляров; класс с одним экземляров; запрос для класса, отсутсвующего в онтологии; запрос для класса, получающего экземпляры через наследование классов
 }
 
-void TOntology::TestAnyClassInstances()
+void TOntology::TestClassInstances()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(QStringList, classNames);
-
+    QFETCH(QString, className);
+    
     QFETCH(QSet<QString>, classInstances);
 
-    QCOMPARE(ontology.anyClassInstances(classNames), classInstances);
+    QCOMPARE(ontology.classInstances(className), classInstances);
 }
 
 void TOntology::TestAnyClassInstances_data()
@@ -158,6 +148,16 @@ void TOntology::TestAnyClassInstances_data()
                              <<(QSet<QString>());
 
     //запрос к пустой онтологии;класс без экземпляров; класс с одним экземляров; запрос для класса, отсутсвующего в онтологии; запрос для класса, получающего экземпляры через наследование классов
+}
+
+void TOntology::TestAnyClassInstances()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QStringList, classNames);
+
+    QFETCH(QSet<QString>, classInstances);
+
+    QCOMPARE(ontology.anyClassInstances(classNames), classInstances);
 }
 
 void TOntology::TestAllClassInstances_data()
@@ -204,15 +204,6 @@ void TOntology::TestAllClassInstances()
     QCOMPARE(ontology.allClassInstances(classNames), classInstances);
 }
 
-void TOntology::TestAllClasses()
-{
-    QFETCH(Ontology, ontology);
-
-    QFETCH(QSet<QString>, allClasses);
-
-    QCOMPARE(ontology.allClasses(), allClasses);
-}
-
 void TOntology::TestAllClasses_data()
 {
     QTest::addColumn <Ontology> ("ontology");
@@ -244,13 +235,13 @@ void TOntology::TestAllClasses_data()
     //тест для пустой онтологии; для онтологии без классов; для онтологии с одним классом; для онтологии с наследуемыми классами
 }
 
-void TOntology::TestAllInstances()
+void TOntology::TestAllClasses()
 {
     QFETCH(Ontology, ontology);
 
-    QFETCH(QSet<QString>, allInstances);
+    QFETCH(QSet<QString>, allClasses);
 
-    QCOMPARE(ontology.allInstances(), allInstances);
+    QCOMPARE(ontology.allClasses(), allClasses);
 }
 
 void TOntology::TestAllInstances_data()
@@ -314,14 +305,13 @@ void TOntology::TestAllInstances_data()
      //тест для пустой онтологии; для онтологии без классов; для онтологии с одним классом; для онтологии с двумя классами;для класса без экземпляров;для онтологии с наследуемыми классами
 }
 
-void TOntology::TestClassesForInstance()
+void TOntology::TestAllInstances()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(QString, instanceName);
 
-    QFETCH(QSet<QString>, classes);
+    QFETCH(QSet<QString>, allInstances);
 
-    QCOMPARE(ontology.classesForInstance(instanceName), classes);
+    QCOMPARE(ontology.allInstances(), allInstances);
 }
 
 void TOntology::TestClassesForInstance_data()
@@ -369,14 +359,14 @@ void TOntology::TestClassesForInstance_data()
 //тесты для пустой онтологии;для одного класса;для двух, трёх классов с наследованием;для некорректно онтологии без объявления классов
 }
 
-void TOntology::TestSubClasses()
+void TOntology::TestClassesForInstance()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(QString, className);
+    QFETCH(QString, instanceName);
 
-    QFETCH(QSet<QString>, subClasses);
+    QFETCH(QSet<QString>, classes);
 
-    QCOMPARE(ontology.subClasses(className), subClasses);
+    QCOMPARE(ontology.classesForInstance(instanceName), classes);
 }
 
 void TOntology::TestSubClasses_data()
@@ -402,14 +392,14 @@ void TOntology::TestSubClasses_data()
     //тест для пустой онтологии; для онтологии без классов; для онтологии с одним классом; для онтологии с двумя классами;для онтологии с наследуемыми классами
 }
 
-void TOntology::TestSuperClasses()
+void TOntology::TestSubClasses()
 {
     QFETCH(Ontology, ontology);
     QFETCH(QString, className);
 
-    QFETCH(QSet<QString>, superClasses);
+    QFETCH(QSet<QString>, subClasses);
 
-    QCOMPARE(ontology.superClasses(className), superClasses);
+    QCOMPARE(ontology.subClasses(className), subClasses);
 }
 
 void TOntology::TestSuperClasses_data()
@@ -435,14 +425,14 @@ void TOntology::TestSuperClasses_data()
     //тест для пустой онтологии; для онтологии без классов; для онтологии с одним классом; для онтологии с двумя классами;для онтологии с наследуемыми классами
 }
 
-void TOntology::TestClassesForInstances()
+void TOntology::TestSuperClasses()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(QStringList, instanceNames);
+    QFETCH(QString, className);
 
-    QFETCH(QSet<QString>, classes);
+    QFETCH(QSet<QString>, superClasses);
 
-    QCOMPARE(ontology.classesForInstances(instanceNames), classes);
+    QCOMPARE(ontology.superClasses(className), superClasses);
 }
 
 void TOntology::TestClassesForInstances_data()
@@ -468,15 +458,14 @@ void TOntology::TestClassesForInstances_data()
 
 }
 
-void TOntology::TestMainSuperClass()
+void TOntology::TestClassesForInstances()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(QString, instance1);
-    QFETCH(QString, instance2);
+    QFETCH(QStringList, instanceNames);
 
     QFETCH(QSet<QString>, classes);
 
-    QCOMPARE(ontology.mainSuperClass(instance1, instance2), classes);
+    QCOMPARE(ontology.classesForInstances(instanceNames), classes);
 }
 
 void TOntology::TestMainSuperClass_data()
@@ -506,14 +495,15 @@ void TOntology::TestMainSuperClass_data()
     //для пустой онтотологии; для онтологии без объявления классов; для одного, двух, трёх, минимальных классов; для отсутвующего минимального класса
 }
 
-void TOntology::TestMainSuperClass2()
+void TOntology::TestMainSuperClass()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(QStringList, instances);
+    QFETCH(QString, instance1);
+    QFETCH(QString, instance2);
 
     QFETCH(QSet<QString>, classes);
 
-    QCOMPARE(ontology.mainSuperClass(instances), classes);
+    QCOMPARE(ontology.mainSuperClass(instance1, instance2), classes);
 }
 
 void TOntology::TestMainSuperClass2_data()
@@ -563,12 +553,14 @@ void TOntology::TestMainSuperClass2_data()
 
 }
 
-void TOntology::TestIsValid()
+void TOntology::TestMainSuperClass2()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(bool, isItValid);
+    QFETCH(QStringList, instances);
 
-    QCOMPARE(ontology.isValid(),isItValid);
+    QFETCH(QSet<QString>, classes);
+
+    QCOMPARE(ontology.mainSuperClass(instances), classes);
 }
 
 void TOntology::TestIsValid_data()
@@ -615,12 +607,12 @@ void TOntology::TestIsValid_data()
 
 }
 
-void TOntology::TestIsMinimal()
+void TOntology::TestIsValid()
 {
     QFETCH(Ontology, ontology);
-    QFETCH(bool, isItMinimal);
+    QFETCH(bool, isItValid);
 
-    QCOMPARE(ontology.isMinimal(),isItMinimal);
+    QCOMPARE(ontology.isValid(),isItValid);
 }
 
 void TOntology::TestIsMinimal_data()
@@ -716,6 +708,14 @@ void TOntology::TestIsMinimal_data()
 
 }
 
+void TOntology::TestIsMinimal()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(bool, isItMinimal);
+
+    QCOMPARE(ontology.isMinimal(),isItMinimal);
+}
+
 void TOntology::TestGetClassLvl_data()
 {
     QTest::addColumn <Ontology> ("ontology");
@@ -762,16 +762,6 @@ void TOntology::TestGetClassLvl()
     QCOMPARE(ontology.getClassLvl(className), lvlOfClass);
 }
 
-void TOntology::TestMinimalize()
-{
-    QFETCH(Ontology, ontology1);
-    QFETCH(bool, isminimal);
-
-    ontology1.minimalize();
-
-    QCOMPARE(ontology1.isMinimal(), isminimal);
-}
-
 void TOntology::TestMinimalize_data()
 {
     QTest::addColumn <Ontology> ("ontology1");
@@ -793,12 +783,14 @@ void TOntology::TestMinimalize_data()
                                            <<true;
 }
 
-void TOntology::TestGetNotMinimalInstances()
+void TOntology::TestMinimalize()
 {
-    QFETCH(Ontology, ontology);
-    QFETCH(QSet<QString>, minimalInstances);
+    QFETCH(Ontology, ontology1);
+    QFETCH(bool, isminimal);
 
-    QCOMPARE(ontology.getNotMinimalInstances(), minimalInstances);
+    ontology1.minimalize();
+
+    QCOMPARE(ontology1.isMinimal(), isminimal);
 }
 
 void TOntology::TestGetNotMinimalInstances_data()
@@ -842,5 +834,14 @@ void TOntology::TestGetNotMinimalInstances_data()
                                   <<"tt"
                                   );
 }
+
+void TOntology::TestGetNotMinimalInstances()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QSet<QString>, minimalInstances);
+
+    QCOMPARE(ontology.getNotMinimalInstances(), minimalInstances);
+}
+
 
 

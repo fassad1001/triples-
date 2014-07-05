@@ -17,7 +17,7 @@ void TripleStorage::addTriple(const Triple &triple)
 QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &predicate) const
 {
     QSet<QString> result;
-    foreach (Triple tr, triples_)
+    foreach(const Triple tr, triples_)
     {
         if (tr.equalsBySubjectAndPredicate(Triple(subject, predicate, "")))
         {
@@ -30,7 +30,7 @@ QSet<QString> TripleStorage::objectsFor(const QString &subject, const QString &p
 QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString &object) const
 {
     QSet<QString> result;
-    foreach (Triple tr, triples_)
+    foreach(const Triple tr, triples_)
     {
         if (tr.equalsByObjectAndPredicate(Triple("", predicate, object)))
         {
@@ -43,7 +43,7 @@ QSet<QString> TripleStorage::subjectsFor(const QString &predicate, const QString
 QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString &object) const
 {
     QSet<QString> result;
-    foreach (Triple tr, triples_)
+    foreach(const Triple tr, triples_)
     {
         if (tr.equalsBySubjectAndObject(Triple(subject, "", object)))
         {
@@ -56,7 +56,7 @@ QSet<QString> TripleStorage::predicatesFor(const QString &subject, const QString
 QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object) const
 {
     QSet<Pair> result;
-    foreach (Triple tr, triples_)
+    foreach(const Triple tr, triples_)
     {
         if (tr.equalsByObject(Triple("", "", object)))
         {
@@ -69,7 +69,7 @@ QSet<Pair> TripleStorage::subjectAndPredicatesFor(const QString &object) const
 QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject) const
 {
     QSet<Pair> result;
-    foreach (Triple tr, triples_)
+    foreach(const Triple tr, triples_)
     {
         if (tr.equalsBySubject(Triple(subject, "", "")))
         {
@@ -82,7 +82,7 @@ QSet<Pair> TripleStorage::predicatesAndObjects(const QString &subject) const
 QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate) const
 {
     QSet<Pair> result;
-    foreach (Triple tr, triples_)
+    foreach(const Triple tr, triples_)
     {
         if (tr.equalsByPredicate(Triple("",predicate,"")))
         {

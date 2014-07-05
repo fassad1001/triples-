@@ -6,15 +6,6 @@ TTriples::TTriples()
 {
 }
 
-void TTriples::TestToString()
-{
-    QFETCH(Triple, triple);
-
-    QFETCH(QString, result);
-
-    QCOMPARE(triple.toString(), result);
-}
-
 void TTriples::TestToString_data()
 {
     QTest::addColumn< Triple > ("triple");
@@ -40,13 +31,13 @@ void TTriples::TestToString_data()
                               << ("(,,)");
 }
 
-void TTriples::TestQhash()
+void TTriples::TestToString()
 {
-    QFETCH(QString, str1);
-    QFETCH(QString, str2);
-    QFETCH(QString, str3);
+    QFETCH(Triple, triple);
 
-    QCOMPARE(qHash(Triple(str1,str2,str3)),qHash(Triple(str1,str2,str3).toString()));
+    QFETCH(QString, result);
+
+    QCOMPARE(triple.toString(), result);
 }
 
 void TTriples::TestQhash_data()
@@ -84,14 +75,13 @@ void TTriples::TestQhash_data()
                           << ("");
 }
 
-void TTriples::TestOperatorEquals()
+void TTriples::TestQhash()
 {
-    QFETCH(Triple, input1);
-    QFETCH(Triple, input2);
+    QFETCH(QString, str1);
+    QFETCH(QString, str2);
+    QFETCH(QString, str3);
 
-    QFETCH(bool, output);
-
-    QCOMPARE(input1 == input2, output);
+    QCOMPARE(qHash(Triple(str1,str2,str3)),qHash(Triple(str1,str2,str3).toString()));
 }
 
 void TTriples::TestOperatorEquals_data()
@@ -122,14 +112,14 @@ void TTriples::TestOperatorEquals_data()
 
 }
 
-void TTriples::TestForEqualObjects()
+void TTriples::TestOperatorEquals()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsByObject(input2),output);
+    QCOMPARE(input1 == input2, output);
 }
 
 void TTriples::TestForEqualObjects_data()
@@ -160,14 +150,14 @@ void TTriples::TestForEqualObjects_data()
 
 }
 
-void TTriples::TestForEqualSubjects()
+void TTriples::TestForEqualObjects()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsBySubject(input2), output);
+    QCOMPARE(input1.equalsByObject(input2),output);
 }
 
 void TTriples::TestForEqualSubjects_data()
@@ -195,14 +185,14 @@ void TTriples::TestForEqualSubjects_data()
                                   <<(true);
 }
 
-void TTriples::TestForEqualPredicates()
+void TTriples::TestForEqualSubjects()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsByPredicate(input2),output);
+    QCOMPARE(input1.equalsBySubject(input2), output);
 }
 
 void TTriples::TestForEqualPredicates_data()
@@ -230,14 +220,14 @@ void TTriples::TestForEqualPredicates_data()
                                   <<(true);
 }
 
-void TTriples::TestForEqualBySubjectAndObject()
+void TTriples::TestForEqualPredicates()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsBySubjectAndObject(input2),output);
+    QCOMPARE(input1.equalsByPredicate(input2),output);
 }
 
 void TTriples::TestForEqualBySubjectAndObject_data()
@@ -265,14 +255,14 @@ void TTriples::TestForEqualBySubjectAndObject_data()
                                   <<(true);
 }
 
-void TTriples::TestForEqualBySubjectsAndPredicates()
+void TTriples::TestForEqualBySubjectAndObject()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsBySubjectAndPredicate(input2),output);
+    QCOMPARE(input1.equalsBySubjectAndObject(input2),output);
 }
 
 void TTriples::TestForEqualBySubjectsAndPredicates_data()
@@ -300,14 +290,14 @@ void TTriples::TestForEqualBySubjectsAndPredicates_data()
                                   <<(true);
 }
 
-void TTriples::TestForEqualByObjectsAndPredicates()
+void TTriples::TestForEqualBySubjectsAndPredicates()
 {
     QFETCH(Triple, input1);
     QFETCH(Triple, input2);
 
     QFETCH(bool, output);
 
-    QCOMPARE(input1.equalsByObjectAndPredicate(input2),output);
+    QCOMPARE(input1.equalsBySubjectAndPredicate(input2),output);
 }
 
 void TTriples::TestForEqualByObjectsAndPredicates_data()
@@ -333,4 +323,14 @@ void TTriples::TestForEqualByObjectsAndPredicates_data()
     QTest::newRow("TestNum5") << (Triple("5", "", ""))
                                 <<(Triple("9", "", ""))
                                   <<(true);
+}
+
+void TTriples::TestForEqualByObjectsAndPredicates()
+{
+    QFETCH(Triple, input1);
+    QFETCH(Triple, input2);
+
+    QFETCH(bool, output);
+
+    QCOMPARE(input1.equalsByObjectAndPredicate(input2),output);
 }

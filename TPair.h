@@ -13,8 +13,8 @@ public:
     TPair();
 private slots:
     //тесты
-    void TestEquals();
     void TestEquals_data();
+    void TestEquals();
 
 };
 

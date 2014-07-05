@@ -4,17 +4,6 @@ TPair::TPair()
 {
 }
 
-void TPair::TestEquals()
-{
-    QFETCH(Pair, input1);
-    QFETCH(Pair, input2);
-
-    QFETCH(bool, output);
-
-    QCOMPARE(input1 == input2,output);
-}
-
-//
 void TPair::TestEquals_data()
 {
     QTest::addColumn <Pair> ("input1");
@@ -47,5 +36,17 @@ void TPair::TestEquals_data()
                                 <<(Pair("", "5"))
                                   <<(true);
 }
+
+void TPair::TestEquals()
+{
+    QFETCH(Pair, input1);
+    QFETCH(Pair, input2);
+
+    QFETCH(bool, output);
+
+    QCOMPARE(input1 == input2,output);
+}
+
+//
 
 
