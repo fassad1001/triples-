@@ -189,11 +189,12 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     }
     qSort(sortedClasses.begin(), sortedClasses.end());
     //беру первый элемент как самый малый элемент и возвращаю его
-    return sortedClasses.first();
+    return QSet<QString>()<<sortedClasses.at(0).name;
 }
 
 bool Ontology::isValid() const
 {
+
     QHash<QString, QHash<QString, bool>> transitiveClosure;
     QSet<QString> allclasses = allClasses();
     foreach(const QString classitem, allclasses)
