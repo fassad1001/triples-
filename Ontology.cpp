@@ -138,10 +138,12 @@ QSet<QString> Ontology::superClasses(const QString &className) const
     while (!loopClasses.empty())
     {
         exchangeClasses.clear();
-        foreach (const QString loopClass, subjectsFor(Ontology::CONTAINS, loopClasses))
+        QSet<QString> loopMasterClasses;
+        loopMasterClasses = subjectsFor(Ontology::CONTAINS, loopClasses);
+        foreach (const QString loopMasterClass, loopMasterClasses)
         {
-            result += subjectsFor(Ontology::CONTAINS, loopClass);
-            exchangeClasses =+ subjectsFor(Ontology::CONTAINS, loopClass);
+            result += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopMasterClass);
         }
         loopClasses = exchangeClasses;
     }
@@ -153,13 +155,15 @@ QSet<QString> Ontology::superClasses(const QString &className) const
 QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QString &instanceName2) const
 {
     // ПОЛУЧИТЬ ВСЕ КЛАССЫ ДЛЯ instanceName1 И instanceName2, НАЙТИ ИХ ПЕРЕСЕЧЕНИЕ, В ПЕРЕСЕЧЕНИИ НАЙТИ МИНИМАЛЬНЫЕ КЛАССЫ ЧЕРЕЗ ФУНКЦИЮ qSort
-    QList InterSectionClasses = classesForInstance(instanceName1) & classesForInstance(instanceName2);
-    qSort(InterSectionClasses.begin(), InterSectionClasses.end(), CompareClassesMainSuper);
-    return InterSectionClasses.first();
-    QSet<QStriing> result;
+    QSet<QString> InterSectionClasses;
+    QList<QString> SortedIntersectionClasses;
+    InterSectionClasses = classesForInstance(instanceName1) & classesForInstance(instanceName2);
+    SortedIntersectionClasses = InterSectionClasses.toList();
+    qSort(SortedIntersectionClasses.begin(), SortedIntersectionClasses.end(), CompareClassesMainSuper);
+    QSet<QString> result;
     foreach(QString intersectionClass, InterSectionClasses)
     {
-        if (intersectionClass == InterSectionClasses.first())
+        if (intersectionClass == SortedIntersectionClasses.first())
         {
             result += intersectionClass;
         }
@@ -167,20 +171,9 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
     return result;
 }
 
-int Ontology::CompareClassesMainSuper(const QString &className1, const QString &className2) const
+bool Ontology::CompareClassesMainSuper(const QString &className1, const QString &className2) const
 {
-    if(superClasses(className1).count()==superClasses(className2).count())
-    {
-        return 0;
-    }
-    if(superClasses(className1).count()<superClasses(className2).count())
-    {
-        return -1;
-    }
-    else
-    {
-        return 1;
-    }
+    return (superClasses(className1).count() < superClasses(className2).count());
 }
 
 int Ontology::CompareByClassLvl(const QString &className1, const QString &className2) const
@@ -350,7 +343,7 @@ void Ontology::minimalize()
             //сортирую по увеличению значения уровень иерархии
             qSort(branchItemsWithInstance.begin(), branchItemsWithInstance.end(), CompareByClassLvl);
             //убираю элемент с минмальным уровнем иерархии из списка на чистку
-            branchItemstoLoop -= branchItemsWithInstance.first();
+            branchItemstoLoop.removeFirst();
             //провожу чистку удаляю тройки со значениями (instance IS itemToRemove)
             foreach(const QString ItemToRemove, branchItemstoLoop)
             {
