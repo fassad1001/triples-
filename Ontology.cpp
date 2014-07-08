@@ -223,17 +223,30 @@ bool Ontology::isValid() const
         }
     }
 }
+
 bool Ontology::isMinimal() const
 {
-    QSet<QString> allinstances = allInstances();
-    //посмотреть все инстансы, для каждого смотрю классы и подклассы, если один из этих наборов
-    //содержит инстанс то возвращаю правду иначен ложь
-    foreach(QString instance, allinstances)
+    QSet<QString> instances = allInstances();
+    QSet<QString> classesforinstance;
+    foreach(QString instance, instances)
     {
-        QString instanceClass = classesForInstance(instance);
-        if(subClasses(instanceClass).contains(instance) || superClasses(instanceClass).contains(instance))
+        classesforinstance = classesForInstance(instance);
+        //у нас могут быть как и те которые находятся на одной ветке так и те которые находятся на разных ветках
+        //отсеиваем их по веткам
+        //каждый класс - потенциально новая ветка
+        foreach(const QString classforinstance, classesforinstance)
         {
-            return true;
+            QSet<QString> branch;
+            branch += subClasses(classforinstance) += superClasses(classforinstance);
+            foreach(const QString branchItem, branch)
+            {
+                //если класс ветви содержит сущность которую мы ищем
+                if(classInstances(branchItem).contains(instance))
+                {
+                    //то сообщаем что вся иерархия не минимальна
+                    return false;
+                }
+            }
         }
     }
 }
@@ -283,6 +296,7 @@ QSet<QString> Ontology::getNotMinimalInstances() const
 {
     QSet<QString> instances = allInstances();
     QSet<QString> classesforinstance;
+    QSet<QString> notMinimalInstances;
     foreach(QString instance, instances)
     {
         classesforinstance = classesForInstance(instance);
@@ -291,19 +305,20 @@ QSet<QString> Ontology::getNotMinimalInstances() const
         //каждый класс - потенциально новая ветка
         foreach(const QString classforinstance, classesforinstance)
         {
-            QList<QString> branch = subClasses(classforinstance) + superClasses(classforinstance);
-            QList<QString> branchItemsWithInstance;
-            branchItemsWithInstance.clear();
+            QSet<QString> branch;
+            branch += subClasses(classforinstance) += superClasses(classforinstance);
             foreach(const QString branchItem, branch)
             {
                 //если класс ветви содержит сущность которую мы ищем
                 if(classInstances(branchItem).contains(instance))
                 {
-                    //то добавляем этот класс в коллекцию на конкурс
-                    return false;
+                    //то добавляем сущность в коллекцию на вывод
+                    notMinimalInstances += instance;
                 }
+            }
         }
     }
+    return notMinimalInstances;
 }
 
 void Ontology::minimalize()
