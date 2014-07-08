@@ -187,6 +187,7 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
         //запись результата в набор типа Class
         sortedClasses += Class(Name, superClasses(Name));
     }
+    //сортирую классы по принципу, если A содержит B то A<B
     qSort(sortedClasses.begin(), sortedClasses.end());
     //беру первый элемент как самый малый элемент и возвращаю его
     return QSet<QString>()<<sortedClasses.at(0).name;
