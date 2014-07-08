@@ -169,11 +169,11 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
 
 int Ontology::CompareClassesMainSuper(const QString &className1, const QString &className2) const
 {
-    if(superClasses(className1_)==superClasses(className2))
+    if(superClasses(className1).count()==superClasses(className2).count())
     {
         return 0;
     }
-    if(superClasses(className1_)<superClasses(className2))
+    if(superClasses(className1).count()<superClasses(className2).count())
     {
         return -1;
     }
