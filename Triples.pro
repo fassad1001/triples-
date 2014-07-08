@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     TTripleStorage.cpp \
     BenchmarkResult.cpp \
     Ontology.cpp \
-    TOntology.cpp
+    TOntology.cpp \
+    Class.cpp
 
 HEADERS += \
     Triple.h \
@@ -35,4 +36,5 @@ HEADERS += \
     TTripleStorage.h \
     BenchmarkResult.h \
     Ontology.h \
-    TOntology.h
+    TOntology.h \
+    Class.h

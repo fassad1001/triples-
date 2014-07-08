@@ -37,14 +37,8 @@ private slots:
     void TestSuperClasses_data();
     void TestSuperClasses();
 
-    void TestClassesForInstances_data();
-    void TestClassesForInstances();
-
     void TestMainSuperClass_data();
     void TestMainSuperClass();
-
-    void TestMainSuperClass2_data();
-    void TestMainSuperClass2();
 
     void TestIsValid_data();
     void TestIsValid();

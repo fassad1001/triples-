@@ -4,34 +4,31 @@ const QString Ontology::IS = "is";
 const QString Ontology::CONTAINS = "contains";
 const QString Ontology::CLASS = "class";
 
+
 Ontology::Ontology()
 {
 }
 
-Ontology::Ontology(QSet<Triple> storage) :
-    TripleStorage(storage)
+Ontology::Ontology(const QSet<Triple> &triples) :
+    TripleStorage(triples)
 {
-}
-
-bool LessThanBy(const QString &c1, const QString &c2)
-{
-
 }
 
 QSet<QString> Ontology::classInstances(const QString &className) const
 {
     QSet<QString> classesForCicle;
     QSet<QString> resultInstances;
-    QSet<QString> classesForRes;
+
     classesForCicle += className;
     resultInstances += subjectsFor(Ontology::IS, className);
+
     while(!classesForCicle.empty())
     {
-        foreach(const QString classForCicle, classesForCicle)
+        foreach(const QString &classForCicle, classesForCicle)
         {
-            foreach(const QString classf, subClasses(classForCicle))
+            foreach(const QString &subClass, subClasses(classForCicle))
             {
-                resultInstances += subjectsFor(Ontology::IS, classf);
+                resultInstances += subjectsFor(Ontology::IS, subClass);
             }
             classesForCicle = subClasses(classForCicle);
         }
@@ -74,87 +71,116 @@ QSet<QString> Ontology::allClasses() const
 
 QSet<QString> Ontology::allInstances() const
 {
+    //возвращает все инстансы в иерархии
+    //переменная будет в себе хранить все найденые инстансы
     QSet<QString> instances;
+    //переменная будет хранить в себе все классы
     QSet<QString> classes = allClasses();
+    //для каждого класса
     foreach(const QString classItem, classes)
     {
-        foreach(const QString instance, subjectsFor(Ontology::IS, classItem))
-        {
-            instances += instance;
-        }
+        //ложу найденные инстансы в переменную
+        instances += subjectsFor(Ontology::IS, classItem);
     }
+    //возвращаю результат
     return instances;
 }
 
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
+    //возвращаю все что подходит по паттерну (имяИнстанса;IS;*)
     return objectsFor(instanceName, Ontology::IS);
 }
 
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
-    return objectsFor(className, Ontology::CONTAINS);
-    QSet<QString> result;
+    //переменная будет хранить результаты (под классы)
+    QSet<QString> subClasses;
+    //переменная будет хранить классы для использования их в цикле
     QSet<QString> loopClasses;
-    QSet<QString> exchangeClasses;
+
+    //записываю первоначальные данные для цикла
     loopClasses += className;
-    result += objectsFor(className, Ontology::CONTAINS);
-    while (!loopClasses.empty())
+    //дополняю результаты с учетом первоначальных данных
+    subClasses += objectsFor(className, Ontology::CONTAINS);
+    //пока есть данные для цикла
+    while(!loopClasses.empty())
     {
-        exchangeClasses.clear();
+        //переменная будет хранить классы для передачи их следующей итерации цикла
+        QSet<QString> exchangeClasses;
+        //для каждого класса (для цикла)
         foreach(QString loopclass, loopClasses)
         {
-            QSet<QString> subjectsTooLoop = subjectsFor(Ontology::CONTAINS, loopclass);
-            foreach (const QString loopClass, subjectsTooLoop)
-            {
-                result += objectsFor(loopClass, Ontology::CONTAINS);
-                exchangeClasses += objectsFor(loopClass, Ontology::CONTAINS);
-            }
-            loopClasses = exchangeClasses;
+            //заполняю объекты для следующего цикла (имяКласса, CONSTAIN, *) это подклассы
+            exchangeClasses += objectsFor(loopclass, Ontology::CONTAINS);
+            //дополняю результаты
+            subClasses += exchangeClasses;
         }
+        //передаю полученные данные для обработки в следуюющем цикле
+        loopClasses = exchangeClasses;
     }
-
+    //возвращаю результат работы программы
+    return subClasses;
 }
 
 QSet<QString> Ontology::superClasses(const QString &className) const
 {
-    QSet<QString> result;
+    //переменная будет хранить результаты (под классы)
+    QSet<QString> superClasses;
+    //переменная будет хранить классы для использования их в цикле
     QSet<QString> loopClasses;
-    QSet<QString> exchangeClasses;
+
+    //записываю первоначальные данные для цикла
     loopClasses += className;
-    result += subjectsFor(Ontology::CONTAINS, className);
-    while (!loopClasses.empty())
+    //дополняю результаты с учетом первоначальных данных
+    superClasses += subjectsFor(Ontology::CONTAINS, className);
+    //пока есть данные для цикла
+    while(!loopClasses.empty())
     {
-            foreach(QString loopClass, loopClasses)
-            {
-                exchangeClasses.clear();
-                QSet<QString> loopSuperClasses;
-                loopSuperClasses = subjectsFor(Ontology::CONTAINS, loopClass);
-                foreach (const QString loopMasterClass, loopSuperClasses)
-                {
-                    result += subjectsFor(Ontology::CONTAINS, loopMasterClass);
-                    exchangeClasses += subjectsFor(Ontology::CONTAINS, loopMasterClass);
-                }
-                loopClasses = exchangeClasses;
-            }
+        //переменная будет хранить классы для передачи их следующей итерации цикла
+        QSet<QString> exchangeClasses;
+        //для каждого класса (для цикла)
+        foreach(QString loopclass, loopClasses)
+        {
+            //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это подклассы
+            exchangeClasses += subjectsFor(Ontology::CONTAINS, className);
+            //дополняю результаты
+            superClasses += exchangeClasses;
+        }
+        //передаю полученные данные для обработки в следуюющем цикле
+        loopClasses = exchangeClasses;
     }
-    return result;
+    //возвращаю результат работы программы
+    return superClasses;
 }
 
 
 
-QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QString &instanceName2) const
+QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
+                                       const QString &instanceName2) const
 {
     // ПОЛУЧИТЬ ВСЕ КЛАССЫ ДЛЯ instanceName1 И instanceName2, НАЙТИ ИХ ПЕРЕСЕЧЕНИЕ, В ПЕРЕСЕЧЕНИИ НАЙТИ МИНИМАЛЬНЫЕ КЛАССЫ ЧЕРЕЗ ФУНКЦИЮ qSort
-    QSet<QString> InterSectionClasses;
-    QList<QString> SortedIntersectionClasses;
-    InterSectionClasses = classesForInstance(instanceName1) & classesForInstance(instanceName2);
-    SortedIntersectionClasses = InterSectionClasses.toList();
-    qSort(SortedIntersectionClasses.begin(), SortedIntersectionClasses.end(), );
-    QSet<QString> result;
-    foreach(QString intersectionClass, InterSectionClasses)
+    //переменная будет хранить в себе результат пересечения классов
+    QSet<QString> interSectionClasses;
+    //переменная будет хранить в себе отсортированный список
+    QList<QString> sortedIntersectionClasses;
+    //записываю результат перечечения двух классов у инстансов
+    interSectionClasses = classesForInstance(instanceName1) & classesForInstance(instanceName2);
+    //переменная будет хранить в себе множество объектов типа Class для сортировки
+    QList<Class> sortedClasses;
+    //для каждого результата перечесения
+    foreach(QString Name, interSectionClasses)
     {
-        if (intersectionClass == SortedIntersectionClasses.first())
+        //запись результата в набор типа Class
+        sortedClasses += Class(Name, superClasses(Name));
+    }
+
+    qSort(sortedClasses.begin(), sortedClasses.end(),);
+
+    QSet<QString> result;
+    foreach(QString intersectionClass, interSectionClasses)
+    {
+        if (intersectionClass == sortedIntersectionClasses.first())
         {
             result += intersectionClass;
         }
@@ -164,9 +190,17 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
 
 bool Ontology::isValid() const
 {
+    QHash<QString, QHash<QString, bool>> transitiveClosure;
+    QSet<QString> allclasses = allClasses();
+    foreach(const QString classitem, allclasses)
+    {
+        classitem =
+    }
+
     QSet<QString> classes = allClasses();
     QSet<QString> loopclasses = allClasses();
     QSet<Pair> transitiveClosure = subjectsAndObjects(Ontology::CONTAINS);
+
     foreach(QString Class, classes)
     {
         foreach(QString loopclass, loopclasses)
@@ -191,6 +225,7 @@ bool Ontology::isMinimal() const
 {
     QSet<QString> instances = allInstances();
     QSet<QString> classesforinstance;
+
     foreach(QString instance, instances)
     {
         classesforinstance = classesForInstance(instance);
@@ -212,6 +247,7 @@ bool Ontology::isMinimal() const
             }
         }
     }
+    return true;
 }
 
 
@@ -328,9 +364,9 @@ bool Ontology::operator ==(const Ontology &o) const
     return triples_ == o.triples_;
 }
 
-QSet<Triple> Ontology::getOntology() const
+bool Ontology::CompareByClassLvl(const QString &class1, const QString &class2)
 {
-    return triples_;
+
 }
 
 
