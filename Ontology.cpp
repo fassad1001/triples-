@@ -137,15 +137,18 @@ QSet<QString> Ontology::superClasses(const QString &className) const
     result += subjectsFor(Ontology::CONTAINS, className);
     while (!loopClasses.empty())
     {
-        exchangeClasses.clear();
-        QSet<QString> loopMasterClasses;
-        loopMasterClasses = subjectsFor(Ontology::CONTAINS, loopClasses);
-        foreach (const QString loopMasterClass, loopMasterClasses)
+        foreach(QString loopClass, loopClasses)
         {
-            result += subjectsFor(Ontology::CONTAINS, loopMasterClass);
-            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+            exchangeClasses.clear();
+            QSet<QString> loopMasterClasses;
+            loopMasterClasses = subjectsFor(Ontology::CONTAINS, loopClasses);
+            foreach (const QString loopMasterClass, loopMasterClasses)
+            {
+                result += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+                exchangeClasses += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+            }
+            loopClasses = exchangeClasses;
         }
-        loopClasses = exchangeClasses;
     }
     return result;
 }
@@ -178,18 +181,7 @@ bool Ontology::CompareClassesMainSuper(const QString &className1, const QString 
 
 int Ontology::CompareByClassLvl(const QString &className1, const QString &className2) const
 {
-    if(getClassLvl(className1) > getClassLvl(className2))
-    {
-        return 1;
-    }
-    if(getClassLvl(className1) == getClassLvl(className2))
-    {
-        return 0;
-    }
-    if(getClassLvl(className1) < getClassLvl(className2))
-    {
-        return -1;
-    }
+    return (getClassLvl(className1) < getClassLvl(className2));
 }
 
 bool Ontology::isValid() const
@@ -326,7 +318,7 @@ void Ontology::minimalize()
         //каждый класс - потенциально новая ветка
         foreach(const QString classforinstance, classesforinstance)
         {
-            QList<QString> branch = subClasses(classforinstance) + superClasses(classforinstance);
+            QList<QString> branch = subClasses(classforinstance).toList() + superClasses(classforinstance).toList();
             QList<QString> branchItemsWithInstance;
             branchItemsWithInstance.clear();
             foreach(const QString branchItem, branch)
