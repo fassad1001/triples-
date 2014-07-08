@@ -78,6 +78,7 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 
 QSet<QString> Ontology::allClasses() const
 {
+    //подбираю все что подходит (*, IS, CLASS)
     return subjectsFor(Ontology::IS, Ontology::CLASS);
 }
 
