@@ -48,11 +48,15 @@ QSet<QString> Ontology::classInstances(const QString &className) const
 
 QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 {
+    //переменная хранит результаты работы метода (инстансы)
     QSet<QString> instanses;
+    //для каждого класса
     foreach(const QString &className, classNames)
     {
+        //дополняю результат инстансами
         instanses += classInstances(className);
     }
+    //возвращаю результат работы метода
     return instanses;
 }
 
