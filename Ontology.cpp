@@ -195,17 +195,28 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
 
 bool Ontology::isValid() const
 {
-
+    //переменная хранит в себе таблицу вида [Class1][Class2]=bool
     QHash<QString, QHash<QString, bool>> transitiveClosure;
+    //переменная хранит в себе пары (класс;подкласс) выбираю по образцу (класс;CONTAINS;подкласс)
+    QSet<Pair> closurePairs = subjectsAndObjects(Ontology::CONTAINS);
+    //для каждой пары
+    foreach(Pair closurePair, closurePairs)
+    {
+        //дополнить Хеш значением из пары
+        //если
+        if()
+        transitiveClosure.insert(closurePair.first(), )
+    }
+
     QSet<QString> allclasses = allClasses();
     foreach(const QString classitem, allclasses)
     {
-        classitem =
+        classitem
     }
 
     QSet<QString> classes = allClasses();
     QSet<QString> loopclasses = allClasses();
-    QSet<Pair> transitiveClosure = subjectsAndObjects(Ontology::CONTAINS);
+    QSet<Pair> transitiveClosure
 
     foreach(QString Class, classes)
     {
