@@ -12,6 +12,7 @@ public:
     Class();
     Class(QString Name, QSet<QString> Parents);
     bool operator <(const Class &anotherClass) const;
+    bool operator >(const Class &anotherClass) const;
 };
 
 #endif // CLASS_H
