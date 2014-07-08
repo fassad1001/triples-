@@ -187,17 +187,9 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
         //запись результата в набор типа Class
         sortedClasses += Class(Name, superClasses(Name));
     }
-    qSort(sortedClasses.begin(), sortedClasses.end(),);
+    qSort(sortedClasses.begin(), sortedClasses.end());
     //беру первый элемент как самый малый элемент и возвращаю его
-    QSet<QString> result;
-    foreach(QString intersectionClass, interSectionClasses)
-    {
-        if (intersectionClass == sortedIntersectionClasses.first())
-        {
-            result += intersectionClass;
-        }
-    }
-    return result;
+    return sortedClasses.first();
 }
 
 bool Ontology::isValid() const
