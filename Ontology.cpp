@@ -16,23 +16,33 @@ Ontology::Ontology(const QSet<Triple> &triples) :
 
 QSet<QString> Ontology::classInstances(const QString &className) const
 {
+    //переменная хранит в себе классы для цикла
     QSet<QString> classesForCicle;
+    //переменная хранит в себе результаты
     QSet<QString> resultInstances;
 
+    //добавляю первичные данные
     classesForCicle += className;
+    //по первичным данным добавляю первые результаты (*, IS, имяКласса)
     resultInstances += subjectsFor(Ontology::IS, className);
 
+    //пока есть классы для цикла
     while(!classesForCicle.empty())
     {
+        //переменная будет хранить данные для следующей итерации
+        QSet<QString> nextIteration;
+        //для каждого класса-для-цикла
         foreach(const QString &classForCicle, classesForCicle)
         {
-            foreach(const QString &subClass, subClasses(classForCicle))
-            {
-                resultInstances += subjectsFor(Ontology::IS, subClass);
-            }
-            classesForCicle = subClasses(classForCicle);
+            //заполняем данные для следующей итерации
+            nextIteration += subClasses(classForCicle);
         }
+        //заполняем результат данными для след итерации
+        resultInstances += nextIteration;
+        //указываю данные для след итерации
+        classesForCicle = nextIteration;
     }
+    //возвращаем результат работы метода
     return resultInstances;
 }
 
