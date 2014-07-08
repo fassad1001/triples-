@@ -62,19 +62,17 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
-    //получаю набор инатансов для каждого из классов
-    //нахожу пересечение общее и записываю его
-    //возвращаю результат пересечения как результат конечный
+    //переменная хранит все классы в иерархии
+    QSet<QString> allclasses = allClasses();
+    //переменная хранит все инстансы-результаты-работы-метода
     QSet<QString> classinstances;
-    foreach(QString className, classNames)
+    //для каждого класса
+    foreach(QString classItem, allclasses)
     {
-        if(classinstances.empty())
-        {
-            classinstances = classInstances(className);
-            continue;
-        }
-        classinstances &= classInstances(className);
+        //дополняю результаты инстансами класса
+        classinstances += classInstances(classItem);
     }
+    //возвращаю инстанс-класса-результаты-работы-функции
     return classinstances;
 }
 
