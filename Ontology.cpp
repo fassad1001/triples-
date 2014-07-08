@@ -13,6 +13,11 @@ Ontology::Ontology(QSet<Triple> storage) :
 {
 }
 
+bool LessThanBy(const QString &c1, const QString &c2)
+{
+
+}
+
 QSet<QString> Ontology::classInstances(const QString &className) const
 {
     QSet<QString> classesForCicle;
@@ -46,36 +51,20 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
-    // !!! ПЕРЕПИСАТЬ ИСПОЛЬЗУЯ ОПЕРАТОР ПЕРЕСЕЧЕНИЯ МНОЖЕСТВ И МЕТОД classInstances
-
-    //все экземпляры, которые входят в каждый класс из classNames
-    QSet<QString> muster;
-    QSet<QString> instanses;
-    //нахожу максимально длинный список
-    foreach(const QString className, classNames)
+    //получаю набор инатансов для каждого из классов
+    //нахожу пересечение общее и записываю его
+    //возвращаю результат пересечения как результат конечный
+    QSet<QString> classinstances;
+    foreach(QString className, classNames)
     {
-        muster += subjectsFor(Ontology::IS, className);
-    }
-    bool is_uniq;
-    //иду по всем элементам образца
-    foreach(const QString musterElement, muster)
-    {
-        is_uniq = true;
-        //для элемента образца ставлю метку если он не присутствует хотябы в одном списке
-        foreach(const QString className, classNames)
+        if(classinstances.empty())
         {
-            if (!subjectsFor(Ontology::IS, className).contains(musterElement))
-            {
-                is_uniq = false;
-            }
+            classinstances = classInstances(className);
+            continue;
         }
-        //в случае отсутствия изменения метки я записываю элемент образца в результат
-        if (is_uniq == true)
-        {
-            instanses << musterElement;
-        }
+        classinstances &= classInstances(className);
     }
-    return instanses;
+    return classinstances;
 }
 
 QSet<QString> Ontology::allClasses() const
@@ -85,7 +74,6 @@ QSet<QString> Ontology::allClasses() const
 
 QSet<QString> Ontology::allInstances() const
 {
-    // !!!! ИЗНАЧАЛЬНО ПОЛУЧИТЬ МНОЖЕСТВО ВСЕХ КЛАССОВ И С ПОМЩЬЮ НЕГО ПРОВЕРЯТЬ ЯВЛЯЕТСЯ ЛИ ОБЪЕКТ КЛАССОМ
     QSet<QString> instances;
     QSet<QString> classes = allClasses();
     foreach(const QString classItem, classes)
@@ -137,18 +125,18 @@ QSet<QString> Ontology::superClasses(const QString &className) const
     result += subjectsFor(Ontology::CONTAINS, className);
     while (!loopClasses.empty())
     {
-        foreach(QString loopClass, loopClasses)
-        {
-            exchangeClasses.clear();
-            QSet<QString> loopMasterClasses;
-            loopMasterClasses = subjectsFor(Ontology::CONTAINS, loopClasses);
-            foreach (const QString loopMasterClass, loopMasterClasses)
+            foreach(QString loopClass, loopClasses)
             {
-                result += subjectsFor(Ontology::CONTAINS, loopMasterClass);
-                exchangeClasses += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+                exchangeClasses.clear();
+                QSet<QString> loopSuperClasses;
+                loopSuperClasses = subjectsFor(Ontology::CONTAINS, loopClass);
+                foreach (const QString loopMasterClass, loopSuperClasses)
+                {
+                    result += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+                    exchangeClasses += subjectsFor(Ontology::CONTAINS, loopMasterClass);
+                }
+                loopClasses = exchangeClasses;
             }
-            loopClasses = exchangeClasses;
-        }
     }
     return result;
 }
@@ -162,7 +150,7 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
     QList<QString> SortedIntersectionClasses;
     InterSectionClasses = classesForInstance(instanceName1) & classesForInstance(instanceName2);
     SortedIntersectionClasses = InterSectionClasses.toList();
-    qSort(SortedIntersectionClasses.begin(), SortedIntersectionClasses.end(), CompareClassesMainSuper);
+    qSort(SortedIntersectionClasses.begin(), SortedIntersectionClasses.end(), );
     QSet<QString> result;
     foreach(QString intersectionClass, InterSectionClasses)
     {
@@ -172,16 +160,6 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1, const QStri
         }
     }
     return result;
-}
-
-bool Ontology::CompareClassesMainSuper(const QString &className1, const QString &className2) const
-{
-    return (superClasses(className1).count() < superClasses(className2).count());
-}
-
-int Ontology::CompareByClassLvl(const QString &className1, const QString &className2) const
-{
-    return (getClassLvl(className1) < getClassLvl(className2));
 }
 
 bool Ontology::isValid() const
@@ -348,6 +326,11 @@ void Ontology::minimalize()
 bool Ontology::operator ==(const Ontology &o) const
 {
     return triples_ == o.triples_;
+}
+
+QSet<Triple> Ontology::getOntology() const
+{
+    return triples_;
 }
 
 

@@ -23,16 +23,16 @@ public:
     QSet<QString> subClasses(const QString &className) const;
     QSet<QString> superClasses(const QString &className) const;
     QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;
-    bool CompareClassesMainSuper(const QString &className1, const QString &className2) const;
-    int CompareByClass();
-    int CompareByClassLvl(const QString &className1, const QString &className2) const;
     bool isValid() const;
     bool isMinimal() const;
     int getClassLvl(const QString &className) const;
     QSet<QString> getNotMinimalInstances() const;
     void minimalize();
     bool operator ==(const Ontology &o) const;
+    QSet<Triple> getOntology() const;
 };
 Q_DECLARE_METATYPE(Ontology)
+
+
 
 #endif // ONTOLOGY_H
