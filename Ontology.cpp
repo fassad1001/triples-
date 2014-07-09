@@ -342,38 +342,56 @@ bool Ontology::isMinimal() const
 
 void Ontology::minimalize()
 {
-    QSet<QString> instances = allInstances();
-    QSet<QString> classesforinstance;
-    foreach(QString instance, instances)
+    //переменная хранит все классы
+    QSet<QString> allclasses = allClasses();
+    //переменная хранит набор объектов типа "Класс"
+    QSet<Class> classes;
+    //переменная хранит набор инстансов на подозрение
+    QSet<QString> instances;
+    //если иерархия валидна
+    if(isValid())
     {
-        classesforinstance = classesForInstance(instance);
-        //у нас могут быть как и те которые находятся на одной ветке так и те которые находятся на разных ветках
-        //отсеиваем их по веткам
-        //каждый класс - потенциально новая ветка
-        foreach(const QString classforinstance, classesforinstance)
+        //для каждого класса
+        foreach(QString class1, allclasses)
         {
-            QList<QString> branch = subClasses(classforinstance).toList() + superClasses(classforinstance).toList();
-            QList<QString> branchItemsWithInstance;
-            branchItemsWithInstance.clear();
-            foreach(const QString branchItem, branch)
+            //для каждого класса
+            foreach(QString class2, allclasses)
             {
-                //если класс ветви содержит сущность которую мы ищем
-                if(classInstances(branchItem).contains(instance))
+                //если пересечение инстансов-класса дает положительный результат
+                if(!(classInstances(class1) && classInstances(class2)).isEmpty())
                 {
-                    //то добавляем этот класс в коллекцию на конкурс
-                    branchItemsWithInstance += branchItem;
+                    //записываем результат в список инстансов на подозрение
+                    instances += classInstances(class1) && classInstances(class2);
                 }
             }
-            //собираю элементы ветки для перебора
-            QList<QString> branchItemstoLoop = branchItemsWithInstance;
-            //сортирую по увеличению значения уровень иерархии
-            qSort(branchItemsWithInstance.begin(), branchItemsWithInstance.end(), CompareByClassLvl);
-            //убираю элемент с минмальным уровнем иерархии из списка на чистку
-            branchItemstoLoop.removeFirst();
-            //провожу чистку удаляю тройки со значениями (instance IS itemToRemove)
-            foreach(const QString ItemToRemove, branchItemstoLoop)
+        }
+        //для каждого элемента-списка-на-подозрение
+        foreach(QString instance, instances)
+        {
+            //переменная будет хранить все классы для интанса в виде объектов "Class"
+            QSet<Class> instanceclasses;
+            //переменная хранит в себе классы для инстанса типа QString
+            QSet<QString> classesforinstance = classesForInstance(instance);
+            //для каждого класса для инстанса (QString)
+            foreach(QString instClass, classesforinstance)
             {
-                triples_ -= Triple(instance, Ontology::IS, ItemToRemove);
+                //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
+                instanceclasses += Class(instClass, superClasses(instClass));
+            }
+            //для каждого класса-для-инстанса
+            foreach(Class instanceclass1, instanceclasses)
+            {
+                //для каждого класса-для-инстанса
+                foreach(Class instanceclass2, instanceclasses)
+                {
+                    //если класса-для-инстанса1 < класса-для-инстанса2
+                    if(instanceclass1 < instanceclass2)
+                    {
+                        //можно удалить связь (имяИнстанса;IS;класс-для-инатанса1)*как вари-
+                        //для устранения неминимальной связи                      *ант
+                        triples_ -= Triple(instance, Ontology::IS, instanceclass1.name);
+                    }
+                }
             }
         }
     }
