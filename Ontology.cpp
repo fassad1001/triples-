@@ -293,6 +293,7 @@ bool Ontology::isMinimal() const
         foreach(QString class1, allclasses)
         {
             //добавить объект типа класс в коллекцию
+
         }
         //для каждого класса
         foreach(QString class1, allclasses)
@@ -304,6 +305,7 @@ bool Ontology::isMinimal() const
                 if(!(classInstances(class1) && classInstances(class2)).isEmpty())
                 {
                     //записываем результат в список инстансов на подозрение
+                    instances += classInstances(class1) && classInstances(class2);
                 }
             }
         }
@@ -312,7 +314,14 @@ bool Ontology::isMinimal() const
         {
             //переменная будет хранить все классы для интанса в виде объектов "Class"
             QSet<Class> instanceclasses;
-            //запись классов в переменную классов для инстанса
+            //переменная хранит в себе классы для инстанса типа QString
+            QSet<QString> classesforinstance = classesForInstance(instance);
+            //для каждого класса для инстанса (QString)
+            foreach(QString instClass, classesforinstance)
+            {
+                //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
+                instanceclasses += Class(instClass, superClasses(instClass));
+            }
             //для каждого класса-для-инстанса
             foreach(Class instanceclass1, instanceclasses)
             {
