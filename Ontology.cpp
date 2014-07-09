@@ -281,17 +281,37 @@ bool Ontology::isValid() const
 bool Ontology::isMinimal() const
 {
     //переменная хранит все классы
+    QSet<QString> allclasses = allClasses();
     //переменная хранит набор объектов типа "Класс"
+    QSet<Class> classes;
     //переменная хранит набор инстансов на подозрение
+    QSet<QString> instances;
     //если иерархия валидна
+    if(isValid())
+    {
         //для каждого класса
+        foreach(QString class1, allclasses)
+        {
             //добавить объект типа класс в коллекцию
+        }
         //для каждого класса
+        foreach(QString class1, allclasses)
+        {
             //для каждого класса
-                //если пересечение дает положительный результат
+            foreach(QString class2, allclasses)
+            {
+                //если пересечение инстансов-класса дает положительный результат
+                if(!(classInstances(class1) && classInstances(class2)).isEmpty())
+                {
                     //записываем результат в список инстансов на подозрение
+                }
+            }
+        }
         //для каждого элемента-списка-на-подозрение
+        foreach(QString instance, instances)
+        {
             //переменная будет хранить все классы для интанса в виде объектов "Class"
+            QSet<Class> instanceclasses;
             //запись классов в переменную классов для инстанса
                 //для каждого класса-для-инстанса
                     //для каждого класса-для-инстанса
@@ -299,6 +319,8 @@ bool Ontology::isMinimal() const
                             //вернуть ложь
                             //можно также удалить связь (имяИнстанса;IS;класс-для-инатанса1)
                             //для устранения неминимальной связи
+        }
+    }
     QSet<QString> instances = allInstances();
     QSet<QString> classesforinstance;
 
