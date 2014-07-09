@@ -292,12 +292,6 @@ bool Ontology::isMinimal() const
         //для каждого класса
         foreach(QString class1, allclasses)
         {
-            //добавить объект типа класс в коллекцию
-
-        }
-        //для каждого класса
-        foreach(QString class1, allclasses)
-        {
             //для каждого класса
             foreach(QString class2, allclasses)
             {
@@ -347,45 +341,6 @@ bool Ontology::isMinimal() const
 }
 
 
-int Ontology::getClassLvl(const QString &className) const
-{
-    QSet<QString> headerClasses;
-    QSet<QString> classes = allClasses();
-    foreach(const QString classf, classes)
-    {
-        if (superClasses(classf).empty())
-        {
-            headerClasses += classf;
-        }
-    }
-    QSet<QString> classesForCycle = headerClasses;
-    QSet<QString> classesForTest;
-    int level = 0;
-    if (classesForCycle.contains(className))
-    {
-        return level;
-    }
-    level ++;
-    while(!classesForCycle.empty())
-    {
-
-        foreach(const QString classf, classesForCycle)
-        {
-            classesForTest += subClasses(classf);
-        }
-        if (classesForTest.contains(className))
-        {
-            return level;
-        }
-        level ++;
-        classesForTest.clear();
-        foreach(const QString classf, classesForCycle)
-        {
-            classesForCycle += subClasses(classf);
-        }
-    }
-    return -1;
-}
 
 QSet<QString> Ontology::getNotMinimalInstances() const
 {

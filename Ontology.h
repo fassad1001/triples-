@@ -35,8 +35,6 @@ public:
     bool isValid() const;
     bool isMinimal() const;
 
-    int getClassLvl(const QString &className) const;
-
     QSet<QString> getNotMinimalInstances() const;
 
     void minimalize();
