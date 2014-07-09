@@ -313,39 +313,28 @@ bool Ontology::isMinimal() const
             //переменная будет хранить все классы для интанса в виде объектов "Class"
             QSet<Class> instanceclasses;
             //запись классов в переменную классов для инстанса
-                //для каждого класса-для-инстанса
-                    //для каждого класса-для-инстанса
-                        //если класса-для-инстанса1 < класса-для-инстанса2
-                            //вернуть ложь
-                            //можно также удалить связь (имяИнстанса;IS;класс-для-инатанса1)
-                            //для устранения неминимальной связи
-        }
-    }
-    QSet<QString> instances = allInstances();
-    QSet<QString> classesforinstance;
-
-    foreach(QString instance, instances)
-    {
-        classesforinstance = classesForInstance(instance);
-        //у нас могут быть как и те которые находятся на одной ветке так и те которые находятся на разных ветках
-        //отсеиваем их по веткам
-        //каждый класс - потенциально новая ветка
-        foreach(const QString classforinstance, classesforinstance)
-        {
-            QSet<QString> branch;
-            branch += subClasses(classforinstance) += superClasses(classforinstance);
-            foreach(const QString branchItem, branch)
+            //для каждого класса-для-инстанса
+            foreach(Class instanceclass1, instanceclasses)
             {
-                //если класс ветви содержит сущность которую мы ищем
-                if(classInstances(branchItem).contains(instance))
+                //для каждого класса-для-инстанса
+                foreach(Class instanceclass2, instanceclasses)
                 {
-                    //то сообщаем что вся иерархия не минимальна
-                    return false;
+                    //если класса-для-инстанса1 < класса-для-инстанса2
+                    if(instanceclass1 < instanceclass2)
+                    {
+                        //можно удалить связь (имяИнстанса;IS;класс-для-инатанса1)*как вари-
+                        //для устранения неминимальной связи                      *ант
+                        //вернуть ложь
+                        return false;
+                    }
                 }
             }
         }
+        //вернуть правду
+        return true;
     }
-    return true;
+    //вернуть ложь
+    return false;
 }
 
 
