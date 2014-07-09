@@ -197,16 +197,69 @@ bool Ontology::isValid() const
 {
     //переменная хранит в себе таблицу вида [Class1][Class2]=bool
     QHash<QString, QHash<QString, bool>> transitiveClosure;
+    //переменная содержит в себе все классы
+    QSet<QString> allclasses = allClasses();
     //переменная хранит в себе пары (класс;подкласс) выбираю по образцу (класс;CONTAINS;подкласс)
     QSet<Pair> closurePairs = subjectsAndObjects(Ontology::CONTAINS);
     //для каждой пары
-    foreach(Pair closurePair, closurePairs)
+    foreach(const Pair &closurePair, closurePairs)
     {
         //дополнить Хеш значением из пары
-        //если
-        if()
-        transitiveClosure.insert(closurePair.first(), )
+        transitiveClosure.insert(closurePair.first(), closurePair.second);
+        //если есть замыкание на себе, то вернуть ложь
+        //для каждого класса
+        //если для (1,2) есть (2,3) то
+        //создать связь (1,3)
     }
+    //вариант 1
+    //для каждого класса
+    foreach(const QString &classItem1, allclasses)
+    {
+        //для каждого класса
+        foreach(const QString &classItem2, allclasses)
+        {
+            //добавить в таблицу (класс1, класс2, ложь)
+            transitiveClosure[classItem1][classItem2] = false;
+        }
+    }
+
+    //для каждой пары
+    foreach(const Pair &closurePair, closurePairs)
+    {
+        //добавить в таблицу (класс1, класс2, правда)
+        transitiveClosure[closurePair.first()][closurePair.second()] = true;
+    }
+    //переменная хранит в себе метку (изменилось/не изменилось)
+    bool change = false;
+    //пока чтото изменяется
+    do
+    {
+        //для каждого класса
+        foreach(const QString &classItem1, allclasses)
+        {
+            //для каждого класса
+            foreach(const QString &classItem2, allclasses)
+            {
+                //для каждого класса
+                foreach(const QString &classItem1, allclasses)
+                {
+                    //если (класс1, класс2, правда) && (класс2, класс1, правда) то
+                    if(transitiveClosure[classItem1][classItem2] == true
+                            && transitiveClosure[closurePair.first()][closurePair.second()] == true)
+                    {
+                        //добавить (класс1, класс3, правда)
+                        transitiveClosure[classItem1][classItem3] = true;
+                        //установить метку (что-то изменилось)
+                        change = true;
+                    }
+                }
+
+            }
+        }
+    }
+
+
+
 
     QSet<QString> allclasses = allClasses();
     foreach(const QString classitem, allclasses)
@@ -218,7 +271,7 @@ bool Ontology::isValid() const
     QSet<QString> loopclasses = allClasses();
     QSet<Pair> transitiveClosure
 
-    foreach(QString Class, classes)
+            foreach(QString Class, classes)
     {
         foreach(QString loopclass, loopclasses)
         {
