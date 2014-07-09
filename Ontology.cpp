@@ -298,6 +298,7 @@ bool Ontology::isMinimal() const
                         //если класса-для-инстанса1 < класса-для-инстанса2
                             //вернуть ложь
                             //можно также удалить связь (имяИнстанса;IS;класс-для-инатанса1)
+                            //для устранения неминимальной связи
     QSet<QString> instances = allInstances();
     QSet<QString> classesforinstance;
 
