@@ -63,7 +63,7 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
     //переменная хранит все классы в иерархии
-    QSet<QString> allclasses = allClasses();
+    QSet<QString> allclasses = classNames;
     //переменная хранит все инстансы-результаты-работы-метода
     QSet<QString> classinstances;
     //для каждого класса
@@ -196,7 +196,7 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
 bool Ontology::isValid() const
 {
     //переменная хранит в себе таблицу вида [Class1][Class2]=bool
-    QHash<QString, QHash<QString, bool>> transitiveClosure;
+    QHash<QString, QHash<QString, bool> > transitiveClosure;
     //переменная содержит в себе все классы
     QSet<QString> allclasses = allClasses();
     //переменная хранит в себе пары (класс;подкласс) выбираю по образцу (класс;CONTAINS;подкласс)
@@ -296,10 +296,10 @@ bool Ontology::isMinimal() const
             foreach(QString class2, allclasses)
             {
                 //если пересечение инстансов-класса дает положительный результат
-                if(!(classInstances(class1) && classInstances(class2)).isEmpty())
+                if(!(classInstances(class1) & classInstances(class2)).isEmpty())
                 {
                     //записываем результат в список инстансов на подозрение
-                    instances += classInstances(class1) && classInstances(class2);
+                    instances += classInstances(class1) & classInstances(class2);
                 }
             }
         }
@@ -314,7 +314,7 @@ bool Ontology::isMinimal() const
             foreach(QString instClass, classesforinstance)
             {
                 //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
-                instanceclasses += Class(instClass, superClasses(instClass));
+                instanceclasses << Class(instClass, superClasses(instClass));
             }
             //для каждого класса-для-инстанса
             foreach(Class instanceclass1, instanceclasses)
@@ -358,10 +358,10 @@ void Ontology::minimalize()
             foreach(QString class2, allclasses)
             {
                 //если пересечение инстансов-класса дает положительный результат
-                if(!(classInstances(class1) && classInstances(class2)).isEmpty())
+                if(!(classInstances(class1) & classInstances(class2)).isEmpty())
                 {
                     //записываем результат в список инстансов на подозрение
-                    instances += classInstances(class1) && classInstances(class2);
+                    instances += classInstances(class1) & classInstances(class2);
                 }
             }
         }

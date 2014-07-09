@@ -21,7 +21,7 @@ public:
     QSet<QString> classInstances(const QString &className) const;
     QSet<QString> anyClassInstances(const QStringList &classNames) const;
 
-    QSet<QString> allClassInstances(const QStringList &classNames) const;
+    QSet<QString> allClassInstances() const;
     QSet<QString> allClasses() const;
     QSet<QString> allInstances() const;
 

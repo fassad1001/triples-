@@ -13,6 +13,17 @@ Class::Class(QString Name,
 
 }
 
+QString Class::toString() const
+{
+    QString result;
+    result << name;
+    foreach(QString parent, parents)
+    {
+        result << ";" << parent;
+    }
+    return result;
+}
+
 bool Class::operator <(const Class &anotherClass) const
 {
     if(parents.contains(anotherClass.name))
@@ -28,6 +39,18 @@ bool Class::operator <(const Class &anotherClass) const
 bool Class::operator >(const Class &anotherClass) const
 {
     if(anotherClass<this)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool Class::operator ==(const Class class2) const
+{
+    if(name == class2.name && parents == class2.parents)
     {
         return true;
     }
