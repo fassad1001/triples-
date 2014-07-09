@@ -11,6 +11,15 @@ void TOntology::TestClassInstances_data()
 
     QTest::addColumn <QSet<QString> > ("classInstances");
 
+    QTest::newRow("fake-class") << (Ontology(QSet<Triple>()
+                                                << Triple("class1", Ontology::IS, Ontology::CLASS)
+                                                << Triple("class2", Ontology::IS, Ontology::CLASS)
+                                                << Triple("instance1", Ontology::IS,"class1")
+                                                << Triple("instance2", Ontology::IS,"class2")
+                                                << Triple("instance3" ,Ontology::IS,"class2")))
+                                   <<("class123")
+                                  <<(QSet<QString>());
+
     QTest::newRow("two-instances") << (Ontology(QSet<Triple>()
                                                 << Triple("class1", Ontology::IS, Ontology::CLASS)
                                                 << Triple("class2", Ontology::IS, Ontology::CLASS)
@@ -95,6 +104,19 @@ void TOntology::TestClassInstances_data()
                                               <<"instance1"
                                               );
 
+    QTest::newRow("class-has-instances-as-instances-of-other-class-2") << (Ontology(QSet<Triple>()
+                                                 << Triple("class1", Ontology::IS, Ontology::CLASS)
+                                                 << Triple("class2", Ontology::IS, Ontology::CLASS)
+                                                 << Triple("class3", Ontology::IS, Ontology::CLASS)
+                                                 << Triple("class1", Ontology::CONTAINS, "class2")
+                                                 << Triple("class2", Ontology::CONTAINS, "class3")
+                                                 << Triple("instance1", Ontology::IS, "class3")
+                                                 ))
+                                       << ("class1")
+                                          << (QSet<QString>()
+                                              <<"instance1"
+                                              );
+
     //запрос к пустой онтологии;класс без экземпляров; класс с одним экземляров; запрос для класса, отсутсвующего в онтологии; запрос для класса, получающего экземпляры через наследование классов
 }
 
@@ -141,25 +163,30 @@ void TOntology::TestAnyClassInstances_data()
     QTest::newRow("fake-class-as-argument") << (Ontology(QSet<Triple>()
                               << Triple("class1", Ontology::IS, Ontology::CLASS)
                               << Triple("class2", Ontology::IS, Ontology::CLASS)
-                              << Triple("instance1", Ontology::IS, "class1")
-                                                          ))
+                              << Triple("instance1", Ontology::IS, "class1")))
                               <<(QStringList()
-                              << "class2"
-                                  )
-                              <<(QStringList())
+                              << "class2")
                              <<(QSet<QString>());
 
     QTest::newRow("class-has-instances-as-instances-of-other-class") << (Ontology(QSet<Triple>()
                              << Triple("class1", Ontology::IS, Ontology::CLASS)
                              << Triple("class2", Ontology::IS, Ontology::CLASS)
                              << Triple("class1", Ontology::CONTAINS, "class2")
-                             << Triple("instance1", Ontology::IS, "class2")
-                                                          ))
+                             << Triple("instance1", Ontology::IS, "class2")))
                              <<(QStringList()
-                             << "class1"
-                                  )
-                             <<(QStringList())
-                             <<(QSet<QString>());
+                             << "class1")
+                             <<(QSet<QString>()<<"instance1");
+
+    QTest::newRow("class-has-instances-as-instances-of-other-class-2") << (Ontology(QSet<Triple>()
+                             << Triple("class1", Ontology::IS, Ontology::CLASS)
+                             << Triple("class2", Ontology::IS, Ontology::CLASS)
+                             << Triple("class3", Ontology::IS, Ontology::CLASS)
+                             << Triple("class1", Ontology::CONTAINS, "class2")
+                             << Triple("class2", Ontology::CONTAINS, "class3")
+                             << Triple("instance1", Ontology::IS, "class1")))
+                             <<(QStringList()
+                             << "class1")
+                             <<(QSet<QString>()<<"instance1");
 
     //запрос к пустой онтологии;класс без экземпляров; класс с одним экземляров; запрос для класса, отсутсвующего в онтологии; запрос для класса, получающего экземпляры через наследование классов
 }
@@ -209,20 +236,28 @@ void TOntology::TestAllClassInstances_data()
                                  )
                              <<(QSet<QString>());
 
-    QTest::newRow("class-with-one-instance") << (Ontology(QSet<Triple>()
+    QTest::newRow("class-with-2-instances-and-inheritance") << (Ontology(QSet<Triple>()
                               << Triple("class1", Ontology::IS, Ontology::CLASS)
                               << Triple("class2", Ontology::IS, Ontology::CLASS)
                               << Triple("class3", Ontology::IS, Ontology::CLASS)
-                              << Triple("class2", Ontology::CONTAINS, "class3")
-                              << Triple("instance1", Ontology::IS, "class3")
-                                                          ))
+                              << Triple("class4", Ontology::IS, Ontology::CLASS)
+                              << Triple("class5", Ontology::IS, Ontology::CLASS)
+                              << Triple("class6", Ontology::IS, Ontology::CLASS)
+                              << Triple("class7", Ontology::IS, Ontology::CLASS)
+                              << Triple("class1", Ontology::CONTAINS, "class2")
+                              << Triple("class2", Ontology::CONTAINS, "class4")
+                              << Triple("class4", Ontology::CONTAINS, "class6")
+                              << Triple("class1", Ontology::CONTAINS, "class3")
+                              << Triple("class3", Ontology::CONTAINS, "class5")
+                              << Triple("class5", Ontology::CONTAINS, "class7")
+                              << Triple("instance1", Ontology::IS, "class6")
+                              << Triple("instance2", Ontology::IS, "class7")))
                               <<(QStringList()
-                                 <<"class1"
                                  <<"class2"
-                                 )
+                                 <<"class3")
                              <<(QSet<QString>()
                                 <<"instance1"
-                                );
+                                <<"instacne2");
 
      //запрос к пустой онтологии;класс без экземпляров; класс с одним экземляров; запрос для класса, отсутсвующего в онтологии; запрос для класса, получающего экземпляры через наследование классов
 }
@@ -512,8 +547,7 @@ void TOntology::TestMainSuperClass_data()
 
     QTest::addColumn <QSet<QString> > ("classes");
 
-    QTest::newRow("empty-ontology") << (Ontology(QSet<Triple>()
-                                           ))
+    QTest::newRow("empty-ontology") << (Ontology(QSet<Triple>()))
                               <<("1")
                              <<("2")
                             <<(QSet<QString>()
@@ -610,11 +644,11 @@ void TOntology::TestIsMinimal_data()
     QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
                                            << Triple("a", Ontology::CONTAINS,"b")
                                            << Triple("a", Ontology::CONTAINS,"c")
-                                           << Triple("b", Ontology::CONTAINS,"d")
+                                           << Triple("b", Ontology::CONTAINS,"dex")
                                            << Triple("a", Ontology::IS, Ontology::CLASS)
                                            << Triple("b", Ontology::IS, Ontology::CLASS)
                                            << Triple("c", Ontology::IS, Ontology::CLASS)
-                                           << Triple("d", Ontology::IS, Ontology::CLASS)
+                                           << Triple("dex", Ontology::IS, Ontology::CLASS)
                                            << Triple("t", Ontology::IS, "a")
                                            ))
                               <<true;
@@ -663,7 +697,7 @@ void TOntology::TestIsMinimal_data()
                                            ))
                               <<true;
 
-    QTest::newRow("TestNum3") << (Ontology(QSet<Triple>()
+    QTest::newRow("TestNum4") << (Ontology(QSet<Triple>()
                                            << Triple("a", Ontology::CONTAINS,"b")
                                            << Triple("b", Ontology::CONTAINS,"c")
                                            << Triple("b", Ontology::CONTAINS,"d")
@@ -703,51 +737,6 @@ void TOntology::TestIsMinimal()
     QCOMPARE(ontology.isMinimal(),isItMinimal);
 }
 
-void TOntology::TestGetClassLvl_data()
-{
-    QTest::addColumn <Ontology> ("ontology");
-    QTest::addColumn <QString> ("className");
-    QTest::addColumn <int> ("lvlOfClass");
-
-    QTest::newRow("testNum1") << (Ontology(QSet<Triple>()
-                                           << Triple("class1", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class2", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class3", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class1", Ontology::CONTAINS, "class2")
-                                           << Triple("class2", Ontology::CONTAINS, "class3")
-                                           ))
-                                 <<"class1"
-                                   <<0;
-
-    QTest::newRow("testNum2") << (Ontology(QSet<Triple>()
-                                           << Triple("class1", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class2", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class3", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class1", Ontology::CONTAINS, "class2")
-                                           << Triple("class2", Ontology::CONTAINS, "class3")
-                                           ))
-                                 <<"class2"
-                                   <<1;
-
-    QTest::newRow("testNum3") << (Ontology(QSet<Triple>()
-                                           << Triple("class1", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class2", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class3", Ontology::IS, Ontology::CLASS)
-                                           << Triple("class1", Ontology::CONTAINS, "class2")
-                                           << Triple("class2", Ontology::CONTAINS, "class3")
-                                           ))
-                                 <<"class3"
-                                   <<2;
-}
-
-void TOntology::TestGetClassLvl()
-{
-    QFETCH(Ontology, ontology);
-    QFETCH(QString, className);
-    QFETCH(int, lvlOfClass);
-
-    QCOMPARE(ontology.getClassLvl(className), lvlOfClass);
-}
 
 void TOntology::TestMinimalize_data()
 {
@@ -779,56 +768,3 @@ void TOntology::TestMinimalize()
 
     QCOMPARE(ontology1.isMinimal(), isminimal);
 }
-
-void TOntology::TestGetNotMinimalInstances_data()
-{
-
-    QTest::addColumn <Ontology> ("ontology");
-    QTest::addColumn <QSet<QString> > ("minimalInstances");
-
-    QTest::newRow("TestNum1") << (Ontology(QSet<Triple>()
-                                           << Triple("a", Ontology::CONTAINS,"b")
-                                           << Triple("b", Ontology::CONTAINS,"c")
-                                           << Triple("b", Ontology::CONTAINS,"d")
-                                           << Triple("c", Ontology::CONTAINS,"e")
-                                           << Triple("c", Ontology::CONTAINS,"f")
-                                           << Triple("d", Ontology::CONTAINS,"g")
-                                           << Triple("d", Ontology::CONTAINS,"h")
-                                           << Triple("e", Ontology::CONTAINS,"i")
-                                           << Triple("f", Ontology::CONTAINS,"j")
-                                           << Triple("g", Ontology::CONTAINS,"k")
-                                           << Triple("h", Ontology::CONTAINS,"l")
-                                           << Triple("a", Ontology::IS, Ontology::CLASS)
-                                           << Triple("b", Ontology::IS, Ontology::CLASS)
-                                           << Triple("c", Ontology::IS, Ontology::CLASS)
-                                           << Triple("d", Ontology::IS, Ontology::CLASS)
-                                           << Triple("e", Ontology::IS, Ontology::CLASS)
-                                           << Triple("f", Ontology::IS, Ontology::CLASS)
-                                           << Triple("g", Ontology::IS, Ontology::CLASS)
-                                           << Triple("h", Ontology::IS, Ontology::CLASS)
-                                           << Triple("i", Ontology::IS, Ontology::CLASS)
-                                           << Triple("j", Ontology::IS, Ontology::CLASS)
-                                           << Triple("k", Ontology::IS, Ontology::CLASS)
-                                           << Triple("l", Ontology::IS, Ontology::CLASS)
-                                           << Triple("t", Ontology::IS, "e")
-                                           << Triple("t", Ontology::IS, "i")
-                                           << Triple("tt", Ontology::IS, "h")
-                                           << Triple("tt", Ontology::IS, "b")
-                                           << Triple("wolf", Ontology::IS, "j")
-                                           ))
-                              << (QSet<QString>()
-                                  <<"t"
-                                  <<"tt"
-                                  );
-}
-
-void TOntology::TestGetNotMinimalInstances()
-{
-    QFETCH(Ontology, ontology);
-    QFETCH(QSet<QString>, minimalInstances);
-
-    QCOMPARE(ontology.getNotMinimalInstances(), minimalInstances);
-}
-
-
-

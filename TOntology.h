@@ -46,14 +46,8 @@ private slots:
     void TestIsMinimal_data();
     void TestIsMinimal();
 
-    void TestGetClassLvl_data();
-    void TestGetClassLvl();
-
     void TestMinimalize_data();
     void TestMinimalize();
-
-    void TestGetNotMinimalInstances_data();
-    void TestGetNotMinimalInstances();
 };
 
 #endif // TONTOLOGY_H

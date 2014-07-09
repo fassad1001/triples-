@@ -16,10 +16,11 @@ Class::Class(QString Name,
 QString Class::toString() const
 {
     QString result;
-    result << name;
+    result += name;
     foreach(QString parent, parents)
     {
-        result << ";" << parent;
+        result += ";";
+        result += parent;
     }
     return result;
 }
@@ -38,13 +39,13 @@ bool Class::operator <(const Class &anotherClass) const
 
 bool Class::operator >(const Class &anotherClass) const
 {
-    if(anotherClass<this)
+    if(!parents.contains(anotherClass.name))
     {
-        return true;
+        return false;
     }
     else
     {
-        return false;
+        return true;
     }
 }
 
