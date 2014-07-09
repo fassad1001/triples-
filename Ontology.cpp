@@ -258,6 +258,8 @@ bool Ontology::isValid() const
                     {
                         //добавить (класс1, класс3, правда)
                         transitiveClosure[classItem1][classItem3] = true;
+                        //установить метку (что-то изменилось)
+                        change = true;
                         // **проверка на наличие циклов
                         //если (класс1, класс3, правда) && (класс3, класс1, правда) то
                         if((transitiveClosure[classItem1][classItem3] == true
@@ -267,8 +269,6 @@ bool Ontology::isValid() const
                             //вернуть ложь;
                             return false;
                         }
-                        //установить метку (что-то изменилось)
-                        change = true;
                     }
                 }
 
