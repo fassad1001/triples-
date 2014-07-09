@@ -384,9 +384,3 @@ bool Ontology::operator ==(const Ontology &o) const
     return triples_ == o.triples_;
 }
 
-bool Ontology::CompareByClassLvl(const QString &class1, const QString &class2)
-{
-
-}
-
-

@@ -38,8 +38,6 @@ public:
     void minimalize();
 
     bool operator ==(const Ontology &o) const;
-
-    static bool CompareByClassLvl(const QString &class1, const QString &class2);
 };
 Q_DECLARE_METATYPE(Ontology)
 
