@@ -35,8 +35,6 @@ public:
     bool isValid() const;
     bool isMinimal() const;
 
-    QSet<QString> getNotMinimalInstances() const;
-
     void minimalize();
 
     bool operator ==(const Ontology &o) const;

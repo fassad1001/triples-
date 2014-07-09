@@ -340,37 +340,6 @@ bool Ontology::isMinimal() const
     return false;
 }
 
-
-
-QSet<QString> Ontology::getNotMinimalInstances() const
-{
-    QSet<QString> instances = allInstances();
-    QSet<QString> classesforinstance;
-    QSet<QString> notMinimalInstances;
-    foreach(QString instance, instances)
-    {
-        classesforinstance = classesForInstance(instance);
-        //у нас могут быть как и те которые находятся на одной ветке так и те которые находятся на разных ветках
-        //отсеиваем их по веткам
-        //каждый класс - потенциально новая ветка
-        foreach(const QString classforinstance, classesforinstance)
-        {
-            QSet<QString> branch;
-            branch += subClasses(classforinstance) += superClasses(classforinstance);
-            foreach(const QString branchItem, branch)
-            {
-                //если класс ветви содержит сущность которую мы ищем
-                if(classInstances(branchItem).contains(instance))
-                {
-                    //то добавляем сущность в коллекцию на вывод
-                    notMinimalInstances += instance;
-                }
-            }
-        }
-    }
-    return notMinimalInstances;
-}
-
 void Ontology::minimalize()
 {
     QSet<QString> instances = allInstances();
