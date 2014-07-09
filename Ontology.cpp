@@ -201,16 +201,6 @@ bool Ontology::isValid() const
     QSet<QString> allclasses = allClasses();
     //переменная хранит в себе пары (класс;подкласс) выбираю по образцу (класс;CONTAINS;подкласс)
     QSet<Pair> closurePairs = subjectsAndObjects(Ontology::CONTAINS);
-    //для каждой пары
-    foreach(const Pair &closurePair, closurePairs)
-    {
-        //дополнить Хеш значением из пары
-        transitiveClosure.insert(closurePair.first(), closurePair.second);
-        //если есть замыкание на себе, то вернуть ложь
-        //для каждого класса
-        //если для (1,2) есть (2,3) то
-        //создать связь (1,3)
-    }
     //вариант 1
     //для каждого класса
     foreach(const QString &classItem1, allclasses)
@@ -252,21 +242,31 @@ bool Ontology::isValid() const
                     //вернуть ложь;
                     return false;
                 }
+                //если (класс1, класс2, правда) && (класс2, класс1, правда)
+                if(transitiveClosure[classItem1][classItem2] == true
+                        && transitiveClosure[classItem2][classItem1] == true)
+                {
+                    //вернуть ложь;
+                    return false;
+                }
                 //для каждого класса
                 foreach(const QString &classItem3, allclasses)
                 {
-                    //если (класс3, класс3, правда)
-                    if(transitiveClosure[classItem3][classItem3] == true)
-                    {
-                        //вернуть ложь;
-                        return false;
-                    }
-                    //если (класс1, класс2, правда) && (класс2, класс1, правда) то
+                    //если (класс1, класс2, правда) && (класс2, класс3, правда) то
                     if(transitiveClosure[classItem1][classItem2] == true
                             && transitiveClosure[classItem2][classItem3] == true)
                     {
                         //добавить (класс1, класс3, правда)
                         transitiveClosure[classItem1][classItem3] = true;
+                        // **проверка на наличие циклов
+                        //если (класс1, класс3, правда) && (класс3, класс1, правда) то
+                        if((transitiveClosure[classItem1][classItem3] == true
+                                && transitiveClosure[classItem3][classItem1] == true)
+                                || (transitiveClosure[classItem3][classItem3] == true))
+                        {
+                            //вернуть ложь;
+                            return false;
+                        }
                         //установить метку (что-то изменилось)
                         change = true;
                     }
