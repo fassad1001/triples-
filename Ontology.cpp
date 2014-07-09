@@ -237,15 +237,33 @@ bool Ontology::isValid() const
         //для каждого класса
         foreach(const QString &classItem1, allclasses)
         {
+            //если (класс1, класс1, правда)
+            if(transitiveClosure[classItem1][classItem1] == true)
+            {
+                //вернуть ложь;
+                return false;
+            }
             //для каждого класса
             foreach(const QString &classItem2, allclasses)
             {
-                //для каждого класса
-                foreach(const QString &classItem1, allclasses)
+                //если (класс2, класс2, правда)
+                if(transitiveClosure[classItem2][classItem2] == true)
                 {
+                    //вернуть ложь;
+                    return false;
+                }
+                //для каждого класса
+                foreach(const QString &classItem3, allclasses)
+                {
+                    //если (класс3, класс3, правда)
+                    if(transitiveClosure[classItem3][classItem3] == true)
+                    {
+                        //вернуть ложь;
+                        return false;
+                    }
                     //если (класс1, класс2, правда) && (класс2, класс1, правда) то
                     if(transitiveClosure[classItem1][classItem2] == true
-                            && transitiveClosure[closurePair.first()][closurePair.second()] == true)
+                            && transitiveClosure[classItem2][classItem3] == true)
                     {
                         //добавить (класс1, класс3, правда)
                         transitiveClosure[classItem1][classItem3] = true;
