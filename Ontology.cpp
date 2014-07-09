@@ -263,7 +263,7 @@ bool Ontology::isValid() const
                         // **проверка на наличие циклов
                         //если (класс1, класс3, правда) && (класс3, класс1, правда) то
                         if((transitiveClosure[classItem1][classItem3] == true
-                                && transitiveClosure[classItem3][classItem1] == true)
+                            && transitiveClosure[classItem3][classItem1] == true)
                                 || (transitiveClosure[classItem3][classItem3] == true))
                         {
                             //вернуть ложь;
@@ -274,39 +274,8 @@ bool Ontology::isValid() const
 
             }
         }
-    } while(change)
-
-
-
-
-    QSet<QString> allclasses = allClasses();
-    foreach(const QString classitem, allclasses)
-    {
-        classitem
-    }
-
-    QSet<QString> classes = allClasses();
-    QSet<QString> loopclasses = allClasses();
-    QSet<Pair> transitiveClosure
-
-            foreach(QString Class, classes)
-    {
-        foreach(QString loopclass, loopclasses)
-        {
-            if (subClasses(Class).contains(loopclass))
-            {
-                transitiveClosure += Pair(Class, loopclass);
-            }
-        }
-    }
-    foreach(Pair transitiveClosureItem, transitiveClosure)
-    {
-        if(transitiveClosure.contains(Pair(transitiveClosureItem.second(), transitiveClosureItem.first()))
-                && transitiveClosure.contains(Pair(transitiveClosureItem.first(), transitiveClosureItem.first())))
-        {
-            return true;
-        }
-    }
+    } while(change);
+    return true;
 }
 
 bool Ontology::isMinimal() const
