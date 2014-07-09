@@ -256,7 +256,7 @@ bool Ontology::isValid() const
 
             }
         }
-    }
+    } while(change)
 
 
 
