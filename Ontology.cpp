@@ -43,7 +43,7 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 {
     if(classNames.isEmpty())
     {
-        return QSet<QString>()<<QString();
+        return QSet<QString>();
     }
     //переменная хранит результаты работы метода (инстансы)
     qWarning()<<"выполняю функцию anyClassInstances";
@@ -126,14 +126,29 @@ QSet<QString> Ontology::allInstances() const
 
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
-    //переменная будет хранить классы для использования их в цикле
-    QSet<QString> loopClasses;
-    QSet<QString> classresults;
     qWarning()<<"выполняю функцию classesForInstance";
     qWarning()<<"+++++++++++++++++++++++++++++++++++++";
     qWarning()<<"на вход подаю :"<<instanceName;
+    //переменная будет хранить классы для использования их в цикле
+    QSet<QString> loopClasses;
+    //переменная содержит результаты работы метода
+    QSet<QString> classresults;
+    //переменная содержит все классы
+    QSet<QString> allclasses = allClasses();
+    //для каждого классса срежи всех классов
+    foreach(QString classItem, allclasses)
+    {
+        //если класс содержит инстанс (входящий)
+        if(classInstances(classItem).contains(instanceName))
+        {
+            //добавить его в первичные данные
+            loopClasses += classItem;
+            qWarning()<<"+"<<loopClasses;
+        }
+    }
     //записываю первоначальные данные для цикла
-    loopClasses += objectsFor(instanceName, Ontology::IS);
+    classresults += loopClasses;
+    qWarning()<<"начинаю цикл с :"<<loopClasses;
     //пока есть данные для цикла
     while(!loopClasses.empty())
     {
@@ -146,13 +161,14 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
             exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
             //дополняю результаты (+= инстансы для классов)
             qWarning()<<"+"<<exchangeClasses;
-            classresults += classInstances(loopclass);
+            classresults += exchangeClasses;
         }
         //передаю полученные данные для обработки в следуюющем цикле
         loopClasses = exchangeClasses;
     }
     //возвращаю результат работы программы
     qWarning()<<"выполнение функции закончилось";
+    qWarning()<<"результат :"<<classresults;
     return classresults;
 }
 
