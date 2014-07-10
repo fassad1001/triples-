@@ -207,6 +207,8 @@ QSet<QString> Ontology::subClasses(const QString &className) const
 
 QSet<QString> Ontology::superClasses(const QString &className) const
 {
+    qWarning()<<"выполнение функции superClasses началось";
+    qWarning()<<"на вход подается :"<<className;
     //переменная будет хранить результаты (под классы)
     QSet<QString> superClasses;
     //переменная будет хранить классы для использования их в цикле
@@ -215,22 +217,27 @@ QSet<QString> Ontology::superClasses(const QString &className) const
     //записываю первоначальные данные для цикла
     loopClasses += className;
     //пока есть данные для цикла
+    qWarning()<<"формирую результат:";
     while(!loopClasses.empty())
     {
+        qWarning()<<"=>"<<loopClasses;
         //переменная будет хранить классы для передачи их следующей итерации цикла
         QSet<QString> exchangeClasses;
         //для каждого класса (для цикла)
         foreach(QString loopclass, loopClasses)
         {
             //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это суперклассы
-            exchangeClasses += subjectsFor(Ontology::CONTAINS, className);
+            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
             //дополняю результаты
             superClasses += exchangeClasses;
+            qWarning()<<"+"<<exchangeClasses;
         }
         //передаю полученные данные для обработки в следуюющем цикле
         loopClasses = exchangeClasses;
     }
     //возвращаю результат работы программы
+    qWarning()<<"результат сформирован";
+    qWarning()<<"результат :"<<superClasses;
     return superClasses;
 }
 
@@ -332,7 +339,7 @@ bool Ontology::isValid() const
                     //если (класс1, класс2, правда) && (класс2, класс3, правда) то
                     if(transitiveClosure[classItem1][classItem2] == true
                             && transitiveClosure[classItem2][classItem3] == true
-                            || transitiveClosure[classItem1][classItem3])
+                            && transitiveClosure[classItem1][classItem3] == false)
                     {
                         //добавить (класс1, класс3, правда)
                         transitiveClosure[classItem1][classItem3] = true;
@@ -359,6 +366,8 @@ bool Ontology::isValid() const
 
 bool Ontology::isMinimal() const
 {
+    qWarning()<<"выполняется функция isMinimal";
+    qWarning()<<"+++++++++++++++++++++++++++++";
     //переменная хранит все классы
     QSet<QString> allclasses = allClasses();
     //переменная хранит набор объектов типа "Класс"
@@ -366,64 +375,72 @@ bool Ontology::isMinimal() const
     //переменная хранит набор инстансов на подозрение
     QSet<QString> instances;
     //если иерархия валидна
-    if(isValid())
+    //для каждого класса
+    qWarning()<<"начинается формирование списка инстансов";
+    foreach(const QString &class1, allclasses)
     {
         //для каждого класса
-        foreach(const QString &class1, allclasses)
+        foreach(const QString &class2, allclasses)
         {
-            //для каждого класса
-            foreach(const QString &class2, allclasses)
+            //если слассы одни и теже
+            if(class1 == class2)
             {
-                //если слассы одни и теже
-                if(class1 == class2)
+                continue;
+            }
+            //если пересечение инстансов-класса дает положительный результат
+            if(!(classInstances(class1) & classInstances(class2)).isEmpty())
+            {
+                qWarning()<<"для классов :"<<class1<<";"<<class2;
+                qWarning()<<"список инстансов на подозрение:";
+                //записываем результат в список инстансов на подозрение
+                instances += classInstances(class1) & classInstances(class2);
+                qWarning()<<"+"<<instances;
+            }
+        }
+    }
+    qWarning()<<"список инстансов сформирован.";
+    qWarning()<<"Начинаю выяление подозреваемых";
+    //для каждого элемента-списка-на-подозрение
+    foreach(const QString &instance, instances)
+    {
+        qWarning()<<"метка1!";
+        //переменная будет хранить все классы для интанса в виде объектов "Class"
+        QSet<Class> instanceclasses;
+        //переменная хранит в себе классы для инстанса типа QString
+        QSet<QString> classesforinstance = classesForInstance(instance);
+        //для каждого класса для инстанса (QString)
+        qWarning()<<"метка2!";
+        foreach(const QString &instClass, classesforinstance)
+        {
+            qWarning()<<"для класса:"<<instClass;
+            //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
+            QString className = instClass;
+            QSet<QString> parents = superClasses(instClass);
+            instanceclasses += Class(className, parents);
+            qWarning()<<"записываю:"<<className<<";"<<parents;
+        }
+        qWarning()<<"метка5!";
+        //для каждого класса-для-инстанса
+        foreach(const Class &instanceclass1, instanceclasses)
+        {
+            //для каждого класса-для-инстанса
+            foreach(const Class &instanceclass2, instanceclasses)
+            {
+                if(instanceclass1.name == instanceclass2.name)
                 {
                     continue;
                 }
-                //если пересечение инстансов-класса дает положительный результат
-                if(!(classInstances(class1) & classInstances(class2)).isEmpty())
+                //если класса-для-инстанса1 < класса-для-инстанса2
+                if(instanceclass1 < instanceclass2)
                 {
-                    //записываем результат в список инстансов на подозрение
-                    instances += classInstances(class1) & classInstances(class2);
+                    //вернуть ложь
+                    return false;
                 }
             }
         }
-        //для каждого элемента-списка-на-подозрение
-        foreach(const QString &instance, instances)
-        {
-            //переменная будет хранить все классы для интанса в виде объектов "Class"
-            QSet<Class> instanceclasses;
-            //переменная хранит в себе классы для инстанса типа QString
-            QSet<QString> classesforinstance = classesForInstance(instance);
-            //для каждого класса для инстанса (QString)
-            foreach(const QString &instClass, classesforinstance)
-            {
-                //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
-                QString className = instClass;
-                QSet<QString> parents = superClasses(instClass);
-                instanceclasses += Class(className, parents);
-            }
-            //для каждого класса-для-инстанса
-            foreach(const Class &instanceclass1, instanceclasses)
-            {
-                //для каждого класса-для-инстанса
-                foreach(const Class &instanceclass2, instanceclasses)
-                {
-                    if(instanceclass1.name == instanceclass2.name)
-                    {
-                        continue;
-                    }
-                    //если класса-для-инстанса1 < класса-для-инстанса2
-                    if(instanceclass1 < instanceclass2)
-                    {
-                        //вернуть ложь
-                        return false;
-                    }
-                }
-            }
-        }
-        //вернуть правду
-        return true;
     }
+    //вернуть правду
+    return true;
     //вернуть ложь
     return false;
 }
