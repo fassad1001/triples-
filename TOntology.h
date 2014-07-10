@@ -48,6 +48,9 @@ private slots:
 
     void TestMinimalize_data();
     void TestMinimalize();
+
+    void TestClassProperties_data();
+    void TestClassProperties();
 };
 
 #endif // TONTOLOGY_H

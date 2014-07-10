@@ -14,11 +14,13 @@ public:
     static const QString IS;
     static const QString CONTAINS;
     static const QString CLASS;
+    static const QString HAS_PROPERTY;
 
     Ontology();
     Ontology(const QSet<Triple> &triples);
 
     QSet<QString> classInstances(const QString &className) const;
+    QSet<QString> classProperties(const QString &className) const;
     QSet<QString> anyClassInstances(const QStringList &classNames) const;
 
     QSet<QString> allClassInstances(const QStringList &classNames) const;

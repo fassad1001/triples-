@@ -3,7 +3,7 @@
 const QString Ontology::IS = "is";
 const QString Ontology::CONTAINS = "contains";
 const QString Ontology::CLASS = "class";
-
+const QString Ontology::HAS_PROPERTY = "has_properety";
 
 Ontology::Ontology()
 {
@@ -44,6 +44,19 @@ QSet<QString> Ontology::classInstances(const QString &className) const
     }
     //возвращаем результат работы метода
     return resultInstances;
+}
+
+QSet<QString> Ontology::classProperties(const QString &className) const
+{
+    QSet<QString> classesToLoop;
+    QSet<QString> properities;
+    classesToLoop += className;
+    classesToLoop += superClasses(className);
+    foreach(QString classToLoop, classesToLoop)
+    {
+        //(subject, predicate, object) (имяКласса;HAS_PROPERETY;*)
+        properities += objectsFor(classToLoop, Ontology::HAS_PROPERTY);
+    }
 }
 
 QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
