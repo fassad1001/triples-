@@ -16,7 +16,14 @@ Ontology::Ontology(const QSet<Triple> &triples) :
 
 QSet<QString> Ontology::classInstances(const QString &className) const
 {
-    return subjectsFor(Ontology::IS, className);
+    QSet<QString> subclases = subClasses(className);
+    subclases += className;
+    QSet<QString> subclassInstances;
+    foreach(const QString &subclass, subclases)
+    {
+        subclassInstances += subjectsFor(Ontology::IS, subclass);
+    }
+    return subclassInstances;
 }
 
 QSet<QString> Ontology::classProperties(const QString &className) const
@@ -34,30 +41,61 @@ QSet<QString> Ontology::classProperties(const QString &className) const
 
 QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
 {
+    if(classNames.isEmpty())
+    {
+        return QSet<QString>()<<QString();
+    }
     //переменная хранит результаты работы метода (инстансы)
+    qWarning()<<"выполняю функцию anyClassInstances";
+    qWarning()<<"++++++++++++++++++++++++++++++++++";
+    qWarning()<<"на вход подаю имена классов :"<<classNames;
+    qWarning()<<"начинаю выполнение функции...";
+    QSet<QString> classNamess = classNames.toSet();
+    foreach(const QString &className, classNames)
+    {
+        classNamess += subClasses(className);
+    }
     QSet<QString> instanses;
     //для каждого класса
-    foreach(const QString &className, classNames)
+    foreach(const QString &className, classNamess)
     {
         //дополняю результат инстансами
         instanses += classInstances(className);
+        qWarning()<<"+ "<<instanses;
     }
     //возвращаю результат работы метода
+    qWarning()<<"выполнение функции закончилось";
     return instanses;
 }
 
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
-    //переменная хранит все классы в иерархии
-    QSet<QString> allclasses = classNames.toSet();
+    QSet<QString> classesToChoose;
+    if(classNames.isEmpty())
+    {
+        return QSet<QString>();
+    }
+    QSet<QString> allSubClases = classNames.toSet();
+    //извлекаю все подклассы у которых есть сущности
+    foreach(const QString &className, classNames)
+    {
+        allSubClases += subClasses(className);
+        foreach(const QString &subClassName, allSubClases)
+        {
+            if(!classInstances(subClassName).isEmpty())
+            {
+                classesToChoose += classInstances(subClassName);
+            }
+        }
+    }
     //переменная хранит все инстансы-результаты-работы-метода
     QSet<QString> classinstances;
-    classinstances = classInstances(classNames.first());
+    classinstances += classesToChoose.toList().first();
     //для каждого класса
-    foreach(QString classItem, allclasses)
+    foreach(QString classinstance, classinstances)
     {
         //дополняю результаты инстансами класса
-        classinstances &= classInstances(classItem);
+        classinstances &= classInstances(classinstance);
     }
     //возвращаю инстанс-класса-результаты-работы-функции
     return classinstances;
@@ -90,8 +128,10 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
     //переменная будет хранить классы для использования их в цикле
     QSet<QString> loopClasses;
-    QSet<Qstring> classresults;
-
+    QSet<QString> classresults;
+    qWarning()<<"выполняю функцию classesForInstance";
+    qWarning()<<"+++++++++++++++++++++++++++++++++++++";
+    qWarning()<<"на вход подаю :"<<instanceName;
     //записываю первоначальные данные для цикла
     loopClasses += objectsFor(instanceName, Ontology::IS);
     //пока есть данные для цикла
@@ -105,12 +145,14 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
             //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это надклассы
             exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
             //дополняю результаты (+= инстансы для классов)
+            qWarning()<<"+"<<exchangeClasses;
             classresults += classInstances(loopclass);
         }
         //передаю полученные данные для обработки в следуюющем цикле
         loopClasses = exchangeClasses;
     }
     //возвращаю результат работы программы
+    qWarning()<<"выполнение функции закончилось";
     return classresults;
 }
 
@@ -307,10 +349,10 @@ bool Ontology::isMinimal() const
     if(isValid())
     {
         //для каждого класса
-        foreach(QString class1, allclasses)
+        foreach(const QString &class1, allclasses)
         {
             //для каждого класса
-            foreach(QString class2, allclasses)
+            foreach(const QString &class2, allclasses)
             {
                 //если слассы одни и теже
                 if(class1 == class2)
@@ -326,7 +368,7 @@ bool Ontology::isMinimal() const
             }
         }
         //для каждого элемента-списка-на-подозрение
-        foreach(QString instance, instances)
+        foreach(const QString &instance, instances)
         {
             //переменная будет хранить все классы для интанса в виде объектов "Class"
             QSet<Class> instanceclasses;
@@ -341,10 +383,10 @@ bool Ontology::isMinimal() const
                 instanceclasses += Class(className, parents);
             }
             //для каждого класса-для-инстанса
-            foreach(Class instanceclass1, instanceclasses)
+            foreach(const Class &instanceclass1, instanceclasses)
             {
                 //для каждого класса-для-инстанса
-                foreach(Class instanceclass2, instanceclasses)
+                foreach(const Class &instanceclass2, instanceclasses)
                 {
                     if(instanceclass1.name == instanceclass2.name)
                     {
