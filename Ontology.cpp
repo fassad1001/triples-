@@ -174,6 +174,10 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
+    if(!allClasses().contains(className))
+    {
+        return QSet<QString>();
+    }
     //переменная будет хранить результаты (под классы)
     QSet<QString> subClasses;
     //переменная будет хранить классы для использования их в цикле
