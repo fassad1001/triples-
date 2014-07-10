@@ -32,7 +32,7 @@ public:
     QSet<QString> subClasses(const QString &className) const;//1
     QSet<QString> superClasses(const QString &className) const;//1
 
-    QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;
+    QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;//1
 
     bool isValid() const;
     bool isMinimal() const;
