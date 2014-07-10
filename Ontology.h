@@ -19,18 +19,18 @@ public:
     Ontology();
     Ontology(const QSet<Triple> &triples);
 
-    QSet<QString> classInstances(const QString &className) const;
-    QSet<QString> classProperties(const QString &className) const;
-    QSet<QString> anyClassInstances(const QStringList &classNames) const;
+    QSet<QString> classInstances(const QString &className) const; //1
+    QSet<QString> classProperties(const QString &className) const;//1
+    QSet<QString> anyClassInstances(const QStringList &classNames) const;//1
 
-    QSet<QString> allClassInstances(const QStringList &classNames) const;
-    QSet<QString> allClasses() const;
-    QSet<QString> allInstances() const;
+    QSet<QString> allClassInstances(const QStringList &classNames) const;//1
+    QSet<QString> allClasses() const;//1
+    QSet<QString> allInstances() const;//1
 
-    QSet<QString> classesForInstance(const QString &instanceName) const;
+    QSet<QString> classesForInstance(const QString &instanceName) const;//1
 
-    QSet<QString> subClasses(const QString &className) const;
-    QSet<QString> superClasses(const QString &className) const;
+    QSet<QString> subClasses(const QString &className) const;//1
+    QSet<QString> superClasses(const QString &className) const;//1
 
     QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;
 

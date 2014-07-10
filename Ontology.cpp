@@ -16,34 +16,7 @@ Ontology::Ontology(const QSet<Triple> &triples) :
 
 QSet<QString> Ontology::classInstances(const QString &className) const
 {
-    //переменная хранит в себе классы для цикла
-    QSet<QString> classesForCicle;
-    //переменная хранит в себе результаты
-    QSet<QString> resultInstances;
-
-    //добавляю первичные данные
-    classesForCicle += className;
-    //по первичным данным добавляю первые результаты (*, IS, имяКласса)
-    resultInstances += subjectsFor(Ontology::IS, className);
-
-    //пока есть классы для цикла
-    while(!classesForCicle.empty())
-    {
-        //переменная будет хранить данные для следующей итерации
-        QSet<QString> nextIteration;
-        //для каждого класса-для-цикла
-        foreach(const QString &classForCicle, classesForCicle)
-        {
-            //заполняем результат данными для след итерации
-            resultInstances += subjectsFor(Ontology::IS, classForCicle);
-            //заполняем данные для следующей итерации
-            nextIteration += subClasses(classForCicle);
-        }
-        //указываю данные для след итерации
-        classesForCicle = nextIteration;
-    }
-    //возвращаем результат работы метода
-    return resultInstances;
+    return subjectsFor(Ontology::IS, className);
 }
 
 QSet<QString> Ontology::classProperties(const QString &className) const
@@ -79,11 +52,12 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
     QSet<QString> allclasses = classNames.toSet();
     //переменная хранит все инстансы-результаты-работы-метода
     QSet<QString> classinstances;
+    classinstances = classInstances(classNames.first());
     //для каждого класса
     foreach(QString classItem, allclasses)
     {
         //дополняю результаты инстансами класса
-        classinstances += classInstances(classItem);
+        classinstances &= classInstances(classItem);
     }
     //возвращаю инстанс-класса-результаты-работы-функции
     return classinstances;
@@ -114,8 +88,30 @@ QSet<QString> Ontology::allInstances() const
 
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
-    //возвращаю все что подходит по паттерну (имяИнстанса;IS;*)
-    return objectsFor(instanceName, Ontology::IS);
+    //переменная будет хранить классы для использования их в цикле
+    QSet<QString> loopClasses;
+    QSet<Qstring> classresults;
+
+    //записываю первоначальные данные для цикла
+    loopClasses += objectsFor(instanceName, Ontology::IS);
+    //пока есть данные для цикла
+    while(!loopClasses.empty())
+    {
+        //переменная будет хранить классы для передачи их следующей итерации цикла
+        QSet<QString> exchangeClasses;
+        //для каждого класса (для цикла)
+        foreach(QString loopclass, loopClasses)
+        {
+            //заполняю объекты для следующего цикла (имяКласса, CONSTAIN, *) это подклассы
+            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
+            //дополняю результаты (+= инстансы для классов)
+            classresults += classInstances(loopclass);
+        }
+        //передаю полученные данные для обработки в следуюющем цикле
+        loopClasses = exchangeClasses;
+    }
+    //возвращаю результат работы программы
+    return classresults;
 }
 
 QSet<QString> Ontology::subClasses(const QString &className) const
@@ -127,8 +123,6 @@ QSet<QString> Ontology::subClasses(const QString &className) const
 
     //записываю первоначальные данные для цикла
     loopClasses += className;
-    //дополняю результаты с учетом первоначальных данных
-    subClasses += objectsFor(className, Ontology::CONTAINS);
     //пока есть данные для цикла
     while(!loopClasses.empty())
     {
@@ -158,8 +152,6 @@ QSet<QString> Ontology::superClasses(const QString &className) const
 
     //записываю первоначальные данные для цикла
     loopClasses += className;
-    //дополняю результаты с учетом первоначальных данных
-    superClasses += subjectsFor(Ontology::CONTAINS, className);
     //пока есть данные для цикла
     while(!loopClasses.empty())
     {
@@ -177,8 +169,6 @@ QSet<QString> Ontology::superClasses(const QString &className) const
         loopClasses = exchangeClasses;
     }
     //возвращаю результат работы программы
-    qWarning()<<"на вход функции superClasses подается:"<<className;
-    qWarning()<<"функция superClasses возвращает значения:"<<superClasses;
     return superClasses;
 }
 
