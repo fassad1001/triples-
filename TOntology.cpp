@@ -966,6 +966,20 @@ void TOntology::TestInstanceProperties_data()
                                                                     .insertInc("property2",QString())
                                                                     .insertInc("property1","value1"));
 
+    QTest::newRow("3 classes, without branching, 1 header classes, 1 instance, with fake instance")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classC")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("classB", Ontology::HAS_PROPERTY, "property2")
+                                                                               <<Triple("classC", Ontology::HAS_PROPERTY, "property3")
+                                                                               <<Triple("instance1", Ontology::IS, "classC")
+                                                                               <<Triple("instance1", "property1", "value1")))
+                                                                  <<QString("instance15")
+                                                                 <<(MyHash());
+
     QTest::newRow("4 classes, with branching, 1 header classes, 2 instances")<<(Ontology(QSet<Triple>()
                                                                                <<Triple("classA", Ontology::IS, Ontology::CLASS)
                                                                                <<Triple("classB", Ontology::IS, Ontology::CLASS)
@@ -1013,7 +1027,7 @@ void TOntology::TestInstanceProperties_data()
                                                                     .insertInc("property2","value4")
                                                                     .insertInc("property1","value3"));
 
-    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances, with fake properety")<<(Ontology(QSet<Triple>()
+    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances")<<(Ontology(QSet<Triple>()
                                                                                <<Triple("classA", Ontology::IS, Ontology::CLASS)
                                                                                <<Triple("classB", Ontology::IS, Ontology::CLASS)
                                                                                <<Triple("classC", Ontology::IS, Ontology::CLASS)
@@ -1037,7 +1051,7 @@ void TOntology::TestInstanceProperties_data()
                                                                     .insertInc("property1", "value1")
                                                                     .insertInc("property2", "value2"));
 
-    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances, with fake properety")<<(Ontology(QSet<Triple>()
+    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances")<<(Ontology(QSet<Triple>()
                                                                                <<Triple("classA", Ontology::IS, Ontology::CLASS)
                                                                                <<Triple("classB", Ontology::IS, Ontology::CLASS)
                                                                                <<Triple("classC", Ontology::IS, Ontology::CLASS)
@@ -1060,6 +1074,14 @@ void TOntology::TestInstanceProperties_data()
                                                                  <<(MyHash()
                                                                     .insertInc("property3", "value6")
                                                                     .insertInc("property4", QString()));
+
+    QTest::newRow("empty-ontology")<<(Ontology(QSet<Triple>()))
+                                                        <<QString("instance1")
+                                                        <<(MyHash());
+
+    QTest::newRow("empty-ontology, no instance")<<(Ontology(QSet<Triple>()))
+                                                        <<QString()
+                                                        <<(MyHash());
 
 
 }
