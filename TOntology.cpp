@@ -802,6 +802,108 @@ void TOntology::TestPropertyValues_data()
     QTest::addColumn <QString> ("propertyName");
     QTest::addColumn <QSet<QString> > ("propertyvalues");
 
+    QTest::newRow("3 classes, without branching, 1 header classes, 1 instance")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classC")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("instance1", Ontology::IS, "classC")
+                                                                               <<Triple("instance1", "property1", "value1")
+                                                                               <<Triple("instance1", "property1", "value2")
+                                                                               <<Triple("instance1", "property1", "value3")))
+                                                                  <<QString("property1")
+                                                                 <<(QSet<QString>()
+                                                                    <<"value1"
+                                                                    <<"value2"
+                                                                    <<"value3");
+
+    QTest::newRow("4 classes, with branching, 1 header classes, 2 instances")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classD", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classC")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classD")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("instance1", Ontology::IS, "classC")
+                                                                               <<Triple("instance1", "property1", "value1")
+                                                                               <<Triple("instance1", "property1", "value2")
+                                                                               <<Triple("instance1", "property1", "value3")
+                                                                               <<Triple("instance2", Ontology::IS, "classD")
+                                                                               <<Triple("instance2", "property1", "value4")
+                                                                               <<Triple("instance2", "property1", "value5")
+                                                                               <<Triple("instance2", "property1", "value6")))
+                                                                  <<QString("property1")
+                                                                 <<(QSet<QString>()
+                                                                    <<"value1"
+                                                                    <<"value2"
+                                                                    <<"value3"
+                                                                    <<"value4"
+                                                                    <<"value5"
+                                                                    <<"value6");
+
+    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classD", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classC", Ontology::CONTAINS, "classD")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("classC", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("instance1", Ontology::IS, "classB")
+                                                                               <<Triple("instance1", "property1", "value1")
+                                                                               <<Triple("instance1", "property1", "value2")
+                                                                               <<Triple("instance1", "property1", "value3")
+                                                                               <<Triple("instance2", Ontology::IS, "classD")
+                                                                               <<Triple("instance2", "property1", "value4")
+                                                                               <<Triple("instance2", "property1", "value5")
+                                                                               <<Triple("instance2", "property1", "value6")))
+                                                                  <<QString("property1")
+                                                                 <<(QSet<QString>()
+                                                                    <<"value1"
+                                                                    <<"value2"
+                                                                    <<"value3"
+                                                                    <<"value4"
+                                                                    <<"value5"
+                                                                    <<"value6");
+
+    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classD", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classE", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classF", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classG", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classK", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classE")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classF")
+                                                                               <<Triple("classC", Ontology::CONTAINS, "classD")
+                                                                               <<Triple("classD", Ontology::CONTAINS, "classG")
+                                                                               <<Triple("classD", Ontology::CONTAINS, "classK")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("classC", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("instance1", Ontology::IS, "classE")
+                                                                               <<Triple("instance1", "property1", "value1")
+                                                                               <<Triple("instance1", "property1", "value2")
+                                                                               <<Triple("instance1", "property1", "value3")
+                                                                               <<Triple("instance2", Ontology::IS, "classG")
+                                                                               <<Triple("instance2", "property1", "value4")
+                                                                               <<Triple("instance2", "property1", "value5")
+                                                                               <<Triple("instance2", "property1", "value6")))
+                                                                  <<QString("property1")
+                                                                 <<(QSet<QString>()
+                                                                    <<"value1"
+                                                                    <<"value2"
+                                                                    <<"value3"
+                                                                    <<"value4"
+                                                                    <<"value5"
+                                                                    <<"value6");
 
 }
 
@@ -810,4 +912,6 @@ void TOntology::TestPropertyValues()
     QFETCH(Ontology, ontology);
     QFETCH(QString, propertyName);
     QFETCH(QSet<QString>, propertyvalues);
+
+    QCOMPARE(ontology.propertyValues(propertyName),propertyvalues);
 }
