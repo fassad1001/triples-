@@ -100,22 +100,23 @@ QSet<QString> Ontology::propertyValues(const QString &propertyName) const
     return propertyvalues;
 }
 
-QHash<QString, QString> Ontology::instanceProperties(const QString &instanceName) const
+MyHash Ontology::instanceProperties(const QString &instanceName) const
 {
     //перременная будет хранить результат работы функции
-    QHash<QString, QString> results;
+    MyHash results;
     //получить все классы
     QSet<QString> allclasses = allClasses();
     //для инстанса получить список классов к которым он относится
-    QSet<QString> instanceclasses = classInstances(instanceName);
+    QSet<QString> instanceclasses = classesForInstance(instanceName);
     //если все классы включают в себя список-классов-для-инстанса
+    qWarning()<<"в классах:"<<instanceclasses;
     if(allclasses.contains(instanceclasses))
     {
         //для каждого класса
         foreach(const QString &instanceclass, instanceclasses)
         {
             //получить список свойств
-            QSet<QString> instanceproperities = instanceProperties();
+            QSet<QString> instanceproperities = classProperties(instanceclass);
             //для каждого свойства
             foreach(const QString &instanceproperity, instanceproperities)
             {
@@ -123,14 +124,19 @@ QHash<QString, QString> Ontology::instanceProperties(const QString &instanceName
                 QSet<QString> values;
                 values += objectsFor(instanceName,instanceproperity);
                 //для каждого значения
+                if(values.isEmpty())
+                {
+                    results.insert(instanceproperity, QString());
+                }
                 foreach(const QString &value, values)
                 {
                     //запись в результирующий хеш
-                    results.insertMulti(instanceproperity, value);
+                    results.insert(instanceproperity, value);
                 }
             }
         }
     }
+    qWarning()<<"instanceProperties:"<<results;
     //вернуть результат
     return results;
 }

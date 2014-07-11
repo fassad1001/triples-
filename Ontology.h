@@ -8,6 +8,22 @@
 
 #include "Class.h"
 
+class MyHash : public QHash< QString, QString >
+{
+public:
+   MyHash& insertInc(const QString key, const QString value)
+   {
+       insert(key, value);
+       return *this;
+   }
+   MyHash& insertIncMulti(const QString key, const QString value)
+   {
+       insertMulti(key, value);
+       return *this;
+   }
+};
+Q_DECLARE_METATYPE(MyHash)
+
 class Ontology : public TripleStorage
 {
 public:
@@ -23,7 +39,7 @@ public:
     QSet<QString> classProperties(const QString &className) const;
     QSet<QString> anyClassInstances(const QStringList &classNames) const;
     QSet<QString> propertyValues(const QString &propertyName) const;
-    QHash<QString, QString> instanceProperties(const QString &instanceName) const;
+    MyHash instanceProperties(const QString &instanceName) const;
 
     QSet<QString> allClassInstances(const QStringList &classNames) const;
     QSet<QString> allClasses() const;

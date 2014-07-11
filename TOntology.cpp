@@ -904,6 +904,34 @@ void TOntology::TestPropertyValues_data()
                                                                     <<"value4"
                                                                     <<"value5"
                                                                     <<"value6");
+
+    QTest::newRow("6 classes, with branching, 2 header classes, 2 instances, fake properety")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classD", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classE", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classF", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classG", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classK", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classE")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classF")
+                                                                               <<Triple("classC", Ontology::CONTAINS, "classD")
+                                                                               <<Triple("classD", Ontology::CONTAINS, "classG")
+                                                                               <<Triple("classD", Ontology::CONTAINS, "classK")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("classC", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("instance1", Ontology::IS, "classE")
+                                                                               <<Triple("instance1", "property1", "value1")
+                                                                               <<Triple("instance1", "property1", "value2")
+                                                                               <<Triple("instance1", "property1", "value3")
+                                                                               <<Triple("instance2", Ontology::IS, "classG")
+                                                                               <<Triple("instance2", "property1", "value4")
+                                                                               <<Triple("instance2", "property1", "value5")
+                                                                               <<Triple("instance2", "property1", "value6")))
+                                                                  <<QString("property2")
+                                                                 <<(QSet<QString>());
 }
 
 void TOntology::TestPropertyValues()
@@ -913,4 +941,37 @@ void TOntology::TestPropertyValues()
     QFETCH(QSet<QString>, propertyvalues);
 
     QCOMPARE(ontology.propertyValues(propertyName),propertyvalues);
+}
+
+void TOntology::TestInstanceProperties_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QString> ("instanceName");
+    QTest::addColumn <MyHash> ("instanceproperties");
+
+    QTest::newRow("3 classes, without branching, 1 header classes, 1 instance")<<(Ontology(QSet<Triple>()
+                                                                               <<Triple("classA", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classB", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classC", Ontology::IS, Ontology::CLASS)
+                                                                               <<Triple("classA", Ontology::CONTAINS, "classB")
+                                                                               <<Triple("classB", Ontology::CONTAINS, "classC")
+                                                                               <<Triple("classA", Ontology::HAS_PROPERTY, "property1")
+                                                                               <<Triple("classB", Ontology::HAS_PROPERTY, "property2")
+                                                                               <<Triple("classC", Ontology::HAS_PROPERTY, "property3")
+                                                                               <<Triple("instance1", Ontology::IS, "classC")
+                                                                               <<Triple("instance1", "property1", "value1")))
+                                                                  <<QString("instance1")
+                                                                 <<(MyHash()
+                                                                    .insertIncMulti("property3",QString())
+                                                                    .insertIncMulti("property2",QString())
+                                                                    .insertIncMulti("property1","value1"));
+}
+
+void TOntology::TestInstanceProperties()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QString, instanceName);
+    QFETCH(MyHash, instanceproperties);
+
+    QCOMPARE(ontology.instanceProperties(instanceName),instanceproperties);
 }
