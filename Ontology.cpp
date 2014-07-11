@@ -237,6 +237,32 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
     return classresults;
 }
 
+QSet<QString> Ontology::instancesForProperties(const QHash<QString, QString> &values) const
+{
+    //переменная хранит результаты работы функции
+    QSet<QString> results;
+    //получить все классы allClasses()
+    QSet<QString> allclasses = allClasses();
+    //для каждого класса
+    foreach(Qstring classItem, allclasses)
+    {
+        //получить все параметры (имя_класса,HAS_PROPERTY,)
+        QSet<QString> properties = objectsFor(classItem, Ontology::HAS_PROPERTY);
+        //для каждого параметра
+        foreach(QString property, properties)
+        {
+            //если вход содержит ключ имя_параметра
+            if(values.contains(property))
+            {
+                //записать (,имя_параметра,значение_параметра) в результат
+                results += subjectsFor(property, values.value(property));
+            }
+        }
+    }
+    //вернуть результат
+    return result;
+}
+
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
     if(!allClasses().contains(className))

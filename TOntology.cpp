@@ -1082,8 +1082,6 @@ void TOntology::TestInstanceProperties_data()
     QTest::newRow("empty-ontology, no instance")<<(Ontology(QSet<Triple>()))
                                                         <<QString()
                                                         <<(MyHash());
-
-
 }
 
 void TOntology::TestInstanceProperties()

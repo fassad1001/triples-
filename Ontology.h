@@ -46,6 +46,7 @@ public:
     QSet<QString> allInstances() const;
 
     QSet<QString> classesForInstance(const QString &instanceName) const;
+    QSet<QString> instancesForProperties(const QHash<QString, QString> &values) const;
 
     QSet<QString> subClasses(const QString &className) const;
     QSet<QString> superClasses(const QString &className) const;
