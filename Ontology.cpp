@@ -244,10 +244,10 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
     //получить все классы allClasses()
     QSet<QString> allclasses = allClasses();
     //для каждого класса
-    foreach(QString classItem, allclasses)
+    foreach(QString className, allclasses)
     {
-        //получить все параметры (имя_класса,HAS_PROPERTY,)
-        QSet<QString> properties = objectsFor(classItem, Ontology::HAS_PROPERTY);
+        //получить все параметры (имя_класса,HAS_PROPERTY,) для класса
+        QSet<QString> properties = objectsFor(className, Ontology::HAS_PROPERTY);
         //для каждого параметра
         foreach(QString property, properties)
         {
@@ -255,10 +255,14 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
             if(values.contains(property))
             {
                 //записать (,имя_параметра,значение_параметра) в результат
-                results += subjectsFor(property, values.value(property));
+                foreach (QString value, values)
+                {
+                    results += subjectsFor(property, value);
+                }
             }
         }
     }
+    qWarning()<<"instancesForProperties:"<<results;
     //вернуть результат
     return results;
 }
