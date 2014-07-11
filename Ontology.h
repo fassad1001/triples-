@@ -23,6 +23,7 @@ public:
     QSet<QString> classProperties(const QString &className) const;
     QSet<QString> anyClassInstances(const QStringList &classNames) const;
     QSet<QString> propertyValues(const QString &propertyName) const;
+    QHash<QString, QString> instanceProperties(const QString &instanceName) const;
 
     QSet<QString> allClassInstances(const QStringList &classNames) const;
     QSet<QString> allClasses() const;

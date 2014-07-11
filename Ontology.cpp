@@ -100,6 +100,41 @@ QSet<QString> Ontology::propertyValues(const QString &propertyName) const
     return propertyvalues;
 }
 
+QHash<QString, QString> Ontology::instanceProperties(const QString &instanceName) const
+{
+    //перременная будет хранить результат работы функции
+    QHash<QString, QString> results;
+    //получить все классы
+    QSet<QString> allclasses = allClasses();
+    //для инстанса получить список классов к которым он относится
+    QSet<QString> instanceclasses = classInstances(instanceName);
+    //если все классы включают в себя список-классов-для-инстанса
+    if(allclasses.contains(instanceclasses))
+    {
+        //для каждого класса
+        foreach(const QString &instanceclass, instanceclasses)
+        {
+            //получить список свойств
+            QSet<QString> instanceproperities = instanceProperties();
+            //для каждого свойства
+            foreach(const QString &instanceproperity, instanceproperities)
+            {
+                //получение значений в инстансе (instance;property;значение_которое_ищем)
+                QSet<QString> values;
+                values += objectsFor(instanceName,instanceproperity);
+                //для каждого значения
+                foreach(const QString &value, values)
+                {
+                    //запись в результирующий хеш
+                    results.insertMulti(instanceproperity, value);
+                }
+            }
+        }
+    }
+    //вернуть результат
+    return results;
+}
+
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
     QSet<QString> classesToChoose;
