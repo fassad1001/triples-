@@ -32,11 +32,15 @@ QSet<QString> Ontology::classProperties(const QString &className) const
     QSet<QString> properities;
     classesToLoop += className;
     classesToLoop += superClasses(className);
+    qWarning()<<"classProperties.суперклассы:"<<classesToLoop;
+    properities += objectsFor(className, Ontology::HAS_PROPERTY);
     foreach(QString classToLoop, classesToLoop)
     {
         //(subject, predicate, object) (имяКласса;HAS_PROPERETY;*)
         properities += objectsFor(classToLoop, Ontology::HAS_PROPERTY);
     }
+    qWarning()<<"classProperties:"<<properities;
+    return properities;
 }
 
 QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
