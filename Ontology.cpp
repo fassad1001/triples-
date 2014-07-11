@@ -244,7 +244,7 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
     //получить все классы allClasses()
     QSet<QString> allclasses = allClasses();
     //для каждого класса
-    foreach(Qstring classItem, allclasses)
+    foreach(QString classItem, allclasses)
     {
         //получить все параметры (имя_класса,HAS_PROPERTY,)
         QSet<QString> properties = objectsFor(classItem, Ontology::HAS_PROPERTY);
@@ -260,7 +260,7 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
         }
     }
     //вернуть результат
-    return result;
+    return results;
 }
 
 QSet<QString> Ontology::subClasses(const QString &className) const

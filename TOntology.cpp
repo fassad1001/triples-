@@ -1099,9 +1099,9 @@ void TOntology::TestInstancesForProperties_data()
     QTest::addColumn <MyHash> ("values");
     QTest::addColumn <QSet<QString> > ("instances");
 
-    QTest::newRow("empty ontology")<<(Ontology(QSet<Triple>()))
+    QTest::newRow("empty ontology, empty values")<<(Ontology(QSet<Triple>()))
                     <<(MyHash())
-                      <<QString();
+                      <<(QSet<QString>());
 
 }
 
@@ -1111,5 +1111,5 @@ void TOntology::TestInstancesForProperties()
     QFETCH(MyHash, values);
     QFETCH(QSet<QString>, instances);
 
-    QCOMPARE(ontology.instanceProperties(instanceName),instanceproperties);
+    QCOMPARE(ontology.instancesForProperties(values),instances);
 }
