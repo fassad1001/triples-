@@ -1095,6 +1095,13 @@ void TOntology::TestInstanceProperties()
 
 void TOntology::TestInstancesForProperties_data()
 {
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <MyHash> ("values");
+    QTest::addColumn <QSet<QString> > ("instances");
+
+    QTest::newRow("empty ontology")<<(Ontology(QSet<Triple>()))
+                    <<(MyHash())
+                      <<QString();
 
 }
 
