@@ -57,6 +57,9 @@ private slots:
 
     void TestInstanceProperties_data();
     void TestInstanceProperties();
+
+    void TestInstancesForProperties_data();
+    void TestInstancesForProperties();
 };
 
 #endif // TONTOLOGY_H

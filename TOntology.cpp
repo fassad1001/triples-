@@ -1092,3 +1092,17 @@ void TOntology::TestInstanceProperties()
 
     QCOMPARE(ontology.instanceProperties(instanceName),instanceproperties);
 }
+
+void TOntology::TestInstancesForProperties_data()
+{
+
+}
+
+void TOntology::TestInstancesForProperties()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QString, instanceName);
+    QFETCH(MyHash, instanceproperties);
+
+    QCOMPARE(ontology.instanceProperties(instanceName),instanceproperties);
+}

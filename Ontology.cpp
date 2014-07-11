@@ -237,7 +237,7 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
     return classresults;
 }
 
-QSet<QString> Ontology::instancesForProperties(const QHash<QString, QString> &values) const
+QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
 {
     //переменная хранит результаты работы функции
     QSet<QString> results;
