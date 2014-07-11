@@ -904,7 +904,6 @@ void TOntology::TestPropertyValues_data()
                                                                     <<"value4"
                                                                     <<"value5"
                                                                     <<"value6");
-
 }
 
 void TOntology::TestPropertyValues()
