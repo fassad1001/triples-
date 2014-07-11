@@ -72,6 +72,34 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
     return instanses;
 }
 
+QSet<QString> Ontology::propertyValues(const QString &propertyName) const
+{
+    //переменная будет хранить результаты выполнения функции
+    QSet<QString> propertyvalues;
+    //получить список всех классов
+    QSet<QString> allclasses = allClasses();
+    //получить список-какбы-классов которые содержат свойство(;HAS_PROPERETY;имяСвойства)
+    QSet<QString> testClasses = subjectsFor(Ontology::HAS_PROPERTY, propertyName);
+    //если список-всех-классов содержит список-какбы-классов
+    if(allclasses.contains(testClasses))
+    {
+        //для каждого класса
+        foreach(const QString &classItem, testClasses)
+        {
+            //получить список всех инстансов которые относятся к этому классу (classInstances())
+            QSet<QString> classinstances = classInstances(classItem);
+            //для каждого полученного-интанса
+            foreach(const QString &classinstance, classinstances)
+            {
+                //из списка взять значения для свойства (имяИнстанса;имяСвойства;) и записать их в результаты
+                propertyvalues += objectsFor(classinstance, propertyName);
+            }
+        }
+    }
+    qWarning()<<"propertyValues:"<<propertyvalues;
+    return propertyvalues;
+}
+
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
     QSet<QString> classesToChoose;

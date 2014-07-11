@@ -795,3 +795,19 @@ void TOntology::TestClassProperties()
 
     QCOMPARE(ontology.classProperties(instanceName), properties);
 }
+
+void TOntology::TestPropertyValues_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QString> ("propertyName");
+    QTest::addColumn <QSet<QString> > ("propertyvalues");
+
+
+}
+
+void TOntology::TestPropertyValues()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QString, propertyName);
+    QFETCH(QSet<QString>, propertyvalues);
+}

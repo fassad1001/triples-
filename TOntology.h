@@ -51,6 +51,9 @@ private slots:
 
     void TestClassProperties_data();
     void TestClassProperties();
+
+    void TestPropertyValues_data();
+    void TestPropertyValues();
 };
 
 #endif // TONTOLOGY_H
