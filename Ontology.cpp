@@ -126,9 +126,6 @@ QSet<QString> Ontology::allInstances() const
 
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
 {
-    qWarning()<<"выполняю функцию classesForInstance";
-    qWarning()<<"+++++++++++++++++++++++++++++++++++++";
-    qWarning()<<"на вход подаю :"<<instanceName;
     //переменная будет хранить классы для использования их в цикле
     QSet<QString> loopClasses;
     //переменная содержит результаты работы метода
@@ -143,12 +140,10 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
         {
             //добавить его в первичные данные
             loopClasses += classItem;
-            qWarning()<<"+"<<loopClasses;
         }
     }
     //записываю первоначальные данные для цикла
     classresults += loopClasses;
-    qWarning()<<"начинаю цикл с :"<<loopClasses;
     //пока есть данные для цикла
     while(!loopClasses.empty())
     {
@@ -160,15 +155,12 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
             //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это надклассы
             exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
             //дополняю результаты (+= инстансы для классов)
-            qWarning()<<"+"<<exchangeClasses;
             classresults += exchangeClasses;
         }
         //передаю полученные данные для обработки в следуюющем цикле
         loopClasses = exchangeClasses;
     }
     //возвращаю результат работы программы
-    qWarning()<<"выполнение функции закончилось";
-    qWarning()<<"результат :"<<classresults;
     return classresults;
 }
 
@@ -207,8 +199,6 @@ QSet<QString> Ontology::subClasses(const QString &className) const
 
 QSet<QString> Ontology::superClasses(const QString &className) const
 {
-    qWarning()<<"выполнение функции superClasses началось";
-    qWarning()<<"на вход подается :"<<className;
     //переменная будет хранить результаты (под классы)
     QSet<QString> superClasses;
     //переменная будет хранить классы для использования их в цикле
@@ -217,10 +207,8 @@ QSet<QString> Ontology::superClasses(const QString &className) const
     //записываю первоначальные данные для цикла
     loopClasses += className;
     //пока есть данные для цикла
-    qWarning()<<"формирую результат:";
     while(!loopClasses.empty())
     {
-        qWarning()<<"=>"<<loopClasses;
         //переменная будет хранить классы для передачи их следующей итерации цикла
         QSet<QString> exchangeClasses;
         //для каждого класса (для цикла)
@@ -230,14 +218,11 @@ QSet<QString> Ontology::superClasses(const QString &className) const
             exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
             //дополняю результаты
             superClasses += exchangeClasses;
-            qWarning()<<"+"<<exchangeClasses;
         }
         //передаю полученные данные для обработки в следуюющем цикле
         loopClasses = exchangeClasses;
     }
     //возвращаю результат работы программы
-    qWarning()<<"результат сформирован";
-    qWarning()<<"результат :"<<superClasses;
     return superClasses;
 }
 
@@ -390,42 +375,40 @@ bool Ontology::isMinimal() const
             //если пересечение инстансов-класса дает положительный результат
             if(!(classInstances(class1) & classInstances(class2)).isEmpty())
             {
-                qWarning()<<"для классов :"<<class1<<";"<<class2;
-                qWarning()<<"список инстансов на подозрение:";
                 //записываем результат в список инстансов на подозрение
                 instances += classInstances(class1) & classInstances(class2);
-                qWarning()<<"+"<<instances;
             }
         }
     }
-    qWarning()<<"список инстансов сформирован.";
+    qWarning()<<"список инстансов сформирован:"<<instances;
     qWarning()<<"Начинаю выяление подозреваемых";
     //для каждого элемента-списка-на-подозрение
     foreach(const QString &instance, instances)
     {
-        qWarning()<<"метка1!";
-        //переменная будет хранить все классы для интанса в виде объектов "Class"
+        //переменная будет хранить все классы для инcтанса в виде объектов "Class"
         QSet<Class> instanceclasses;
         //переменная хранит в себе классы для инстанса типа QString
-        QSet<QString> classesforinstance = classesForInstance(instance);
+        QSet<QString> classesforinstance = objectsFor(instance, Ontology::IS);
         //для каждого класса для инстанса (QString)
-        qWarning()<<"метка2!";
+        qWarning()<<"формирую классы для инстансов:";
         foreach(const QString &instClass, classesforinstance)
         {
-            qWarning()<<"для класса:"<<instClass;
             //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
             QString className = instClass;
             QSet<QString> parents = superClasses(instClass);
+            parents += instClass;
             instanceclasses += Class(className, parents);
-            qWarning()<<"записываю:"<<className<<";"<<parents;
+            qWarning()<<instClass<<"+="<<className<<";"<<parents;
         }
-        qWarning()<<"метка5!";
+        qWarning()<<"классы для инстансов сформированы!";
         //для каждого класса-для-инстанса
+        qWarning()<<"начинаю проверять классы - инстансы";
         foreach(const Class &instanceclass1, instanceclasses)
         {
             //для каждого класса-для-инстанса
             foreach(const Class &instanceclass2, instanceclasses)
             {
+                qWarning()<<"для:"<<instanceclass1.name<<"&"<<instanceclass2.name;
                 if(instanceclass1.name == instanceclass2.name)
                 {
                     continue;
@@ -433,6 +416,8 @@ bool Ontology::isMinimal() const
                 //если класса-для-инстанса1 < класса-для-инстанса2
                 if(instanceclass1 < instanceclass2)
                 {
+                    qWarning()<<"класс "<<instanceclass1.name<<"<"<<instanceclass2.name;
+                    qWarning()<<"при "<<instanceclass1.parents<<"<"<<instanceclass2.parents;
                     //вернуть ложь
                     return false;
                 }

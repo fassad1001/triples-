@@ -13,7 +13,6 @@ public:
     Class(QString Name, QSet<QString> Parents);
     QString toString() const;
     bool operator <(const Class &anotherClass) const;
-    bool operator >(const Class &anotherClass) const;
     bool operator ==(const Class class2) const;
 };
 

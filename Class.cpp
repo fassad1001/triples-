@@ -29,23 +29,11 @@ bool Class::operator <(const Class &anotherClass) const
 {
     if(parents.contains(anotherClass.name))
     {
-        return false;
+        return true;
     }
     else
     {
-        return true;
-    }
-}
-
-bool Class::operator >(const Class &anotherClass) const
-{
-    if(!parents.contains(anotherClass.name))
-    {
         return false;
-    }
-    else
-    {
-        return true;
     }
 }
 
