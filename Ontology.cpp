@@ -267,6 +267,11 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
     return results;
 }
 
+QSet<QString> Ontology::instancesForNonProperties(const MyHash &values) const
+{
+    return allInstances()-instancesForProperties(values);
+}
+
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
     if(!allClasses().contains(className))
