@@ -32,14 +32,12 @@ QSet<QString> Ontology::classProperties(const QString &className) const
     QSet<QString> properities;
     classesToLoop += className;
     classesToLoop += superClasses(className);
-    qWarning()<<"classProperties.суперклассы:"<<classesToLoop;
     properities += objectsFor(className, Ontology::HAS_PROPERTY);
     foreach(QString classToLoop, classesToLoop)
     {
         //(subject, predicate, object) (имяКласса;HAS_PROPERETY;*)
         properities += objectsFor(classToLoop, Ontology::HAS_PROPERTY);
     }
-    qWarning()<<"classProperties:"<<properities;
     return properities;
 }
 
@@ -50,10 +48,6 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
         return QSet<QString>();
     }
     //переменная хранит результаты работы метода (инстансы)
-    qWarning()<<"выполняю функцию anyClassInstances";
-    qWarning()<<"++++++++++++++++++++++++++++++++++";
-    qWarning()<<"на вход подаю имена классов :"<<classNames;
-    qWarning()<<"начинаю выполнение функции...";
     QSet<QString> classNamess = classNames.toSet();
     foreach(const QString &className, classNames)
     {
@@ -65,10 +59,8 @@ QSet<QString> Ontology::anyClassInstances(const QStringList &classNames) const
     {
         //дополняю результат инстансами
         instanses += classInstances(className);
-        qWarning()<<"+ "<<instanses;
     }
     //возвращаю результат работы метода
-    qWarning()<<"выполнение функции закончилось";
     return instanses;
 }
 
@@ -96,7 +88,6 @@ QSet<QString> Ontology::propertyValues(const QString &propertyName) const
             }
         }
     }
-    qWarning()<<"propertyValues:"<<propertyvalues;
     return propertyvalues;
 }
 
@@ -109,7 +100,6 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
     //для инстанса получить список классов к которым он относится
     QSet<QString> instanceclasses = classesForInstance(instanceName);
     //если все классы включают в себя список-классов-для-инстанса
-    qWarning()<<"в классах:"<<instanceclasses;
     if(allclasses.contains(instanceclasses))
     {
         //для каждого класса
@@ -136,7 +126,6 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
             }
         }
     }
-    qWarning()<<"instanceProperties:"<<results;
     //вернуть результат
     return results;
 }
@@ -262,7 +251,6 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
             }
         }
     }
-    qWarning()<<"instancesForProperties:"<<results;
     //вернуть результат
     return results;
 }
@@ -347,7 +335,6 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     QList<QString> sortedIntersectionClasses;
     //записываю результат перечечения двух классов у инстансов
     interSectionClasses = objectsFor(instanceName1, Ontology::IS) & objectsFor(instanceName2, Ontology::IS);
-    qWarning()<<"mainSuperClass interSectionClasses:"<<interSectionClasses<<"="<<classesForInstance(instanceName1)<<"AND"<<classesForInstance(instanceName2);
     //переменная будет хранить в себе множество объектов типа Class для сортировки
     QList<Class> sortedClasses;
     //для каждого результата перечесения
@@ -368,12 +355,10 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
         {
             if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.last().name).count())
             {
-                qWarning()<<"minimum"<<(sortedClasses.length()-1);
                 result += sortedClass.name;
             }
         }
     }
-    qWarning()<<"mainSuperClass:"<<result;
     return result;
 }
 
@@ -469,8 +454,6 @@ bool Ontology::isValid() const
 
 bool Ontology::isMinimal() const
 {
-    qWarning()<<"выполняется функция isMinimal";
-    qWarning()<<"+++++++++++++++++++++++++++++";
     //переменная хранит все классы
     QSet<QString> allclasses = allClasses();
     //переменная хранит набор объектов типа "Класс"
@@ -479,7 +462,6 @@ bool Ontology::isMinimal() const
     QSet<QString> instances;
     //если иерархия валидна
     //для каждого класса
-    qWarning()<<"начинается формирование списка инстансов";
     foreach(const QString &class1, allclasses)
     {
         //для каждого класса
@@ -498,8 +480,6 @@ bool Ontology::isMinimal() const
             }
         }
     }
-    qWarning()<<"список инстансов сформирован:"<<instances;
-    qWarning()<<"Начинаю выяление подозреваемых";
     //для каждого элемента-списка-на-подозрение
     foreach(const QString &instance, instances)
     {
@@ -508,7 +488,6 @@ bool Ontology::isMinimal() const
         //переменная хранит в себе классы для инстанса типа QString
         QSet<QString> classesforinstance = objectsFor(instance, Ontology::IS);
         //для каждого класса для инстанса (QString)
-        qWarning()<<"формирую классы для инстансов:";
         foreach(const QString &instClass, classesforinstance)
         {
             //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
@@ -516,17 +495,13 @@ bool Ontology::isMinimal() const
             QSet<QString> parents = superClasses(instClass);
             parents += instClass;
             instanceclasses += Class(className, parents);
-            qWarning()<<instClass<<"+="<<className<<";"<<parents;
         }
-        qWarning()<<"классы для инстансов сформированы!";
         //для каждого класса-для-инстанса
-        qWarning()<<"начинаю проверять классы - инстансы";
         foreach(const Class &instanceclass1, instanceclasses)
         {
             //для каждого класса-для-инстанса
             foreach(const Class &instanceclass2, instanceclasses)
             {
-                qWarning()<<"для:"<<instanceclass1.name<<"&"<<instanceclass2.name;
                 if(instanceclass1.name == instanceclass2.name)
                 {
                     continue;
@@ -534,8 +509,6 @@ bool Ontology::isMinimal() const
                 //если класса-для-инстанса1 < класса-для-инстанса2
                 if(instanceclass1 < instanceclass2)
                 {
-                    qWarning()<<"класс "<<instanceclass1.name<<"<"<<instanceclass2.name;
-                    qWarning()<<"при "<<instanceclass1.parents<<"<"<<instanceclass2.parents;
                     //вернуть ложь
                     return false;
                 }
