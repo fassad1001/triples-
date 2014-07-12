@@ -361,18 +361,11 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     }
     //сортирую классы по принципу, если A содержит B то A<B
     qSort(sortedClasses.begin(), sortedClasses.end());
-    foreach(Class sortedItem, sortedClasses)
-    {
-        qWarning()<<"fassad:"<<sortedClasses.at(0).name;
-        qWarning()<<"fassad:"<<sortedItem.name<<":::"<<sortedItem.parents;
-    }
-
     //беру первый элемент как самый малый элемент и также беру
     if(!sortedClasses.isEmpty())
     {
         foreach (const Class &sortedClass, sortedClasses)
         {
-
             if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.last().name).count())
             {
                 qWarning()<<"minimum"<<(sortedClasses.length()-1);
