@@ -339,19 +339,21 @@ QSet<QString> Ontology::superClasses(const QString &className) const
 QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
                                        const QString &instanceName2) const
 {
-    // ПОЛУЧИТЬ ВСЕ КЛАССЫ ДЛЯ instanceName1 И instanceName2, НАЙТИ ИХ ПЕРЕСЕЧЕНИЕ, В ПЕРЕСЕЧЕНИИ НАЙТИ МИНИМАЛЬНЫЕ КЛАССЫ ЧЕРЕЗ ФУНКЦИЮ qSort
+    //переменная будет хранить в себе результат работы функции
+    QSet<QString> result;
     //переменная будет хранить в себе результат пересечения классов
     QSet<QString> interSectionClasses;
     //переменная будет хранить в себе отсортированный список
     QList<QString> sortedIntersectionClasses;
     //записываю результат перечечения двух классов у инстансов
-    interSectionClasses = classesForInstance(instanceName1) & classesForInstance(instanceName2);
+    interSectionClasses = objectsFor(instanceName1, Ontology::IS) & objectsFor(instanceName2, Ontology::IS);
+    qWarning()<<"mainSuperClass interSectionClasses:"<<interSectionClasses<<"="<<classesForInstance(instanceName1)<<"AND"<<classesForInstance(instanceName2);
     //переменная будет хранить в себе множество объектов типа Class для сортировки
     QList<Class> sortedClasses;
     //для каждого результата перечесения
     if(!interSectionClasses.isEmpty())
     {
-        foreach(QString Name, interSectionClasses)
+        foreach(const QString &Name, interSectionClasses)
         {
             //запись результата в набор типа Class
             sortedClasses += Class(Name, superClasses(Name));
@@ -359,12 +361,27 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     }
     //сортирую классы по принципу, если A содержит B то A<B
     qSort(sortedClasses.begin(), sortedClasses.end());
-    //беру первый элемент как самый малый элемент и возвращаю его
+    foreach(Class sortedItem, sortedClasses)
+    {
+        qWarning()<<"fassad:"<<sortedClasses.at(0).name;
+        qWarning()<<"fassad:"<<sortedItem.name<<":::"<<sortedItem.parents;
+    }
+
+    //беру первый элемент как самый малый элемент и также беру
     if(!sortedClasses.isEmpty())
     {
-        return QSet<QString>()<<sortedClasses.at(0).name;
+        foreach (const Class &sortedClass, sortedClasses)
+        {
+
+            if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.last().name).count())
+            {
+                qWarning()<<"minimum"<<(sortedClasses.length()-1);
+                result += sortedClass.name;
+            }
+        }
     }
-    return QSet<QString>();
+    qWarning()<<"mainSuperClass:"<<result;
+    return result;
 }
 
 bool Ontology::isValid() const
