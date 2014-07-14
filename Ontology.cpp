@@ -77,11 +77,11 @@ QSet<QString> Ontology::propertyValues(const QString &propertyName) const
     //переменная будет хранить результаты выполнения функции
     QSet<QString> propertyvalues;
     //получить список всех классов
-    QSet<QString> allclasses = allClasses();
+    QSet<QString> allClassesItems = allClasses();
     //получить список-какбы-классов которые содержат свойство(;HAS_PROPERETY;имяСвойства)
     QSet<QString> testClasses = subjectsFor(Ontology::HAS_PROPERTY, propertyName);
     //если список-всех-классов содержит список-какбы-классов
-    if(allclasses.contains(testClasses))
+    if(allClassesItems.contains(testClasses))
     {
         //для каждого класса
         foreach(const QString &classItem, testClasses)
@@ -103,32 +103,27 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
 {
     //переменная будет хранить результат работы функции
     MyHash results;
-    //получить все классы
-    QSet<QString> allclasses = allClasses();
     //для инстанса получить список классов к которым он относится
-    QSet<QString> instanceclasses = classesForInstance(instanceName);
-    //если все классы включают в себя список-классов-для-инстанса
-    if(allclasses.contains(instanceclasses))
+    QSet<QString> instanceClasses = classesForInstance(instanceName) & allClasses();
+    //для каждого класса котый есть в иерархии
+    foreach(const QString &instanceclass, instanceClasses)
     {
-        //для каждого класса
-        foreach(const QString &instanceclass, instanceclasses)
+        //получить список свойств
+        QSet<QString> instanceProperities = classProperties(instanceclass);
+        //для каждого свойства
+        foreach(const QString &instanceProperity, instanceProperities)
         {
-            //получить список свойств
-            QSet<QString> instanceproperities = classProperties(instanceclass);
-            //для каждого свойства
-            foreach(const QString &instanceproperity, instanceproperities)
+            //получение значений в инстансе (instance;property;значение_которое_ищем)
+            QSet<QString> values;
+            values += objectsFor(instanceName,instanceProperity);
+            if(values.isEmpty())
             {
-                //получение значений в инстансе (instance;property;значение_которое_ищем)
-                QSet<QString> values;
-                values += objectsFor(instanceName,instanceproperity);
-                if(values.isEmpty())
-                {
-                    results.insert(instanceproperity, QString());
-                }
-                results.insert(values.toList().first());
+                results.insert(instanceProperity, QString());
             }
+            results.insert(instanceProperity, values.toList().first());
         }
     }
+
     //вернуть результат
     return results;
 }
@@ -144,7 +139,7 @@ QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
     //извлекаю все подклассы у которых есть сущности
     foreach(const QString &className, classNames)
     {
-        allSubClases += subClasses(className);
+        const QSet<QString> allSubClases = subClasses(className);
         foreach(const QString &subClassName, allSubClases)
         {
             if(!classInstances(subClassName).isEmpty())
@@ -196,9 +191,9 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
     //переменная содержит результаты работы метода
     QSet<QString> classresults;
     //переменная содержит все классы
-    const QSet<QString> allclasses = allClasses();
+    const QSet<QString> allClassesItems = allClasses();
     //для каждого классса срежи всех классов
-    foreach(const QString &classItem, allclasses)
+    foreach(const QString &classItem, allClassesItems)
     {
         //если класс содержит инстанс (входящий)
         if(classInstances(classItem).contains(instanceName))
@@ -234,9 +229,9 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
     //переменная хранит результаты работы функции
     QSet<QString> results;
     //получить все классы allClasses()
-    QSet<QString> allclasses = allClasses();
+    QSet<QString> allClassesItems = allClasses();
     //для каждого класса
-    foreach(QString className, allclasses)
+    foreach(QString className, allClassesItems)
     {
         //получить все параметры (имя_класса,HAS_PROPERTY,) для класса
         QSet<QString> properties = objectsFor(className, Ontology::HAS_PROPERTY);
@@ -260,7 +255,31 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
 
 QSet<QString> Ontology::instancesForNonProperties(const MyHash &values) const
 {
-    return allInstances() - instancesForProperties(values);
+    //переменная хранит результаты работы функции
+    QSet<QString> results;
+    //получить все классы allClasses()
+    const QSet<QString> allClassesItems = allClasses();
+    //получить все имена входящих параметров
+    const QSet<QString> valuesProperties = values.keys().toSet();
+    //для каждого класса
+    foreach(QString className, allClassesItems)
+    {
+        //свойства, значения которых будут проверяться на несоответствие с входящими данными
+        QSet<QString> propertiesToCheck = classProperties(className) & valuesProperties;
+        //--проверка на несоответствие
+        //для каждого параметра для проверки
+        foreach(const QString &propertieToCheck, propertiesToCheck)
+        {
+            //если значения параметра-для-проверки не равно значению этого параметра их вход данных
+            if(!propertyValues(propertieToCheck).contains(values.value(propertieToCheck)))
+            {
+                //добавить инстансы этого класса в результат
+                results += classInstances(className);
+            }
+        }
+    }
+    //вернуть результат
+    return results;
 }
 
 QSet<QString> Ontology::subClasses(const QString &className) const
@@ -368,15 +387,15 @@ bool Ontology::isValid() const
     //переменная хранит в себе таблицу вида [Class1][Class2]=bool
     QHash<QString, QHash<QString, bool> > transitiveClosure;
     //переменная содержит в себе все классы
-    QSet<QString> allclasses = allClasses();
+    QSet<QString> allClassesItems = allClasses();
     //переменная хранит в себе пары (класс;подкласс) выбираю по образцу (класс;CONTAINS;подкласс)
     QSet<Pair> closurePairs = subjectsAndObjects(Ontology::CONTAINS);
     //вариант 1
     //для каждого класса
-    foreach(const QString &classItem1, allclasses)
+    foreach(const QString &classItem1, allClassesItems)
     {
         //для каждого класса
-        foreach(const QString &classItem2, allclasses)
+        foreach(const QString &classItem2, allClassesItems)
         {
             //добавить в таблицу (класс1, класс2, ложь)
             transitiveClosure[classItem1][classItem2] = false;
@@ -394,7 +413,7 @@ bool Ontology::isValid() const
     {
         changed = false;
         //для каждого класса
-        foreach(const QString &classItem1, allclasses)
+        foreach(const QString &classItem1, allClassesItems)
         {
             //если (класс1, класс1, правда)
             if(transitiveClosure[classItem1][classItem1] == true)
@@ -403,7 +422,7 @@ bool Ontology::isValid() const
                 return false;
             }
             //для каждого класса
-            foreach(const QString &classItem2, allclasses)
+            foreach(const QString &classItem2, allClassesItems)
             {
                 //если (класс2, класс2, правда)
                 if(transitiveClosure[classItem2][classItem2] == true)
@@ -419,7 +438,7 @@ bool Ontology::isValid() const
                     return false;
                 }
                 //для каждого класса
-                foreach(const QString &classItem3, allclasses)
+                foreach(const QString &classItem3, allClassesItems)
                 {
                     if(classItem1 == classItem2)
                     {
@@ -455,15 +474,15 @@ bool Ontology::isValid() const
 bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
 {
     //переменная хранит все классы
-    QSet<QString> allclasses = allClasses();
+    QSet<QString> allClassesItems = allClasses();
     //переменная хранит набор инстансов на подозрение
     QSet<QString> instances;
     //если иерархия валидна
     //для каждого класса
-    foreach(const QString &class1, allclasses)
+    foreach(const QString &class1, allClassesItems)
     {
         //для каждого класса
-        foreach(const QString &class2, allclasses)
+        foreach(const QString &class2, allClassesItems)
         {
             //если слассы одни и теже
             if(class1 == class2)
@@ -482,30 +501,30 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
     foreach(const QString &instance, instances)
     {
         //переменная будет хранить все классы для инcтанса в виде объектов "Class"
-        QSet<Class> instanceclasses;
+        QSet<Class> instanceClasses;
         //переменная хранит в себе классы для инстанса типа QString
-        QSet<QString> classesforinstance = objectsFor(instance, Ontology::IS);
+        QSet<QString> classesForInstance = objectsFor(instance, Ontology::IS);
         //для каждого класса для инстанса (QString)
-        foreach(const QString &instClass, classesforinstance)
+        foreach(const QString &instClass, classesForInstance)
         {
             //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
             QString className = instClass;
             QSet<QString> parents = superClasses(instClass);
             parents += instClass;
-            instanceclasses += Class(className, parents);
+            instanceClasses += Class(className, parents);
         }
         //для каждого класса-для-инстанса
-        foreach(const Class &instanceclass1, instanceclasses)
+        foreach(const Class &instanceClass1, instanceClasses)
         {
             //для каждого класса-для-инстанса
-            foreach(const Class &instanceclass2, instanceclasses)
+            foreach(const Class &instanceClass2, instanceClasses)
             {
-                if(instanceclass1.name == instanceclass2.name)
+                if(instanceClass1.name == instanceClass2.name)
                 {
                     continue;
                 }
                 //если класса-для-инстанса1 < класса-для-инстанса2
-                if(instanceclass1 < instanceclass2)
+                if(instanceClass1 < instanceClass2)
                 {
                     //вернуть ложь
                     return false;
@@ -520,14 +539,14 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
 void Ontology::minimalize()
 {
     //переменная хранит все классы
-    QSet<QString> allclasses = allClasses();
+    QSet<QString> allClassesItems = allClasses();
     //переменная хранит набор инстансов на подозрение
     QSet<QString> instances;
     //для каждого класса
-    foreach(QString class1, allclasses)
+    foreach(QString class1, allClassesItems)
     {
         //для каждого класса
-        foreach(QString class2, allclasses)
+        foreach(QString class2, allClassesItems)
         {
             //если пересечение инстансов-класса дает положительный результат
             if(!(classInstances(class1) & classInstances(class2)).isEmpty() && class1 != class2)
@@ -541,35 +560,30 @@ void Ontology::minimalize()
     foreach(QString instance, instances)
     {
         //переменная будет хранить все классы для интанса в виде объектов "Class"
-        QSet<Class> instanceclasses;
+        QSet<Class> instanceClasses;
         //переменная хранит в себе классы для инстанса типа QString
-        QSet<QString> classesforinstance = classesForInstance(instance);
+        QSet<QString> classesForInstanceItems = classesForInstance(instance);
         //для каждого класса для инстанса (QString)
-        foreach(QString instClass, classesforinstance)
+        foreach(QString instClass, classesForInstanceItems)
         {
             //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
-            instanceclasses += Class(instClass, superClasses(instClass));
+            instanceClasses += Class(instClass, superClasses(instClass));
         }
         //для каждого класса-для-инстанса
-        foreach(Class instanceClass1, instanceclasses)
+        foreach(Class instanceClass1, instanceClasses)
         {
             //для каждого класса-для-инстанса
-            foreach(Class instanceclass2, instanceclasses)
+            foreach(Class instanceClass2, instanceClasses)
             {
                 //если класса-для-инстанса1 < класса-для-инстанса2
-                if(instanceClass1 < instanceclass2)
+                if(instanceClass1 < instanceClass2)
                 {
                     //удаляем связь (имяИнстанса;IS;класс-для-инатанса1)
                     //для устранения неминимальной связи
-                    triples_ -= Triple(instance, Ontology::IS, instanceClass1.name);
+                    remove(instance, Ontology::IS, instanceClass1.name);
                 }
             }
         }
     }
-}
-
-bool Ontology::operator ==(const Ontology &o) const
-{
-    return triples_ == o.triples_;
 }
 
