@@ -5,7 +5,6 @@
 #include <QtCore>
 
 #include "TripleStorage.h"
-
 #include "Class.h"
 
 class MyHash : public QHash< QString, QString >
@@ -32,6 +31,12 @@ public:
     static const QString CLASS;
     static const QString HAS_PROPERTY;
 
+    enum LOOK
+    {
+        UP,
+        DOWN
+    };
+
     Ontology();
     Ontology(const QSet<Triple> &triples);
 
@@ -44,6 +49,7 @@ public:
     QSet<QString> allClassInstances(const QStringList &classNames) const;
     QSet<QString> allClasses() const;
     QSet<QString> allInstances() const;
+    QSet<QString> lookClasses(const LOOK &look, const QString &className) const;
 
     QSet<QString> classesForInstance(const QString &instanceName) const;
     QSet<QString> instancesForProperties(const MyHash &values) const;
@@ -55,11 +61,9 @@ public:
     QSet<QString> mainSuperClass(const QString &instanceName1, const QString &instanceName2) const;
 
     bool isValid() const;
-    bool isMinimal() const;
+    bool isMinimal(QSet<Pair> &redundantPairs) const;
 
     void minimalize();
-
-    bool operator ==(const Ontology &o) const;
 };
 Q_DECLARE_METATYPE(Ontology)
 

@@ -119,12 +119,13 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
             if(values.isEmpty())
             {
                 results.insert(instanceProperity, QString());
+                continue;
             }
             results.insert(instanceProperity, values.toList().first());
         }
     }
-
     //вернуть результат
+    qWarning()<<results;
     return results;
 }
 
@@ -182,6 +183,47 @@ QSet<QString> Ontology::allInstances() const
     }
     //возвращаю результат
     return instances;
+}
+
+QSet<QString> Ontology::lookClasses(const Ontology::LOOK &look, const QString &className) const
+{
+    //переменная будет хранить результаты (под классы)
+    QSet<QString> resultClasses;
+    //переменная будет хранить классы для использования их в цикле
+    QSet<QString> loopClasses;
+
+    //записываю первоначальные данные для цикла
+    loopClasses += className;
+    //пока есть данные для цикла
+    while(!loopClasses.empty())
+    {
+        //переменная будет хранить классы для передачи их следующей итерации цикла
+        QSet<QString> exchangeClasses;
+        //для каждого класса (для цикла)
+        foreach(QString loopclass, loopClasses)
+        {
+            LOOK look1 = look;
+            switch(look)
+            {
+            case UP:
+                //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это суперклассы
+                exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
+                break;
+            case DOWN:
+                //заполняю объекты для следующего цикла (имяКласса, CONSTAIN, *) это подклассы
+                exchangeClasses += objectsFor(loopclass, Ontology::CONTAINS);
+                break;
+            }
+            //дополняю результаты
+            resultClasses += exchangeClasses;
+        }
+        //передаю полученные данные для обработки в следующем цикле
+        loopClasses = exchangeClasses;
+    }
+    //проверка на существование классов-результатов
+    resultClasses &= allClasses();
+    //возвращаю результат работы программы
+    return resultClasses;
 }
 
 QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
@@ -284,64 +326,13 @@ QSet<QString> Ontology::instancesForNonProperties(const MyHash &values) const
 
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
-    if(!allClasses().contains(className))
-    {
-        return QSet<QString>();
-    }
-    //переменная будет хранить результаты (под классы)
-    QSet<QString> subClasses;
-    //переменная будет хранить классы для использования их в цикле
-    QSet<QString> loopClasses;
-
-    //записываю первоначальные данные для цикла
-    loopClasses += className;
-    //пока есть данные для цикла
-    while(!loopClasses.empty())
-    {
-        //переменная будет хранить классы для передачи их следующей итерации цикла
-        QSet<QString> exchangeClasses;
-        //для каждого класса (для цикла)
-        foreach(QString loopclass, loopClasses)
-        {
-            //заполняю объекты для следующего цикла (имяКласса, CONSTAIN, *) это подклассы
-            exchangeClasses += objectsFor(loopclass, Ontology::CONTAINS);
-            //дополняю результаты
-            subClasses += exchangeClasses;
-        }
-        //передаю полученные данные для обработки в следуюющем цикле
-        loopClasses = exchangeClasses;
-    }
-    //возвращаю результат работы программы
-    return subClasses;
+    QSet<QString> results = lookClasses(DOWN, className);
+    return results;
 }
 
 QSet<QString> Ontology::superClasses(const QString &className) const
 {
-    //переменная будет хранить результаты (под классы)
-    QSet<QString> superClasses;
-    //переменная будет хранить классы для использования их в цикле
-    QSet<QString> loopClasses;
-
-    //записываю первоначальные данные для цикла
-    loopClasses += className;
-    //пока есть данные для цикла
-    while(!loopClasses.empty())
-    {
-        //переменная будет хранить классы для передачи их следующей итерации цикла
-        QSet<QString> exchangeClasses;
-        //для каждого класса (для цикла)
-        foreach(QString loopclass, loopClasses)
-        {
-            //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это суперклассы
-            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
-            //дополняю результаты
-            superClasses += exchangeClasses;
-        }
-        //передаю полученные данные для обработки в следуюющем цикле
-        loopClasses = exchangeClasses;
-    }
-    //возвращаю результат работы программы
-    return superClasses;
+    return lookClasses(UP, className);
 }
 
 
