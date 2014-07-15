@@ -353,6 +353,17 @@ void TOntology::TestClassesForInstance_data()
               <<"class2"
               );
 
+    QTest::newRow("two-classes-with-inheritance")
+            << (Ontology(QSet<Triple>()
+                         <<(Triple("class1", Ontology::IS, Ontology::CLASS))
+                         <<(Triple("class2", Ontology::IS, Ontology::CLASS))
+                         <<(Triple("class1", Ontology::CONTAINS, "class2"))
+                         <<(Triple("instance1", Ontology::IS, "class4"))
+                         ))
+            <<"instance1"
+           <<(QSet<QString>());
+
+
     //    QTest::newRow("incorrect-ontology-without-class-decloration") << (Ontology(QSet<Triple>()
     //                                            <<(Triple("class1", Ontology::CONTAINS, "class2"))
     //                                            <<(Triple("instance1", Ontology::IS, "class1"))
