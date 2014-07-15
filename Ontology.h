@@ -31,7 +31,7 @@ public:
     static const QString CLASS;
     static const QString HAS_PROPERTY;
 
-    enum LOOK
+    enum DIRECTION
     {
         UP,
         DOWN
@@ -49,7 +49,7 @@ public:
     QSet<QString> allClassInstances(const QStringList &classNames) const;
     QSet<QString> allClasses() const;
     QSet<QString> allInstances() const;
-    QSet<QString> lookClasses(const LOOK &look, const QString &className) const;
+    QSet<QString> traverse(const DIRECTION  &look, const QString &className) const;
 
     QSet<QString> classesForInstance(const QString &instanceName) const;
     QSet<QString> instancesForProperties(const MyHash &values) const;

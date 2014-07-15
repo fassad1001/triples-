@@ -185,7 +185,7 @@ QSet<QString> Ontology::allInstances() const
     return instances;
 }
 
-QSet<QString> Ontology::lookClasses(const Ontology::LOOK &look, const QString &className) const
+QSet<QString> Ontology::traverse(const Ontology::DIRECTION  &look, const QString &className) const
 {
     //переменная будет хранить результаты (под классы)
     QSet<QString> resultClasses;
@@ -202,7 +202,6 @@ QSet<QString> Ontology::lookClasses(const Ontology::LOOK &look, const QString &c
         //для каждого класса (для цикла)
         foreach(QString loopclass, loopClasses)
         {
-            LOOK look1 = look;
             switch(look)
             {
             case UP:
@@ -326,13 +325,13 @@ QSet<QString> Ontology::instancesForNonProperties(const MyHash &values) const
 
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
-    QSet<QString> results = lookClasses(DOWN, className);
+    QSet<QString> results = traverse(DOWN, className);
     return results;
 }
 
 QSet<QString> Ontology::superClasses(const QString &className) const
 {
-    return lookClasses(UP, className);
+    return traverse(UP, className);
 }
 
 
@@ -399,34 +398,12 @@ bool Ontology::isValid() const
         //добавить в таблицу (класс1, класс2, правда)
         transitiveClosure[closurePair.first()][closurePair.second()] = true;
     }
-    bool changed;
-
-    changed = false;
     //для каждого класса
     foreach(const QString &classItem1, allClassesItems)
     {
-        //если (класс1, класс1, правда)
-        if(transitiveClosure[classItem1][classItem1] == true)
-        {
-            //вернуть ложь;
-            return false;
-        }
         //для каждого класса
         foreach(const QString &classItem2, allClassesItems)
         {
-            //если (класс2, класс2, правда)
-            if(transitiveClosure[classItem2][classItem2] == true)
-            {
-                //вернуть ложь;
-                return false;
-            }
-            //если (класс1, класс2, правда) && (класс2, класс1, правда)
-            if(transitiveClosure[classItem1][classItem2] == true
-                    && transitiveClosure[classItem2][classItem1] == true)
-            {
-                //вернуть ложь;
-                return false;
-            }
             //для каждого класса
             foreach(const QString &classItem3, allClassesItems)
             {
@@ -434,28 +411,45 @@ bool Ontology::isValid() const
                 {
                     continue;
                 }
+                bool edgeClass1Class2 = transitiveClosure[classItem1][classItem2];
+                bool edgeClass2Class3 = transitiveClosure[classItem2][classItem3];
+                bool edgeClass1Class3 = transitiveClosure[classItem1][classItem3];
                 //если (класс1, класс2, правда) && (класс2, класс3, правда) то
-                if(transitiveClosure[classItem1][classItem2] == true
-                        && transitiveClosure[classItem2][classItem3] == true
-                        && transitiveClosure[classItem1][classItem3] == false)
+                if(edgeClass1Class2 && edgeClass2Class3 && !edgeClass1Class3)
                 {
                     //добавить (класс1, класс3, правда)
                     transitiveClosure[classItem1][classItem3] = true;
-                    //установить метку (что-то изменилось)
-                    changed = true;
-                    // **проверка на наличие циклов
-                    //если (класс1, класс3, правда) && (класс3, класс1, правда) то
-                    if((transitiveClosure[classItem1][classItem3] == true
-                        && transitiveClosure[classItem3][classItem1] == true)
-                            || (transitiveClosure[classItem3][classItem3] == true))
-                    {
-                        //вернуть ложь;
-                        return false;
-                    }
                 }
             }
         }
     }
+    foreach(const QString &classItem1, allClassesItems)
+    {
+        foreach(const QString &classItem2, allClassesItems)
+        {
+            //если (класс1, класс1, правда)
+            if(transitiveClosure[classItem1][classItem1] == true)
+            {
+                //вернуть ложь;
+                return false;
+            }
+            //если (класс2, класс2, правда)
+            if(transitiveClosure[classItem2][classItem2] == true)
+            {
+                //вернуть ложь;
+                return false;
+            }
+            bool edgeClass1Class2 = transitiveClosure[classItem1][classItem2];
+            bool edgeClass2Class1 = transitiveClosure[classItem2][classItem1];
+            //если (класс1, класс2, правда) && (класс2, класс1, правда)
+            if(edgeClass1Class2 && edgeClass2Class1)
+            {
+                //вернуть ложь;
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
