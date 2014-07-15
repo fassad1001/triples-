@@ -400,65 +400,62 @@ bool Ontology::isValid() const
         transitiveClosure[closurePair.first()][closurePair.second()] = true;
     }
     bool changed;
-    do
+
+    changed = false;
+    //для каждого класса
+    foreach(const QString &classItem1, allClassesItems)
     {
-        changed = false;
-        //для каждого класса
-        foreach(const QString &classItem1, allClassesItems)
+        //если (класс1, класс1, правда)
+        if(transitiveClosure[classItem1][classItem1] == true)
         {
-            //если (класс1, класс1, правда)
-            if(transitiveClosure[classItem1][classItem1] == true)
+            //вернуть ложь;
+            return false;
+        }
+        //для каждого класса
+        foreach(const QString &classItem2, allClassesItems)
+        {
+            //если (класс2, класс2, правда)
+            if(transitiveClosure[classItem2][classItem2] == true)
+            {
+                //вернуть ложь;
+                return false;
+            }
+            //если (класс1, класс2, правда) && (класс2, класс1, правда)
+            if(transitiveClosure[classItem1][classItem2] == true
+                    && transitiveClosure[classItem2][classItem1] == true)
             {
                 //вернуть ложь;
                 return false;
             }
             //для каждого класса
-            foreach(const QString &classItem2, allClassesItems)
+            foreach(const QString &classItem3, allClassesItems)
             {
-                //если (класс2, класс2, правда)
-                if(transitiveClosure[classItem2][classItem2] == true)
+                if(classItem1 == classItem2)
                 {
-                    //вернуть ложь;
-                    return false;
+                    continue;
                 }
-                //если (класс1, класс2, правда) && (класс2, класс1, правда)
+                //если (класс1, класс2, правда) && (класс2, класс3, правда) то
                 if(transitiveClosure[classItem1][classItem2] == true
-                        && transitiveClosure[classItem2][classItem1] == true)
+                        && transitiveClosure[classItem2][classItem3] == true
+                        && transitiveClosure[classItem1][classItem3] == false)
                 {
-                    //вернуть ложь;
-                    return false;
-                }
-                //для каждого класса
-                foreach(const QString &classItem3, allClassesItems)
-                {
-                    if(classItem1 == classItem2)
+                    //добавить (класс1, класс3, правда)
+                    transitiveClosure[classItem1][classItem3] = true;
+                    //установить метку (что-то изменилось)
+                    changed = true;
+                    // **проверка на наличие циклов
+                    //если (класс1, класс3, правда) && (класс3, класс1, правда) то
+                    if((transitiveClosure[classItem1][classItem3] == true
+                        && transitiveClosure[classItem3][classItem1] == true)
+                            || (transitiveClosure[classItem3][classItem3] == true))
                     {
-                        continue;
-                    }
-                    //если (класс1, класс2, правда) && (класс2, класс3, правда) то
-                    if(transitiveClosure[classItem1][classItem2] == true
-                            && transitiveClosure[classItem2][classItem3] == true
-                            && transitiveClosure[classItem1][classItem3] == false)
-                    {
-                        //добавить (класс1, класс3, правда)
-                        transitiveClosure[classItem1][classItem3] = true;
-                        //установить метку (что-то изменилось)
-                        changed = true;
-                        // **проверка на наличие циклов
-                        //если (класс1, класс3, правда) && (класс3, класс1, правда) то
-                        if((transitiveClosure[classItem1][classItem3] == true
-                            && transitiveClosure[classItem3][classItem1] == true)
-                                || (transitiveClosure[classItem3][classItem3] == true))
-                        {
-                            //вернуть ложь;
-                            return false;
-                        }
+                        //вернуть ложь;
+                        return false;
                     }
                 }
             }
         }
-
-    }while(changed);
+    }
     return true;
 }
 
