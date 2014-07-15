@@ -2,10 +2,14 @@
 
 #define TRIPLESTORAGE_H
 
-
 #include "Triple.h"
-
 #include "Pair.h"
+
+enum Direction
+{
+    TO_SUBJECT,
+    TO_OBJECT
+};
 
 class TripleStorage
 {
@@ -23,8 +27,19 @@ public:
     QSet<Pair> predicatesAndObjects(const QString &subject) const;
     QSet<Pair> subjectsAndObjects(const QString &predicate) const;
 
+    QSet<QString> traverse(const QString &item,
+                           const QString &property,
+                           const Direction dir) const;
+
+    void remove(const QString &subject, const QString &predicate, const QString object);
+
     bool contains(const Triple &triple) const;
-protected:
+
+    bool operator ==(const TripleStorage &o) const
+    {
+        return triples_ == o.triples_;
+    }
+private:
     QSet<Triple> triples_;
 };
 Q_DECLARE_METATYPE(TripleStorage)

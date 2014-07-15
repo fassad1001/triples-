@@ -92,6 +92,16 @@ QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate) const
     return result;
 }
 
+QSet<QString> TripleStorage::traverse(const QString &item, const QString &property, const Direction dir) const
+{
+    return QSet<QString>();
+}
+
+void TripleStorage::remove(const QString &subject, const QString &predicate, const QString object)
+{
+    triples_.remove(Triple(subject, predicate, object));
+}
+
 bool TripleStorage::contains(const Triple &triple) const
 {
     return triples_.contains(triple);
