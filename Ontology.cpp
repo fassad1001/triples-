@@ -239,28 +239,32 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
         //если класс содержит инстанс (входящий)
         if(classInstances(classItem).contains(instanceName))
         {
-            //добавить его в первичные данные
+            //добавить класс в первичные данные
             loopClasses += classItem;
         }
     }
     //записываю первоначальные данные для цикла
     classresults += loopClasses;
     //пока есть данные для цикла
-    while(!loopClasses.empty())
+    foreach (QString loopClass, loopClasses)
     {
-        //переменная будет хранить классы для передачи их следующей итерации цикла
-        QSet<QString> exchangeClasses;
-        //для каждого класса (для цикла)
-        foreach(QString loopclass, loopClasses)
-        {
-            //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это надклассы
-            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
-            //дополняю результаты (+= инстансы для классов)
-            classresults += exchangeClasses;
-        }
-        //передаю полученные данные для обработки в следуюющем цикле
-        loopClasses = exchangeClasses;
+        classresults += traverse(UP, loopClass);
     }
+//    while(!loopClasses.empty())
+//    {
+//        //переменная будет хранить классы для передачи их следующей итерации цикла
+//        QSet<QString> exchangeClasses;
+//        //для каждого класса (для цикла)
+//        foreach(QString loopclass, loopClasses)
+//        {
+//            //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это надклассы
+//            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
+//            //дополняю результаты (+= инстансы для классов)
+//            classresults += exchangeClasses;
+//        }
+//        //передаю полученные данные для обработки в следуюющем цикле
+//        loopClasses = exchangeClasses;
+//    }
     //возвращаю результат работы программы
     return classresults;
 }
@@ -342,8 +346,9 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     QSet<QString> result;
     //переменная будет хранить в себе результат пересечения классов
     //записываю результат перечечения двух классов у инстансов
-    const QSet<QString> interSectionClasses = objectsFor(instanceName1, Ontology::IS)
-            & objectsFor(instanceName2, Ontology::IS);
+    const QSet<QString> interSectionClasses = classesForInstance(instanceName1)
+            & classesForInstance(instanceName2);
+    qWarning()<<";;;;;"<<interSectionClasses<<"INST1:"<<instanceName1<<":"<<classesForInstance(instanceName1)<<"INST2:"<<instanceName2<<":"<<classesForInstance(instanceName2);
     //переменная будет хранить в себе множество объектов типа Class для сортировки
     QList<Class> sortedClasses;
     //для каждого результата перечесения
@@ -357,6 +362,10 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     }
     //сортирую классы по принципу, если A содержит B то A<B
     qSort(sortedClasses.begin(), sortedClasses.end());
+    foreach(Class clobj, sortedClasses)
+    {
+        qWarning()<<"+++++"<<clobj.name;
+    }
     //беру первый элемент как самый малый элемент и также беру
     if(!sortedClasses.isEmpty())
     {
@@ -364,6 +373,7 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
         {
             if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.last().name).count())
             {
+                qWarning()<<"====="<<sortedClass.name;
                 result += sortedClass.name;
             }
         }

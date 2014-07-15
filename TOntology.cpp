@@ -601,7 +601,7 @@ void TOntology::TestMainSuperClass_data()
           <<(QSet<QString>()
              <<"class1");
 
-    QTest::newRow("1 minimal class")
+    QTest::newRow("1 minimal class3")
             << (Ontology(QSet<Triple>()
                          <<Triple("classA", Ontology::IS, Ontology::CLASS)
                          <<Triple("classB", Ontology::IS, Ontology::CLASS)
@@ -625,7 +625,7 @@ void TOntology::TestMainSuperClass_data()
           <<(QSet<QString>()
              <<"classE");
 
-    QTest::newRow("1 minimal class")
+    QTest::newRow("1 minimal class2")
             << (Ontology(QSet<Triple>()
                          <<Triple("classA", Ontology::IS, Ontology::CLASS)
                          <<Triple("classB", Ontology::IS, Ontology::CLASS)
@@ -649,7 +649,7 @@ void TOntology::TestMainSuperClass_data()
           <<(QSet<QString>()
              <<"classB");
 
-    QTest::newRow("1 minimal class")
+    QTest::newRow("1 minimal class1")
             << (Ontology(QSet<Triple>()
                          <<Triple("classA", Ontology::IS, Ontology::CLASS)
                          <<Triple("classB", Ontology::IS, Ontology::CLASS)
