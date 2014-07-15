@@ -450,10 +450,11 @@ void TOntology::TestSuperClasses_data()
             <<""
            <<(QSet<QString>());
 
-    QTest::newRow("ontology-without-classes") << (Ontology(QSet<Triple>()
-                                                           << Triple("instance1", Ontology::IS, "class1")))
-                                              <<""
-                                             <<(QSet<QString>());
+    QTest::newRow("ontology-without-classes")
+            << (Ontology(QSet<Triple>()
+                         << Triple("instance1", Ontology::IS, "class1")))
+            <<""
+           <<(QSet<QString>());
 
     //тест для пустой онтологии; для онтологии без классов; для онтологии с одним классом; для онтологии с двумя классами;для онтологии с наследуемыми классами
 }
@@ -570,6 +571,24 @@ void TOntology::TestMainSuperClass_data()
             <<("instance1")
            <<("instance2")
           <<(QSet<QString>());
+
+    QTest::newRow("1 minimal class")
+            << (Ontology(QSet<Triple>()
+                         <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class5", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class1", Ontology::CONTAINS, "class2")
+                         <<Triple("class2", Ontology::CONTAINS, "class3")
+                         <<Triple("class1", Ontology::CONTAINS, "class4")
+                         <<Triple("class4", Ontology::CONTAINS, "class5")
+                         <<Triple("instance1", Ontology::IS, "class3")
+                         <<Triple("instance2", Ontology::IS, "class5")))
+            <<("instance1")
+           <<("instance2")
+          <<(QSet<QString>()
+             <<"class1");
 
     //для пустой онтотологии; для онтологии без объявления классов; для одного, двух, трёх, минимальных классов; для отсутвующего минимального класса
 }
