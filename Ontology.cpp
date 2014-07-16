@@ -455,12 +455,9 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
     const QSet<QString> allClassesItems = allClasses();
     //переменная хранит набор инстансов на подозрение
     QSet<QString> instances;
-    //если иерархия валидна
     //для каждого класса
-    qWarning()<<"начинаю искать классы которые ссылаются на инстансы";
     foreach(const QString &class1, allClassesItems)
     {
-        qWarning()<<"начинаю искать классы которые ";
         //для каждого класса
         foreach(const QString &class2, allClassesItems)
         {
@@ -474,8 +471,6 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
                 QSet<QString> classInstances1 = subjectsFor(Ontology::IS, class1);
                 QSet<QString> classInstances2 = subjectsFor(Ontology::IS, class2);
                 //записываем результат в список инстансов на подозрение
-                qWarning()<<"=+="<<class1<<"&"<<class2;
-                qWarning()<<"+++"<<classInstances1<<"&"<<classInstances2<<"="<<(classInstances1 & classInstances2);
                 instances += classInstances1 & classInstances2;
             }
         }
