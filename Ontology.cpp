@@ -96,6 +96,7 @@ QSet<QString> Ontology::propertyValues(const QString &propertyName) const
             }
         }
     }
+    qWarning()<<"propertyvalues:"<<propertyvalues;
     return propertyvalues;
 }
 
@@ -284,32 +285,40 @@ QSet<QString> Ontology::instancesForProperties(const MyHash &values) const
     return results;
 }
 
-QSet<QString> Ontology::instancesForNonProperties(const MyHash &values) const
+QSet<QString> Ontology::instancesForNonProperties(const MyHash &hashValues) const
 {
+
     //переменная хранит результаты работы функции
     QSet<QString> results;
     //получить все классы allClasses()
     const QSet<QString> allClassesItems = allClasses();
-    //получить все имена входящих параметров
-    const QSet<QString> valuesProperties = values.keys().toSet();
     //для каждого класса
     foreach(QString className, allClassesItems)
     {
-        //свойства, значения которых будут проверяться на несоответствие с входящими данными
-        QSet<QString> propertiesToCheck = classProperties(className) & valuesProperties;
-        //--проверка на несоответствие
-        //для каждого параметра для проверки
-        foreach(const QString &propertieToCheck, propertiesToCheck)
+        //получить все параметры (имя_класса,HAS_PROPERTY,) для класса
+        QSet<QString> properties = objectsFor(className, Ontology::HAS_PROPERTY);
+        //для каждого параметра хеша
+        foreach (QString hashValue, hashValues.keys())
         {
-            //если значения параметра-для-проверки не равно значению этого параметра их вход данных
-            if(!propertyValues(propertieToCheck).contains(values.value(propertieToCheck)))
+            if(properties.contains(hashValue))
             {
-                //добавить инстансы этого класса в результат
-                results += classInstances(className);
+                //получить все сущности класса
+                QSet<QString> instancesForClass = classInstances(className);
+                foreach(QString instanceForClass, instancesForClass)
+                {
+                    QSet<QString> instanceValues = objectsFor(instanceForClass, hashValue);
+                    QSet<QString> hashItemValues = hashValues.values(hashValue).toSet();
+                    //если набор значений для данной сущности и данного свойства не сод в себе значений для набора значений по ключу свойство
+                    if((instanceValues & hashItemValues).empty())
+                    {
+                        results += instanceForClass;
+                    }
+                }
             }
         }
+
     }
-    //вернуть результат
+    qWarning()<<"results"<<results;
     return results;
 }
 
