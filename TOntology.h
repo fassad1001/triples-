@@ -66,6 +66,9 @@ private slots:
 
     void TestTraverseUP_data();
     void TestTraverseUP();
+
+    void TestTraverseDOWN_data();
+    void TestTraverseDOWN();
 };
 
 #endif // TONTOLOGY_H
