@@ -1248,7 +1248,8 @@ void TOntology::TestInstanceProperties_data()
                         <<Triple("instance2", "property1", "value4")))
            <<QString("instance2")
           <<(MyHash()
-             .insertInc("property1", "value4"));
+             .insertInc("property3", QString())
+             .insertInc("property4", QString()));
 
     QTest::newRow("empty-ontology")<<(Ontology(QSet<Triple>()))
                                   <<QString("instance1")
