@@ -457,8 +457,10 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
     QSet<QString> instances;
     //если иерархия валидна
     //для каждого класса
+    qWarning()<<"начинаю искать классы которые ссылаются на инстансы";
     foreach(const QString &class1, allClassesItems)
     {
+        qWarning()<<"начинаю искать классы которые ";
         //для каждого класса
         foreach(const QString &class2, allClassesItems)
         {
@@ -467,11 +469,14 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
             {
                 continue;
             }
-            //если пересечение инстансов-класса дает положительный результат
-            if(!(classInstances(class1) & classInstances(class2)).isEmpty())
+            else
             {
+                QSet<QString> classInstances1 = subjectsFor(Ontology::IS, class1);
+                QSet<QString> classInstances2 = subjectsFor(Ontology::IS, class2);
                 //записываем результат в список инстансов на подозрение
-                instances += classInstances(class1) & classInstances(class2);
+                qWarning()<<"=+="<<class1<<"&"<<class2;
+                qWarning()<<"+++"<<classInstances1<<"&"<<classInstances2<<"="<<(classInstances1 & classInstances2);
+                instances += classInstances1 & classInstances2;
             }
         }
     }
@@ -488,7 +493,6 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
             //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
             QString className = instClass;
             QSet<QString> parents = superClasses(instClass);
-            parents += instClass;
             instanceClasses += Class(className, parents);
         }
         //для каждого класса-для-инстанса
@@ -497,70 +501,29 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
             //для каждого класса-для-инстанса
             foreach(const Class &instanceClass2, instanceClasses)
             {
-                if(instanceClass1.name == instanceClass2.name)
-                {
-                    continue;
-                }
                 //если класса-для-инстанса1 < класса-для-инстанса2
                 if(instanceClass1 < instanceClass2)
                 {
-                    //вернуть ложь
+                    redundantPairs += Pair(instance, instanceClass2.name);
                     return false;
                 }
             }
         }
     }
-    //вернуть правду
     return true;
 }
 
 void Ontology::minimalize()
 {
-    //переменная хранит все классы
-    const QSet<QString> allClassesItems = allClasses();
-    //переменная хранит набор инстансов на подозрение
-    QSet<QString> instances;
-    //для каждого класса
-    foreach(QString class1, allClassesItems)
+    QSet<Pair> redPairs;
+    isMinimal(redPairs);
+    while(!isMinimal(redPairs))
     {
-        //для каждого класса
-        foreach(QString class2, allClassesItems)
+        foreach(Pair redPair, redPairs)
         {
-            //если пересечение инстансов-класса дает положительный результат
-            if(!(classInstances(class1) & classInstances(class2)).isEmpty() && class1 != class2)
-            {
-                //записываем результат в список инстансов на подозрение
-                instances += classInstances(class1) & classInstances(class2);
-            }
-        }
-    }
-    //для каждого элемента-списка-на-подозрение
-    foreach(QString instance, instances)
-    {
-        //переменная будет хранить все классы для интанса в виде объектов "Class"
-        QSet<Class> instanceClasses;
-        //переменная хранит в себе классы для инстанса типа QString
-        QSet<QString> classesForInstanceItems = classesForInstance(instance);
-        //для каждого класса для инстанса (QString)
-        foreach(QString instClass, classesForInstanceItems)
-        {
-            //добавляю объект типа Class в набор классов для инстанса в виде объ типа Class
-            instanceClasses += Class(instClass, superClasses(instClass));
-        }
-        //для каждого класса-для-инстанса
-        foreach(Class instanceClass1, instanceClasses)
-        {
-            //для каждого класса-для-инстанса
-            foreach(Class instanceClass2, instanceClasses)
-            {
-                //если класса-для-инстанса1 < класса-для-инстанса2
-                if(instanceClass1 < instanceClass2)
-                {
-                    //удаляем связь (имяИнстанса;IS;класс-для-инатанса1)
-                    //для устранения неминимальной связи
-                    remove(instance, Ontology::IS, instanceClass1.name);
-                }
-            }
+            QString instanceName = redPair.first();
+            QString className = redPair.second();
+            remove(instanceName, Ontology::IS, className);
         }
     }
 }
