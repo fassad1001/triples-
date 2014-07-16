@@ -63,6 +63,9 @@ private slots:
 
     void TestInstancesForNonProperties_data();
     void TestInstancesForNonProperties();
+
+    void TestTraverseUP_data();
+    void TestTraverseUP();
 };
 
 #endif // TONTOLOGY_H

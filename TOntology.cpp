@@ -1,5 +1,11 @@
 #include "TOntology.h"
 
+enum DIRECTION
+{
+    UP,
+    DOWN
+};
+
 TOntology::TOntology()
 {
 }
@@ -621,7 +627,7 @@ void TOntology::TestMainSuperClass_data()
                          <<Triple("instance1", Ontology::IS, "classK")
                          <<Triple("instance3", Ontology::IS, "classG")))
             <<("instance1")
-          <<("instance3")
+           <<("instance3")
           <<(QSet<QString>()
              <<"classE");
 
@@ -645,7 +651,7 @@ void TOntology::TestMainSuperClass_data()
                          <<Triple("instance2", Ontology::IS, "classF")
                          <<Triple("instance4", Ontology::IS, "classC")))
             <<("instance2")
-          <<("instance4")
+           <<("instance4")
           <<(QSet<QString>()
              <<"classB");
 
@@ -668,8 +674,8 @@ void TOntology::TestMainSuperClass_data()
                          <<Triple("classE", Ontology::CONTAINS, "classG")
                          <<Triple("instance3", Ontology::IS, "classG")
                          <<Triple("instance5", Ontology::IS, "classH")))
-           <<("instance3")
-          <<("instance5")
+            <<("instance3")
+           <<("instance5")
           <<(QSet<QString>()
              <<"classA");
 
@@ -1803,4 +1809,144 @@ void TOntology::TestInstancesForNonProperties()
     QFETCH(QSet<QString>, instances);
 
     QCOMPARE(ontology.instancesForNonProperties(values),instances);
+}
+
+void TOntology::TestTraverseUP_data()
+{
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QString> ("firstClass");
+    QTest::addColumn <QSet<QString> > ("classes");
+
+    QTest::newRow("empty ontology")
+            <<(Ontology(QSet<Triple>()))
+              <<""
+          <<(QSet<QString>());
+
+    QTest::newRow("try1")
+            <<(Ontology(QSet<Triple>()
+                        <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class5", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class6", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class7", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class8", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class9", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class1", Ontology::CONTAINS, "class2")
+                        <<Triple("class1", Ontology::CONTAINS, "class3")
+                        <<Triple("class1", Ontology::CONTAINS, "class6")
+                        <<Triple("class2", Ontology::CONTAINS, "class4")
+                        <<Triple("class2", Ontology::CONTAINS, "class5")
+                        <<Triple("class3", Ontology::CONTAINS, "class7")
+                        <<Triple("class4", Ontology::CONTAINS, "class8")
+                        <<Triple("class4", Ontology::CONTAINS, "class9")))
+          <<("class8")
+         <<(QSet<QString>()
+            <<"class4"
+            <<"class2"
+            <<"class1");
+
+    QTest::newRow("try2")
+            <<(Ontology(QSet<Triple>()
+                        <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class5", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class6", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class7", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class8", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class9", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class1", Ontology::CONTAINS, "class2")
+                        <<Triple("class1", Ontology::CONTAINS, "class3")
+                        <<Triple("class1", Ontology::CONTAINS, "class6")
+                        <<Triple("class2", Ontology::CONTAINS, "class4")
+                        <<Triple("class2", Ontology::CONTAINS, "class5")
+                        <<Triple("class3", Ontology::CONTAINS, "class7")
+                        <<Triple("class4", Ontology::CONTAINS, "class8")
+                        <<Triple("class4", Ontology::CONTAINS, "class9")))
+          <<("class5")
+         <<(QSet<QString>()
+            <<"class1"
+            <<"class2");
+
+    QTest::newRow("try3")
+            <<(Ontology(QSet<Triple>()
+                        <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class5", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class6", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class7", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class8", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class9", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class1", Ontology::CONTAINS, "class2")
+                        <<Triple("class1", Ontology::CONTAINS, "class3")
+                        <<Triple("class1", Ontology::CONTAINS, "class6")
+                        <<Triple("class2", Ontology::CONTAINS, "class4")
+                        <<Triple("class2", Ontology::CONTAINS, "class5")
+                        <<Triple("class3", Ontology::CONTAINS, "class7")
+                        <<Triple("class4", Ontology::CONTAINS, "class8")
+                        <<Triple("class4", Ontology::CONTAINS, "class9")))
+          <<("class7")
+         <<(QSet<QString>()
+            <<"class1"
+            <<"class3");
+
+    QTest::newRow("try4")
+            <<(Ontology(QSet<Triple>()
+                        <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class5", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class6", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class7", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class8", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class9", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class1", Ontology::CONTAINS, "class2")
+                        <<Triple("class1", Ontology::CONTAINS, "class3")
+                        <<Triple("class1", Ontology::CONTAINS, "class6")
+                        <<Triple("class2", Ontology::CONTAINS, "class4")
+                        <<Triple("class2", Ontology::CONTAINS, "class5")
+                        <<Triple("class3", Ontology::CONTAINS, "class7")
+                        <<Triple("class4", Ontology::CONTAINS, "class8")
+                        <<Triple("class4", Ontology::CONTAINS, "class9")))
+          <<("class6")
+         <<(QSet<QString>()
+            <<"class1");
+
+
+    QTest::newRow("no superclasses")
+            <<(Ontology(QSet<Triple>()
+                        <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class5", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class6", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class7", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class8", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class9", Ontology::IS, Ontology::CLASS)
+                        <<Triple("class1", Ontology::CONTAINS, "class2")
+                        <<Triple("class1", Ontology::CONTAINS, "class3")
+                        <<Triple("class1", Ontology::CONTAINS, "class6")
+                        <<Triple("class2", Ontology::CONTAINS, "class4")
+                        <<Triple("class2", Ontology::CONTAINS, "class5")
+                        <<Triple("class3", Ontology::CONTAINS, "class7")
+                        <<Triple("class4", Ontology::CONTAINS, "class8")
+                        <<Triple("class4", Ontology::CONTAINS, "class9")))
+          <<("class1")
+         <<(QSet<QString>());
+}
+
+void TOntology::TestTraverseUP()
+{
+    QFETCH(Ontology, ontology);
+    QFETCH(QString, firstClass);
+    QFETCH(QSet<QString>, classes);
+
+    QCOMPARE(ontology.traverse(Ontology::UP, firstClass),classes);
 }
