@@ -250,21 +250,6 @@ QSet<QString> Ontology::classesForInstance(const QString &instanceName) const
     {
         classresults += traverse(UP, loopClass);
     }
-//    while(!loopClasses.empty())
-//    {
-//        //переменная будет хранить классы для передачи их следующей итерации цикла
-//        QSet<QString> exchangeClasses;
-//        //для каждого класса (для цикла)
-//        foreach(QString loopclass, loopClasses)
-//        {
-//            //заполняю объекты для следующего цикла (*, CONSTAIN, имяКласса) это надклассы
-//            exchangeClasses += subjectsFor(Ontology::CONTAINS, loopclass);
-//            //дополняю результаты (+= инстансы для классов)
-//            classresults += exchangeClasses;
-//        }
-//        //передаю полученные данные для обработки в следуюющем цикле
-//        loopClasses = exchangeClasses;
-//    }
     //возвращаю результат работы программы
     return classresults;
 }
@@ -371,7 +356,7 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     {
         foreach(const Class &sortedClass, sortedClasses)
         {
-            if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.last().name).count())
+            if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.first().name).count())
             {
                 qWarning()<<"====="<<sortedClass.name;
                 result += sortedClass.name;
