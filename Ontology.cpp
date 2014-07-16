@@ -103,8 +103,10 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
 {
     //переменная будет хранить результат работы функции
     MyHash results;
+    QSet<QString> allClassesForInstance = classesForInstance(instanceName);
+    allClassesForInstance += objectsFor(instanceName,Ontology::IS);
     //для инстанса получить список классов к которым он относится
-    const QSet<QString> instanceClasses = classesForInstance(instanceName) & allClasses();
+    const QSet<QString> instanceClasses = allClassesForInstance & allClasses();
     //для каждого класса котый есть в иерархии
     foreach(const QString &instanceclass, instanceClasses)
     {
@@ -125,7 +127,6 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
         }
     }
     //вернуть результат
-    qWarning()<<results;
     return results;
 }
 
