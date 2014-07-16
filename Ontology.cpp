@@ -96,7 +96,6 @@ QSet<QString> Ontology::propertyValues(const QString &propertyName) const
             }
         }
     }
-    qWarning()<<"propertyvalues:"<<propertyvalues;
     return propertyvalues;
 }
 
@@ -318,7 +317,6 @@ QSet<QString> Ontology::instancesForNonProperties(const MyHash &hashValues) cons
         }
 
     }
-    qWarning()<<"results"<<results;
     return results;
 }
 
@@ -343,7 +341,6 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     //записываю результат перечечения двух классов у инстансов
     const QSet<QString> interSectionClasses = classesForInstance(instanceName1)
             & classesForInstance(instanceName2);
-    qWarning()<<";;;;;"<<interSectionClasses<<"INST1:"<<instanceName1<<":"<<classesForInstance(instanceName1)<<"INST2:"<<instanceName2<<":"<<classesForInstance(instanceName2);
     //переменная будет хранить в себе множество объектов типа Class для сортировки
     QList<Class> sortedClasses;
     //для каждого результата перечесения
@@ -357,10 +354,6 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     }
     //сортирую классы по принципу, если A содержит B то A<B
     qSort(sortedClasses.begin(), sortedClasses.end());
-    foreach(Class clobj, sortedClasses)
-    {
-        qWarning()<<"+++++"<<clobj.name;
-    }
     //беру первый элемент как самый малый элемент и также беру
     if(!sortedClasses.isEmpty())
     {
@@ -368,7 +361,6 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
         {
             if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.first().name).count())
             {
-                qWarning()<<"====="<<sortedClass.name;
                 result += sortedClass.name;
             }
         }
