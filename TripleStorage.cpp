@@ -92,11 +92,6 @@ QSet<Pair> TripleStorage::subjectsAndObjects(const QString &predicate) const
     return result;
 }
 
-QSet<QString> TripleStorage::traverse(const QString &item, const QString &property, const Direction dir) const
-{
-    return QSet<QString>();
-}
-
 void TripleStorage::remove(const QString &subject, const QString &predicate, const QString object)
 {
     triples_.remove(Triple(subject, predicate, object));
@@ -105,6 +100,11 @@ void TripleStorage::remove(const QString &subject, const QString &predicate, con
 void TripleStorage::add(const QString &subject, const QString &predicate, const QString object)
 {
     triples_.insert(Triple(subject, predicate, object));
+}
+
+QSet<Triple> TripleStorage::getStorage() const
+{
+    return triples_;
 }
 
 bool TripleStorage::contains(const Triple &triple) const
