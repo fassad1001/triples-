@@ -10,6 +10,7 @@ public:
     OntologyBuilder();
     void addClass(const QString &className, const QString &parentClassName = QString());
     void addProperty(const QString &className, const QString &propertyName);
+    void addInstance(const QString &className, const QString &instanceName);
 
     Ontology getOntology() const;
 

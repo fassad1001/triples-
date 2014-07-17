@@ -57,6 +57,18 @@ void OntologyBuilder::addProperty(const QString &className, const QString &prope
     add(className, Ontology::HAS_PROPERTY, propertyName);
 }
 
+void OntologyBuilder::addInstance(const QString &className, const QString &instanceName)
+{
+    //если все инстансы содержат имя инстанса
+    if(allInstances().contains(instanceName) || !allClasses().contains(className))
+    {
+        //return;
+        return;
+    }
+    //добавить (имя_инстанса, IS, имя_класса)
+    add(instanceName, Ontology::IS, className);
+}
+
 Ontology OntologyBuilder::getOntology() const
 {
     return(Ontology(getStorage()));
