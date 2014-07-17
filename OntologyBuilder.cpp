@@ -55,6 +55,7 @@ void OntologyBuilder::addProperty(const QString &className, const QString &prope
     }
     //добавить (имя_класса, HAS_PROPERTY, имя_свойства)
     add(className, Ontology::HAS_PROPERTY, propertyName);
+    qWarning()<<className<<","<<Ontology::HAS_PROPERTY<<","<<propertyName;
 }
 
 void OntologyBuilder::addInstance(const QString &className, const QString &instanceName)
@@ -67,6 +68,20 @@ void OntologyBuilder::addInstance(const QString &className, const QString &insta
     }
     //добавить (имя_инстанса, IS, имя_класса)
     add(instanceName, Ontology::IS, className);
+    qWarning()<<instanceName<<","<<Ontology::IS<<","<<className;
+}
+
+void OntologyBuilder::setPropertyValue(const QString &instanceName, const QString &propertyName, const QString value)
+{
+    //если свойства инстанса имя_инстанса (instanceProperties) содержат свойство имя_свойства
+    if(!instanceProperties(instanceName).contains(propertyName))
+    {
+        //return;
+        return;
+    }
+    //добавить (имя_инстанса, имя_свойства, значение_свойства)
+    add(instanceName, propertyName, value);
+    qWarning()<<instanceName<<","<<propertyName<<","<<value;
 }
 
 Ontology OntologyBuilder::getOntology() const

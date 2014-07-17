@@ -11,6 +11,7 @@ public:
     void addClass(const QString &className, const QString &parentClassName = QString());
     void addProperty(const QString &className, const QString &propertyName);
     void addInstance(const QString &className, const QString &instanceName);
+    void setPropertyValue(const QString &instanceName, const QString &propertyName, const QString value);
 
     Ontology getOntology() const;
 
