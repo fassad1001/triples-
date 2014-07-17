@@ -4,6 +4,11 @@ OntologyBuilder::OntologyBuilder()
 {
 }
 
+OntologyBuilder::OntologyBuilder(const QSet<Triple> &triples) :
+    Ontology(triples)
+{
+}
+
 void OntologyBuilder::addClass(const QString &className, const QString &parentClassName)
 {
     QSet<QString> allClassItems = allClasses();
