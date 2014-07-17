@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     BenchmarkResult.cpp \
     Ontology.cpp \
     TOntology.cpp \
-    Class.cpp
+    Class.cpp \
+    OntologyBuilder.cpp
 
 HEADERS += \
     Triple.h \
@@ -37,4 +38,5 @@ HEADERS += \
     BenchmarkResult.h \
     Ontology.h \
     TOntology.h \
-    Class.h
+    Class.h \
+    OntologyBuilder.h
