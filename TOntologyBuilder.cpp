@@ -312,3 +312,77 @@ void TOntologyBuilder::TestAddProperty()
 
     QCOMPARE(BuilderOntology, checkOntology);
 }
+
+void TOntologyBuilder::TestAddInstance_data()
+{
+    QTest::addColumn <Ontology> ("BuilderOntology");
+    QTest::addColumn <Ontology> ("checkOntology");
+
+    OntologyBuilder ontologyBuilder;
+    ontologyBuilder.addClass("class1");
+    ontologyBuilder.addInstance("class1", "instance1");
+
+    Ontology checkOntology;
+    checkOntology.add("class1", Ontology::IS, Ontology::CLASS);
+    checkOntology.add("instance1", Ontology::IS, "class1");
+
+    QTest::newRow("1 class, 1 instance")
+            << (ontologyBuilder.getOntology())
+            << (checkOntology);
+
+    QTest::addColumn <Ontology> ("BuilderOntology");
+    QTest::addColumn <Ontology> ("checkOntology");
+
+    ontologyBuilder.clearStorage();
+    ontologyBuilder.addClass("class1");
+    ontologyBuilder.addInstance("class1", "instance1");
+    ontologyBuilder.addInstance("class1", "instance2");
+
+    checkOntology.clearStorage();
+    checkOntology.add("class1", Ontology::IS, Ontology::CLASS);
+    checkOntology.add("instance1", Ontology::IS, "class1");
+    checkOntology.add("instance2", Ontology::IS, "class1");
+
+    QTest::newRow("1 class, 2 instance")
+            << (ontologyBuilder.getOntology())
+            << (checkOntology);
+
+    ontologyBuilder.clearStorage();
+    ontologyBuilder.addClass("class1");
+    ontologyBuilder.addInstance("class1", "instance1");
+    ontologyBuilder.addInstance("class1", "instance2");
+    ontologyBuilder.addInstance("class1", "instance2");
+
+    checkOntology.clearStorage();
+    checkOntology.add("class1", Ontology::IS, Ontology::CLASS);
+    checkOntology.add("instance1", Ontology::IS, "class1");
+    checkOntology.add("instance2", Ontology::IS, "class1");
+
+    QTest::newRow("1 class, 2 instance, adding existed instance")
+            << (ontologyBuilder.getOntology())
+            << (checkOntology);
+
+    ontologyBuilder.clearStorage();
+    ontologyBuilder.addClass("class1");
+    ontologyBuilder.addInstance("class1", "instance1");
+    ontologyBuilder.addInstance("class1", "instance2");
+    ontologyBuilder.addInstance("class11", "instance3");
+
+    checkOntology.clearStorage();
+    checkOntology.add("class1", Ontology::IS, Ontology::CLASS);
+    checkOntology.add("instance1", Ontology::IS, "class1");
+    checkOntology.add("instance2", Ontology::IS, "class1");
+
+    QTest::newRow("1 class, 2 instance, adding instance to fake class")
+            << (ontologyBuilder.getOntology())
+            << (checkOntology);
+
+}
+
+void TOntologyBuilder::TestAddInstance()
+{
+    QFETCH(Ontology, BuilderOntology);
+    QFETCH(Ontology, checkOntology);
+
+    QCOMPARE(BuilderOntology, checkOntology);
+}

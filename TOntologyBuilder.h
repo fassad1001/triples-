@@ -18,6 +18,9 @@ private slots:
     void TestAddProperty_data();
     void TestAddProperty();
 
+    void TestAddInstance_data();
+    void TestAddInstance();
+
 
 };
 
