@@ -102,6 +102,11 @@ void TripleStorage::remove(const QString &subject, const QString &predicate, con
     triples_.remove(Triple(subject, predicate, object));
 }
 
+void TripleStorage::add(const QString &subject, const QString &predicate, const QString object)
+{
+    triples_.insert(Triple(subject, predicate, object));
+}
+
 bool TripleStorage::contains(const Triple &triple) const
 {
     return triples_.contains(triple);
