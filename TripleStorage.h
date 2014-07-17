@@ -34,6 +34,8 @@ public:
     void remove(const QString &subject, const QString &predicate, const QString object);
     void add(const QString &subject, const QString &predicate, const QString object);
 
+    QSet<Triple> getStorage() const;
+
     bool contains(const Triple &triple) const;
 
     bool operator ==(const TripleStorage &o) const
