@@ -123,7 +123,10 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
                 results.insert(instanceProperity, QString());
                 continue;
             }
-            results.insert(instanceProperity, values.toList().first());
+            else
+            {
+                results.insert(instanceProperity, values.toList().first());
+            }
         }
     }
     //вернуть результат
@@ -132,35 +135,23 @@ MyHash Ontology::instanceProperties(const QString &instanceName) const
 
 QSet<QString> Ontology::allClassInstances(const QStringList &classNames) const
 {
-    QSet<QString> classesToChoose;
-    if(classNames.isEmpty())
+    QSet<QString> instanceItemsForClasses;
+    QSet<QString> classesToChoose = allClasses() & classNames.toSet();
+    //переменная хранит все инстансы-результаты-работы-метода
+    if(classesToChoose.isEmpty())
     {
         return QSet<QString>();
     }
-    QSet<QString> allSubClases = classNames.toSet();
-    //извлекаю все подклассы у которых есть сущности
-    foreach(const QString &className, classNames)
+    else
     {
-        const QSet<QString> allSubClases = subClasses(className);
-        foreach(const QString &subClassName, allSubClases)
-        {
-            if(!classInstances(subClassName).isEmpty())
-            {
-                classesToChoose += classInstances(subClassName);
-            }
-        }
+        instanceItemsForClasses = classInstances(classesToChoose.toList().first());
     }
-    //переменная хранит все инстансы-результаты-работы-метода
-    QSet<QString> classinstances;
-    classinstances += classesToChoose.toList().first();
-    //для каждого класса
-    foreach(QString classinstance, classinstances)
+    foreach(QString className, classesToChoose)
     {
-        //дополняю результаты инстансами класса
-        classinstances &= classInstances(classinstance);
+        instanceItemsForClasses &= classInstances(className);
     }
     //возвращаю инстанс-класса-результаты-работы-функции
-    return classinstances;
+    return instanceItemsForClasses;
 }
 
 QSet<QString> Ontology::allClasses() const
@@ -359,7 +350,8 @@ QSet<QString> Ontology::mainSuperClass(const QString &instanceName1,
     {
         foreach(const Class &sortedClass, sortedClasses)
         {
-            if(superClasses(sortedClass.name).count() == superClasses(sortedClasses.first().name).count())
+            QString FirstSortedItem = sortedClasses.first().name;
+            if(superClasses(sortedClass.name).count() == superClasses(FirstSortedItem).count())
             {
                 result += sortedClass.name;
             }
