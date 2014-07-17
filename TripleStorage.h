@@ -32,6 +32,7 @@ public:
                            const Direction dir) const;
 
     void remove(const QString &subject, const QString &predicate, const QString object);
+    void add(const QString &subject, const QString &predicate, const QString object);
 
     bool contains(const Triple &triple) const;
 
