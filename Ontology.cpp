@@ -313,7 +313,7 @@ QSet<QString> Ontology::instancesForNonProperties(const MyHash &hashValues) cons
 
 QSet<QString> Ontology::subClasses(const QString &className) const
 {
-    return traverse(DOWN, className);;
+    return traverse(DOWN, className);
 }
 
 QSet<QString> Ontology::superClasses(const QString &className) const
