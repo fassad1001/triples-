@@ -12,6 +12,8 @@
 
 #include "TOntology.h"
 
+#include "TOntologyBuilder.h"
+
 
 
 int main(int argc, char *argv[])
@@ -24,10 +26,14 @@ int main(int argc, char *argv[])
     //    TPair pair;
     //    QTest::qExec(&pair);
 
-//        TTripleStorage TtripleStorage;
-//        QTest::qExec(&TtripleStorage);
-    TOntology ontology;
-    QTest::qExec(&ontology);
+//    TTripleStorage TtripleStorage;
+//    QTest::qExec(&TtripleStorage);
+
+//    TOntology ontology;
+//    QTest::qExec(&ontology);
+
+    TOntologyBuilder ontologyBuilder;
+    QTest::qExec(&ontologyBuilder);
 
 
 //    qsrand(42);
