@@ -386,3 +386,52 @@ void TOntologyBuilder::TestAddInstance()
 
     QCOMPARE(BuilderOntology, checkOntology);
 }
+
+void TOntologyBuilder::TestSetPropertyValue_data()
+{
+    QTest::addColumn <Ontology> ("BuilderOntology");
+    QTest::addColumn <Ontology> ("checkOntology");
+
+
+    OntologyBuilder ontologyBuilder;
+    ontologyBuilder.addClass("class1");
+    ontologyBuilder.addProperty("class1", "property1");
+    ontologyBuilder.addInstance("class1", "instance1");
+    ontologyBuilder.setPropertyValue("instance1", "property1", "value1");
+
+
+    Ontology checkOntology;
+    checkOntology.add("class1", Ontology::IS, Ontology::CLASS);
+    checkOntology.add("class1", Ontology::HAS_PROPERTY, "property1");
+    checkOntology.add("instance1", Ontology::IS, "class1");
+    checkOntology.add("instance1", "property1", "value1");
+
+    QTest::newRow("1 instance, 1 property value")
+            << (ontologyBuilder.getOntology())
+            << (checkOntology);
+
+    ontologyBuilder.clearStorage();
+    ontologyBuilder.addClass("class1");
+    ontologyBuilder.addProperty("class1", "property1");
+    ontologyBuilder.addInstance("class1", "instance1");
+    ontologyBuilder.setPropertyValue("instance1", "property1", "value1");
+    ontologyBuilder.setPropertyValue("instance1", "property2", "value2");
+
+    checkOntology.clearStorage();
+    checkOntology.add("class1", Ontology::IS, Ontology::CLASS);
+    checkOntology.add("class1", Ontology::HAS_PROPERTY, "property1");
+    checkOntology.add("instance1", Ontology::IS, "class1");
+    checkOntology.add("instance1", "property1", "value1");
+
+    QTest::newRow("1 instance, 1 property value, fake property name(instance dosent have property)")
+            << (ontologyBuilder.getOntology())
+            << (checkOntology);
+}
+
+void TOntologyBuilder::TestSetPropertyValue()
+{
+    QFETCH(Ontology, BuilderOntology);
+    QFETCH(Ontology, checkOntology);
+
+    QCOMPARE(BuilderOntology, checkOntology);
+}

@@ -21,7 +21,8 @@ private slots:
     void TestAddInstance_data();
     void TestAddInstance();
 
-
+    void TestSetPropertyValue_data();
+    void TestSetPropertyValue();
 };
 
 #endif // TONTOLOGYBUILDER_H
