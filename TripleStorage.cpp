@@ -102,6 +102,42 @@ void TripleStorage::add(const QString &subject, const QString &predicate, const 
     triples_.insert(Triple(subject, predicate, object));
 }
 
+void TripleStorage::updateObject(const QString &subject, const QString &predicate, const QString object)
+{
+    foreach(Triple triple, getStorage())
+    {
+        if(triple.subject() == subject, triple.predicate() == predicate)
+        {
+            remove(triple.subject(), triple.predicate(), triple.object());
+            add(triple.subject(), triple.predicate(), object);
+        }
+    }
+}
+
+void TripleStorage::updateSubject(const QString &subject, const QString &predicate, const QString object)
+{
+    foreach(Triple triple, triples_)
+    {
+        if(triple.predicate() == predicate, triple.object() == object)
+        {
+            remove(triple.subject(), triple.predicate(), triple.object());
+            add(subject, triple.predicate(), triple.object());
+        }
+    }
+}
+
+void TripleStorage::updatePredicate(const QString &subject, const QString &predicate, const QString object)
+{
+    foreach(Triple triple, triples_)
+    {
+        if(triple.subject() == subject, triple.object() == object)
+        {
+            remove(triple.subject(), triple.predicate(), triple.object());
+            add(triple.subject(), predicate, triple.object());
+        }
+    }
+}
+
 QSet<Triple> TripleStorage::getStorage() const
 {
     return triples_;

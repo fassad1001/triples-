@@ -34,6 +34,10 @@ public:
     void remove(const QString &subject, const QString &predicate, const QString object);
     void add(const QString &subject, const QString &predicate, const QString object);
 
+    void updateObject(const QString &subject, const QString &predicate, const QString object);
+    void updateSubject(const QString &subject, const QString &predicate, const QString object);
+    void updatePredicate(const QString &subject, const QString &predicate, const QString object);
+
     QSet<Triple> getStorage() const;
 
     void clearStorage();
