@@ -107,6 +107,11 @@ QSet<Triple> TripleStorage::getStorage() const
     return triples_;
 }
 
+void TripleStorage::clearStorage()
+{
+    triples_ = QSet<Triple>();
+}
+
 bool TripleStorage::contains(const Triple &triple) const
 {
     return triples_.contains(triple);

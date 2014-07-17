@@ -36,6 +36,8 @@ public:
 
     QSet<Triple> getStorage() const;
 
+    void clearStorage();
+
     bool contains(const Triple &triple) const;
 
     bool operator ==(const TripleStorage &o) const
