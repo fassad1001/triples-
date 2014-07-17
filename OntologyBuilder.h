@@ -17,5 +17,6 @@ public:
     Ontology getOntology() const;
 
 };
+Q_DECLARE_METATYPE(OntologyBuilder)
 
 #endif // ONTOLOGYBUILDER_H
