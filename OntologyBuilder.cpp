@@ -11,7 +11,7 @@ OntologyBuilder::OntologyBuilder(const QSet<Triple> &triples) :
 
 void OntologyBuilder::addClass(const QString &className, const QString &parentClassName)
 {
-    QSet<QString> allClassItems = allClasses();
+    const QSet<QString> allClassItems = allClasses();
     //если все классы содержат вводный класс
     if(allClassItems.contains(className))
     {
@@ -44,7 +44,7 @@ void OntologyBuilder::addProperty(const QString &className, const QString &prope
     if(allClasses().contains(className))
     {
         //для каждого класса
-        foreach(QString classItem, allClasses())
+        foreach(const QString &classItem, allClasses())
         {
             //если класс содержит свойство имя_свойства
             if(classProperties(classItem).contains(propertyName))
