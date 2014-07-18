@@ -41,20 +41,7 @@ void OntologyBuilder::addClass(const QString &className, const QString &parentCl
 void OntologyBuilder::addProperty(const QString &className, const QString &propertyName)
 {
     //если все классы содержат класс имя_класса
-    if(allClasses().contains(className))
-    {
-        //для каждого класса
-        foreach(const QString &classItem, allClasses())
-        {
-            //если класс содержит свойство имя_свойства
-            if(classProperties(classItem).contains(propertyName))
-            {
-                //return;
-                return;
-            }
-        }
-    }
-    else
+    if(!allClasses().contains(className))
     {
         return;
     }
@@ -84,6 +71,7 @@ void OntologyBuilder::setPropertyValue(const QString &instanceName, const QStrin
     }
     else
     {
+        //на случай замены значения
         updateObject(instanceName, propertyName, value);
     }
     //добавить (имя_инстанса, имя_свойства, значение_свойства)
