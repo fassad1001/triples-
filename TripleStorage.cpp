@@ -106,7 +106,7 @@ void TripleStorage::updateObject(const QString &subject, const QString &predicat
 {
     foreach(Triple triple, getStorage())
     {
-        if(triple.subject() == subject, triple.predicate() == predicate)
+        if(triple.subject() == subject && triple.predicate() == predicate)
         {
             remove(triple.subject(), triple.predicate(), triple.object());
             add(triple.subject(), triple.predicate(), object);
