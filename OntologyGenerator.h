@@ -13,6 +13,7 @@ public:
 
     QString generateClass() const;
     QString generateInstance() const;
+    QString generatePtoperty() const;
 };
 
 #endif // ONTOLOGYGENERATOR_H

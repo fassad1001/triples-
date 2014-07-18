@@ -56,3 +56,8 @@ QString OntologyGenerator::generateInstance() const
 {
     return QString("instanceN") + QString::number(qrand());
 }
+
+QString OntologyGenerator::generatePtoperty() const
+{
+    return QString("propeertyN") + QString::number(qrand());
+}
