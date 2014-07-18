@@ -6,7 +6,7 @@ class OntologyGenerator : public OntologyBuilder
 {
 public:
     OntologyGenerator();
-    QSet<Triple> generate(const int classCountSummary
+    Ontology generate(const int classCountSummary
                           , const int classPropertiesCount
                           , const int instancesCountSummary
                           , const int classInstancesCount);

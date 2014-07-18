@@ -4,12 +4,11 @@ OntologyGenerator::OntologyGenerator()
 {
 }
 
-QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
+Ontology OntologyGenerator::generate(const int ClassCountSummary
                                          , const int classPropertiesCount
                                          , const int instancesCountSummary
                                          , const int classInstancesCount)
 {
-    QSet<QString> classesSummary;
     QSet<QString> instancesSummary;
     QString className;
     QString instanceName;
@@ -18,56 +17,61 @@ QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
     //пока могу генерировать:
     while(canGenerate)
     {
+        //если классы нельзы создавать
         //если суммарное количество классов > лимита
-        if(classesSummary.count() > ClassCountSummary)
+        if(allClasses().count() > classesSummary)
         {
+            //прервать
             break;
         }
+        //если есть классы для подклассов
         //если количество классов > 0
-        //сгенерировать и запомнить новый класс
-        className = generateClass();
-        //запомнить сгенерированый класс
-        classesSummary.insert(className);
-        if(classesSummary.count() > 0)
+        if(allClasses().count() > 0)
         {
+            className = generateClass();
             //создать случайный класс c надклассом в виде случайного класса
-            addClass(className, classesSummary.toList().at(qrand() % (classesSummary.count())));
+            addClass(className, allClasses().toList().at(qrand() % allClasses().count()));
         }
+        //иначе
         else
         {
             //создать случайный класс без надкласса
+            className = generateClass();
             addClass(className);
         }
-        //пока количество инстансов у класса <= максимума количества инстансов для одного класса
-        while(classInstances(className).count() <= classInstancesCount)
-        {
-            //если суммарное количество инстансов <= лимита
-            if(instancesSummary.count() <= instancesCountSummary)
-            {
-                //сгенерировать инстанс и запомнить его имя
-                instanceName = generateInstance();
-                //добавить инстанс в набор инстансов
-                instancesSummary.insert(instanceName);
-                //добавить инстанс для класса
-                addInstance(className, instanceName);
-            }
-        }
-        //пока кол-во свойств у классов <= предела
+        //пока классу можно добавлять свойства
+        //пока кол-во свойств у классов <= общего предела свойств классов
         while(classProperties(className).count() <= classPropertiesCount)
         {
             //генерировать свойства для класса
             propertyName = generateProperty();
-            //добавить свойство к классу
+            //заполнить свойство класса значением
             addProperty(className, propertyName);
-            //все инстансы класса
-            const QSet<QString> instancesOfClass = classInstances(className);
-            //для каждого инстанса класса для этого свойства
-            foreach(QString instanceOfClass, instancesOfClass)
+        }
+
+        //пока инстансы можно создавать
+        //пока количество инстансов <= общего предела инстансов
+        while(allInstances() <= instancesCountSummary)
+        {
+            //если для класса можно добавить инстанс
+            //если количество инстансов для класса <= предела инстансов для одного класса
+            if(classInstances(className).count() <= ClassCountSummary)
             {
-                setPropertyValue(instanceName, propertyName, generatePtopertyValue());
+                //генерировать инстанс для класса
+                instanceName = generateInstance();
+                addInstance(className, instanceName);
+                setPropertyValue();
+            }
+            //иначе
+            else
+            {
+                //выход из цикла
+                break;
             }
         }
+
     }
+    return getOntology();
 }
 
 QString OntologyGenerator::generateClass() const
