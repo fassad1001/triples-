@@ -11,6 +11,7 @@ QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
 {
     QSet<QString> classesSummary;
     QSet<QString> instancesSummary;
+    QString className;
     bool canGenerate = true;
     //пока могу генерировать:
     while(canGenerate)
@@ -30,16 +31,16 @@ QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
             //создать случайный класс без надкласса
         }
         //пока количество инстансов у класса <= максимума количества инстансов для одного класса
-        while(classInstances(className) <= classInstancesCount)
+        while(classInstances(className).count() <= classInstancesCount)
         {
             //если суммарное количество инстансов <= лимита
-            if(instancesSummary <= instancesCountSummary)
+            if(instancesSummary.count() <= instancesCountSummary)
             {
                 //генерировать инстанс для класса
             }
         }
         //пока кол-во свойств у классов <= предела
-        while(classProperties(className) <= classPropertiesCount)
+        while(classProperties(className).count() <= classPropertiesCount)
         {
             //генерировать свойства для класса
         }
@@ -48,5 +49,5 @@ QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
 
 QString OntologyGenerator::generateClass() const
 {
-
+    return QString("classN") + QString::number(qrand());
 }
