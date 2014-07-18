@@ -12,6 +12,7 @@ public:
                           , const int classInstancesCount);
 
     QString generateClass() const;
+    QString generateInstance() const;
 };
 
 #endif // ONTOLOGYGENERATOR_H

@@ -51,3 +51,8 @@ QString OntologyGenerator::generateClass() const
 {
     return QString("classN") + QString::number(qrand());
 }
+
+QString OntologyGenerator::generateInstance() const
+{
+    return QString("instanceN") + QString::number(qrand());
+}
