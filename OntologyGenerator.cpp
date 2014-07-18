@@ -31,7 +31,7 @@ QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
         if(classesSummary.count() > 0)
         {
             //создать случайный класс c надклассом в виде случайного класса
-            addClass(className, classesSummary.toList().at(qrand() % (classesSummary.count()-1)));
+            addClass(className, classesSummary.toList().at(qrand() % (classesSummary.count())));
         }
         else
         {
@@ -57,8 +57,15 @@ QSet<Triple> OntologyGenerator::generate(const int ClassCountSummary
         {
             //генерировать свойства для класса
             propertyName = generateProperty();
+            //добавить свойство к классу
             addProperty(className, propertyName);
-            setPropertyValue();
+            //все инстансы класса
+            const QSet<QString> instancesOfClass = classInstances(className);
+            //для каждого инстанса класса для этого свойства
+            foreach(QString instanceOfClass, instancesOfClass)
+            {
+                setPropertyValue(instanceName, propertyName, generatePtopertyValue());
+            }
         }
     }
 }
