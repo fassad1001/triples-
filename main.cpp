@@ -14,7 +14,7 @@
 
 #include "TOntologyBuilder.h"
 
-
+#include "OntologyGenerator.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,8 +32,16 @@ int main(int argc, char *argv[])
 //    TOntology ontology;
 //    QTest::qExec(&ontology);
 
-    TOntologyBuilder ontologyBuilder;
-    QTest::qExec(&ontologyBuilder);
+//    TOntologyBuilder ontologyBuilder;
+//    QTest::qExec(&ontologyBuilder);
+
+    OntologyGenerator gener;
+    Ontology test;
+    test = gener.generate(10, 2, 10, 4);
+    foreach(Triple tr, test.getStorage())
+    {
+        qWarning()<<tr.subject()<<tr.predicate()<<tr.object();
+    }
 
 
 //    qsrand(42);
