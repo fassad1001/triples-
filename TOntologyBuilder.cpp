@@ -12,9 +12,9 @@ void TOntologyBuilder::TestAddClass_data()
     QTest::addColumn <Ontology> ("expectedOntology");
 
     QTest::newRow("1 class, 1 header class")
-            << (OntologyBuilder())
-            << ("class1")
-            << (QString())
+            << OntologyBuilder()
+            << "class1"
+            << QString()
             << (Ontology(QSet<Triple>()
                          <<Triple("class1", Ontology::IS, Ontology::CLASS)));
 
@@ -96,21 +96,21 @@ void TOntologyBuilder::TestAddProperty_data()
 
     QTest::newRow("1 class, 1 property")
             << (OntologyBuilder(QSet<Triple>()
-                               << Triple("class1", Ontology::IS, Ontology::CLASS)))
+                                << Triple("class1", Ontology::IS, Ontology::CLASS)))
             << ("class1")
             << ("property1")
             << (Ontology(QSet<Triple>()
-                        << Triple("class1", Ontology::IS, Ontology::CLASS)
+                         << Triple("class1", Ontology::IS, Ontology::CLASS)
                          << Triple("class1", Ontology::HAS_PROPERTY, "property1")));
 
     QTest::newRow("1 class, 2 property")
             << (OntologyBuilder(QSet<Triple>()
                                 << Triple("class1", Ontology::IS, Ontology::CLASS)
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property1")))
+                                << Triple("class1", Ontology::HAS_PROPERTY, "property1")))
             << ("class1")
             << ("property2")
             << (Ontology(QSet<Triple>()
-                        << Triple("class1", Ontology::IS, Ontology::CLASS)
+                         << Triple("class1", Ontology::IS, Ontology::CLASS)
                          << Triple("class1", Ontology::HAS_PROPERTY, "property1")
                          << Triple("class1", Ontology::HAS_PROPERTY, "property2")));
 
@@ -118,42 +118,30 @@ void TOntologyBuilder::TestAddProperty_data()
     QTest::newRow("1 class, 2 property fake className")
             << (OntologyBuilder(QSet<Triple>()
                                 << Triple("class1", Ontology::IS, Ontology::CLASS)
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property1")
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property2")))
+                                << Triple("class1", Ontology::HAS_PROPERTY, "property1")
+                                << Triple("class1", Ontology::HAS_PROPERTY, "property2")))
             << ("class21")
             << ("property3")
             << (Ontology(QSet<Triple>()
-                        << Triple("class1", Ontology::IS, Ontology::CLASS)
+                         << Triple("class1", Ontology::IS, Ontology::CLASS)
                          << Triple("class1", Ontology::HAS_PROPERTY, "property1")
                          << Triple("class1", Ontology::HAS_PROPERTY, "property2")));
 
-    QTest::newRow("1 class, 2 property, existing property name")
-            << (OntologyBuilder(QSet<Triple>()
-                                << Triple("class1", Ontology::IS, Ontology::CLASS)
-                                << Triple("class2", Ontology::IS, Ontology::CLASS)
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property1")
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property2")))
-            << ("class2")
-            << ("property1")
-            << (Ontology(QSet<Triple>()
-                         << Triple("class1", Ontology::IS, Ontology::CLASS)
-                         << Triple("class2", Ontology::IS, Ontology::CLASS)
-                          << Triple("class1", Ontology::HAS_PROPERTY, "property1")
-                          << Triple("class1", Ontology::HAS_PROPERTY, "property2")));
+
 
     QTest::newRow("1 class, 2 property, existing property name")
             << (OntologyBuilder(QSet<Triple>()
                                 << Triple("class1", Ontology::IS, Ontology::CLASS)
                                 << Triple("class2", Ontology::IS, Ontology::CLASS)
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property1")
-                                 << Triple("class1", Ontology::HAS_PROPERTY, "property2")))
+                                << Triple("class1", Ontology::HAS_PROPERTY, "property1")
+                                << Triple("class1", Ontology::HAS_PROPERTY, "property2")))
             << ("class12")
             << ("property1")
             << (Ontology(QSet<Triple>()
                          << Triple("class1", Ontology::IS, Ontology::CLASS)
                          << Triple("class2", Ontology::IS, Ontology::CLASS)
-                          << Triple("class1", Ontology::HAS_PROPERTY, "property1")
-                          << Triple("class1", Ontology::HAS_PROPERTY, "property2")));
+                         << Triple("class1", Ontology::HAS_PROPERTY, "property1")
+                         << Triple("class1", Ontology::HAS_PROPERTY, "property2")));
 }
 
 void TOntologyBuilder::TestAddProperty()
