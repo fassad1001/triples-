@@ -14,7 +14,7 @@ public:
     QString generateClass() const;
     QString generateInstance() const;
     QString generateProperty() const;
-    QString generatePtopertyValue() const;
+    QString generatePropertyValue() const;
 };
 
 #endif // ONTOLOGYGENERATOR_H
