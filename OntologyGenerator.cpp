@@ -23,7 +23,6 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
         //если суммарное количество классов > лимита
         if(allClasses().count() >= ClassCountSummary)
         {
-            qWarning()<<"классов достаточно";
             //прервать
             break;
         }
@@ -34,7 +33,6 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
             className = generateClass();
             //создать случайный класс c надклассом в виде случайного класса
             addClass(className, allClasses().toList().at(qrand() % allClasses().count()));
-            qWarning()<<">>создаю класс с подклассом";
         }
         //иначе
         else
@@ -42,7 +40,6 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
             //создать случайный класс без надкласса
             className = generateClass();
             addClass(className);
-            qWarning()<<">>создаю класс без подкласса";
         }
         //пока классу можно добавлять свойства
         //пока кол-во свойств у классов <= общего предела свойств классов
@@ -52,19 +49,15 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
             propertyName = generateProperty();
             //заполнить свойство класса значением
             addProperty(className, propertyName);
-            qWarning()<<"создаю свойство";
         }
 
         //пока инстансы можно создавать
         //пока количество инстансов < общего предела инстансов
-        qWarning()<<"проверяю, "<<allInstances().count()<<"<"<<instancesCountSummary;
         if(allInstances().count() > instancesCountSummary)
         {
-            qWarning()<<"я не могу создавать инстансы";
         }
         else
         {
-            qWarning()<<"начинаю создавать инстансы для класса "<<className;
         }
         while(allInstances().count() < instancesCountSummary)
         {
@@ -75,18 +68,15 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
                 //генерировать инстанс для класса
                 instanceName = generateInstance();
                 addInstance(className, instanceName);
-                qWarning()<<"создаю инстанс"<<instanceName<<" для "<<className;
             }
             //иначе
             else
             {
                 //выход из цикла
-                qWarning()<<"прекращаю создавать инстансы";
                 break;
 
             }
         }
-        qWarning()<<"у класса "<<className<<" есть инстансы "<<classInstances(className);
 
     }
     classInstancesItems = classInstances(className);

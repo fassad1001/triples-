@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     Class.cpp \
     OntologyBuilder.cpp \
     TOntologyBuilder.cpp \
-    OntologyGenerator.cpp
+    OntologyGenerator.cpp \
+    OntologyBenchmark.cpp
 
 HEADERS += \
     Triple.h \
@@ -43,4 +44,5 @@ HEADERS += \
     Class.h \
     OntologyBuilder.h \
     TOntologyBuilder.h \
-    OntologyGenerator.h
+    OntologyGenerator.h \
+    OntologyBenchmark.h

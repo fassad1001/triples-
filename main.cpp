@@ -16,6 +16,8 @@
 
 #include "OntologyGenerator.h"
 
+#include "OntologyBenchmark.h"
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -36,12 +38,16 @@ int main(int argc, char *argv[])
 //    QTest::qExec(&ontologyBuilder);
 
     OntologyGenerator gener;
+    OntologyBenchmark benchmark;
     Ontology test;
-    test = gener.generate(10, 2, 10, 4);
-    foreach(Triple tr, test.getStorage())
-    {
-        qWarning()<<tr.subject()<<tr.predicate()<<tr.object();
-    }
+    test = gener.generate(100, 1, 211, 1);
+    qWarning()<<"выдаю любой инстанс "<<benchmark.anyInstance(test);
+    qWarning()<<"выдаю любой класс "<<benchmark.anyClass(test);
+    qWarning()<<"выдаю любое свойство "<<benchmark.anyProperty(test);
+    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
+    qWarning()<<"thats all!"<<test.allClasses().count();
+
+
 
 
 //    qsrand(42);
@@ -130,5 +136,5 @@ int main(int argc, char *argv[])
 
 //    bench.writeFile("D:/отчёты/benchmark.csv");
 
-    return 0;
+//    return 0;
 }
