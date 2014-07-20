@@ -441,7 +441,7 @@ bool Ontology::isValid() const
     return true;
 }
 
-bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
+bool Ontology::isMinimal(QSet<Pair> &redundantPairs = QSet<Pair>()<<Pair("1","2")) const
 {
     //переменная хранит все классы
     const QSet<QString> allClassesItems = allClasses();
@@ -491,7 +491,7 @@ bool Ontology::isMinimal(QSet<Pair> &redundantPairs) const
                 //если класса-для-инстанса1 < класса-для-инстанса2
                 if(instanceClass1 < instanceClass2)
                 {
-                    redundantPairs += Pair(instance, instanceClass2.name);
+                    redundantPairs += (Pair(instance, instanceClass2.name));
                     return false;
                 }
             }
