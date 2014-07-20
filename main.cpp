@@ -59,7 +59,9 @@ int main(int argc, char *argv[])
     qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
     qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
     qWarning()<<"бенч!"<<benchmark.benchmarkAllClasses(test);
+    qWarning()<<(benchmark.getFunctionName() + benchmark.getDataName() + benchmark.OntologyDataToString(200, 10, 10, 14));
     qWarning()<<"бенч!"<<benchmark.benchmarkIsMinimal(test);
+    qWarning()<<(benchmark.getFunctionName() + benchmark.getDataName() + benchmark.OntologyDataToString(200, 10, 10, 14));
     qWarning()<<"thats all!"<<test.allClasses().count();
 
 

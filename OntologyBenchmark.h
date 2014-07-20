@@ -21,8 +21,14 @@ public:
     void randomize();
 
 
-
+    QString OntologyDataToString(const int classCountSummary
+                                 , const int classPropertiesCount
+                                 , const int instancesCountSummary
+                                 , const int classInstancesCount);
     QString getDataName() const;
+    QString getFunctionName() const;
+    void setFunctionName(const QString &functionName);
+
     int benchmarkIsMinimal(const Ontology &ontology);
     int benchmarkIsValid(const Ontology &ontology);
     int benchmarkMainSuperClass(const Ontology &ontology);
@@ -39,11 +45,13 @@ public:
     int benchmarkAnyClassInstances(const int &numberOfClasses, const Ontology &ontology);
     int benchmarkClassProperties(const Ontology &ontology);
     int benchmarkClassInstances(const Ontology &ontology);
+    void setDataName(const QString &dataName);
 private:
-    QTime time_;
+    QTime time_; //хранит время которое было затрачено на ту или иную функцию с данными
     QSet<int> timeCollection_; //хранит коллеуцию времени для выведения статистики
     bool start_;//говорит о том что метод start для счётчика был выполнен
-    QTime time;
+    QString dataName_; //хранит в себе имя последних испльзованных данных
+    QString functionName_; //хранит в себе имя последней тестируемой функции
 
 };
 
