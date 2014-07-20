@@ -1,6 +1,7 @@
 #include "OntologyBenchmark.h"
 
-OntologyBenchmark::OntologyBenchmark()
+OntologyBenchmark::OntologyBenchmark() :
+    start_(false)
 {
 }
 
@@ -20,6 +21,11 @@ void OntologyBenchmark::timeStart()
 int OntologyBenchmark::getTime()
 {
     return time_.restart();
+}
+
+void OntologyBenchmark::resetStatistic()
+{
+    timeCollection_.clear();
 }
 
 int OntologyBenchmark::getMinTime() const

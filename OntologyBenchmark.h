@@ -9,6 +9,7 @@ public:
     OntologyBenchmark();
     void timeStart();
     int getTime();
+    void resetStatistic();
 
     int getMaxTime() const;
     int getMinTime() const;
@@ -18,8 +19,6 @@ public:
     QString anyInstance(const Ontology &ontology);
     QString anyProperty(const Ontology &ontology);
     QString anyValue(const Ontology &ontology);
-    void randomize();
-
 
     QString OntologyDataToString(const int classCountSummary
                                  , const int classPropertiesCount
