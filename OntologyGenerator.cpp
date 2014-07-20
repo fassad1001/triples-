@@ -19,13 +19,6 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
     //пока могу генерировать:
     while(canGenerate)
     {
-        //если классы нельзы создавать
-        //если суммарное количество классов > лимита
-        if(allClasses().count() >= ClassCountSummary)
-        {
-            //прервать
-            break;
-        }
         //если есть классы для подклассов
         //если количество классов > 0
         if(allClasses().count() > 0)
@@ -77,16 +70,25 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
 
             }
         }
-
-    }
-    classInstancesItems = classInstances(className);
-    classPropertiesItems = classProperties(className);
-    foreach(QString classInstancesItem, classInstancesItems)
-    {
-        foreach(QString classPropertiesItem, classPropertiesItems)
+        //если классы нельзы создавать
+        //если суммарное количество классов > лимита
+        classInstancesItems = classInstances(className);
+        classPropertiesItems = classProperties(className);
+        foreach(QString classInstancesItem, classInstancesItems)
         {
-            setPropertyValue(classInstancesItem, classPropertiesItem, generatePropertyValue());
+            foreach(QString classPropertiesItem, classPropertiesItems)
+            {
+                QString propertyValue = generatePropertyValue();
+                setPropertyValue(classInstancesItem, classPropertiesItem, propertyValue);
+            }
         }
+
+        if(allClasses().count() >= ClassCountSummary)
+        {
+            //прервать
+            canGenerate = false;
+        }
+
     }
     return getOntology();
 }
