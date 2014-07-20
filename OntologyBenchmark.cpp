@@ -1,6 +1,7 @@
 #include "OntologyBenchmark.h"
 
-OntologyBenchmark::OntologyBenchmark()
+OntologyBenchmark::OntologyBenchmark() :
+    time(QTime::currentTime())
 {
 }
 
@@ -17,11 +18,16 @@ void OntologyBenchmark::timeStart()
     }
 }
 
+int OntologyBenchmark::getTime()
+{
+    return time_.restart();
+}
+
 int OntologyBenchmark::getMinTime() const
 {
     QList<int> sortedTimeCollection = timeCollection_.toList();
     qSort(sortedTimeCollection.begin(), sortedTimeCollection.end());
-    qWarning()<<sortedTimeCollection;if(sortedTimeCollection.isEmpty())
+    if(sortedTimeCollection.isEmpty())
     {
         return int();
     }
@@ -35,7 +41,6 @@ int OntologyBenchmark::getMaxTime() const
 {
     QList<int> sortedTimeCollection = timeCollection_.toList();
     qSort(sortedTimeCollection.begin(), sortedTimeCollection.end());
-    qWarning()<<sortedTimeCollection;
     if(sortedTimeCollection.isEmpty())
     {
         return int();
@@ -53,73 +58,158 @@ int OntologyBenchmark::getAverageTime() const
     {
         resulTime += time / timeCollection_.count();
     }
+    return resulTime;
 }
 
-void OntologyBenchmark::benchmarkOntology(const OntologyBenchmark::FUNC &nameOfFunction
-                                          , const Ontology ontology)
+int OntologyBenchmark::benchmarkClassInstances(const Ontology &ontology)
 {
-    FUNC funcName;
-    switch(funcName)
+    QString classItem = anyClass(ontology);
+    timeStart();
+    ontology.classInstances(classItem);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkClassProperties(const Ontology &ontology)
+{
+    QString classItem = anyClass(ontology);
+    timeStart();
+    ontology.classProperties(classItem);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkAnyClassInstances(const int &numberOfClasses, const Ontology &ontology)
+{
+    QStringList classes;
+    for(int i = 1; i <= numberOfClasses; i++)
     {
-    case FUNC::FUNC_allClasses :
-        timeStart();
-        ontology.allClasses();
-        break;
-    case FUNC_allClassInstances:
-        QString className = anyClass();
-        timeStart();
-        ontology.classInstances(className);
-        break;
-    case FUNC_allInstances:
-        QString className = anyClass();
-        timeStart();
-        ontology.classInstances(className);
-        break;
-    case FUNC_anyClassInstances:
-        QSet<QString> classNames = anyClass();
-        QSet<
-        timeStart();
-        ontology.anyClassInstances(className);
-        break;
-    case FUNC_classesForInstance:
-
-        break;
-    case FUNC_classInstances:
-
-        break;
-    case FUNC_classProperties:
-
-        break;
-    case FUNC_instanceProperties:
-
-        break;
-    case FUNC_instancesForNonProperties:
-
-        break;
-    case FUNC_instancesForProperties:
-
-        break;
-    case FUNC_mainSuperClass:
-
-        break;
-    case FUNC_propertyValues:
-
-        break;
-    case FUNC_subClasses:
-
-        break;
-    case FUNC_superClasses:
-
-        break;
+        classes += anyClass(ontology);
     }
+    timeStart();
+    ontology.anyClassInstances(classes);
+    return getTime();
+}
 
+
+
+int OntologyBenchmark::benchmarkPropertyValues(const Ontology &ontology)
+{
+    QString propertyName = anyProperty(ontology);
+    timeStart();
+    ontology.propertyValues(propertyName);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkInstanceProperties(const Ontology &ontology)
+{
+    QString instanceName = anyInstance(ontology);
+    timeStart();
+    ontology.instanceProperties(instanceName);
+    return getTime();
+}
+
+
+int OntologyBenchmark::benchmarkAllClassInstances(const int &numberOfClasses, const Ontology &ontology)
+{
+    QStringList classes;
+    for(int i = 1; i <= numberOfClasses; i++)
+    {
+        classes += anyClass(ontology);
+    }
+    timeStart();
+    ontology.allClassInstances(classes);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkAllClasses(const Ontology &ontology)
+{
+    timeStart();
+    ontology.allClasses();
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkAllInstances(const Ontology &ontology)
+{
+    timeStart();
+    ontology.allInstances();
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkClassesForInstance(const Ontology &ontology)
+{
+    QString instanceName = anyInstance(ontology);
+    timeStart();
+    ontology.instanceProperties(instanceName);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkInstancesForProperties(const int &numberOfValues, const Ontology &ontology)
+{
+    MyHash values;
+    for(int i = 1; i <= numberOfValues; i++)
+    {
+        values.insert(anyProperty(ontology), anyValue(ontology));
+    }
+    timeStart();
+    ontology.instancesForProperties(values);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkInstancesForNonProperties(const int &numberOfValues, const Ontology &ontology)
+{
+    MyHash values;
+    for(int i = 1; i <= numberOfValues; i++)
+    {
+        values.insert(anyProperty(ontology), anyValue(ontology));
+    }
+    timeStart();
+    ontology.instancesForNonProperties(values);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkSubClasses(const Ontology &ontology)
+{
+    QString className = anyClass(ontology);
+    timeStart();
+    ontology.subClasses(className);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkSuperClasses(const Ontology &ontology)
+{
+    QString className = anyClass(ontology);
+    timeStart();
+    ontology.superClasses(className);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkMainSuperClass(const Ontology &ontology)
+{
+    QString instanceName1 = anyInstance(ontology);
+    QString instanceName2 = anyInstance(ontology);
+    timeStart();
+    ontology.mainSuperClass(instanceName1, instanceName2);
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkIsValid(const Ontology &ontology)
+{
+    timeStart();
+    ontology.isValid();
+    return getTime();
+}
+
+int OntologyBenchmark::benchmarkIsMinimal(const Ontology &ontology)
+{
+    timeStart();
+    ontology.isMinimal(QSet<Pair>()<<Pair("1","2"));
+    return getTime();
 }
 
 QString OntologyBenchmark::anyClass(const Ontology &ontology)
 {
+    randomize();
     if(!ontology.getStorage().isEmpty())
     {
-        qsrand((uint)time.msec());
         QSet<QString> classes = ontology.allClasses();
         return classes.toList().at(qrand() % classes.count());
     }
@@ -131,9 +221,9 @@ QString OntologyBenchmark::anyClass(const Ontology &ontology)
 
 QString OntologyBenchmark::anyInstance(const Ontology &ontology)
 {
+    randomize();
     if(!ontology.getStorage().isEmpty())
     {
-        qsrand((uint)time.msec());
         QSet<QString> instances = ontology.allInstances();
         return instances.toList().at(qrand() % instances.count());
     }
@@ -146,12 +236,13 @@ QString OntologyBenchmark::anyInstance(const Ontology &ontology)
 
 QString OntologyBenchmark::anyProperty(const Ontology &ontology)
 {
+    randomize();
     if(!ontology.getStorage().isEmpty())
     {
-        qsrand((uint)time.msec());
         QString anyClassItem = anyClass(ontology);
         QSet<QString> properties = ontology.classProperties(anyClassItem);
-        return properties.toList().at(qrand() % properties.count());
+        int randomNumber = qrand();
+        return properties.toList().at(randomNumber % properties.count());
     }
     else
     {
@@ -161,17 +252,23 @@ QString OntologyBenchmark::anyProperty(const Ontology &ontology)
 
 QString OntologyBenchmark::anyValue(const Ontology &ontology)
 {
+    randomize();
     if(!ontology.getStorage().isEmpty())
     {
-        qsrand((uint)time.msec());
-        QSet<QString> values = ontology.propertyValues(anyProperty(ontology));
-        QString value = values.toList().at(qrand() % values.count());
+        const QString propertyName = anyProperty(ontology);
+        const QSet<QString> values = ontology.propertyValues(propertyName);
+        QString value = values.toList().at(rand() % values.count());
         return value;
     }
     else
     {
         return QString();
     }
+}
+
+void OntologyBenchmark::randomize()
+{
+    time = QTime::currentTime();
 }
 
 
