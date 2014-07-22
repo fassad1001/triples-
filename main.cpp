@@ -18,6 +18,8 @@
 
 #include "OntologyBenchmark.h"
 
+#include "TOntologyDataBaseInterface.h"
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -37,34 +39,106 @@ int main(int argc, char *argv[])
     //    TOntologyBuilder ontologyBuilder;
     //    QTest::qExec(&ontologyBuilder);
 
-    OntologyGenerator gener;
-    OntologyBenchmark benchmark;
-    Ontology test;
-    test = gener.generate(200, 10, 10, 14);
+    TOntologyDataBaseInterface ontologyDataBaseInterface;
+    QTest::qExec(&ontologyDataBaseInterface);
 
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyClass(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyClass(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyClass(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyClass(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyInstance(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyInstance(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyInstance(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyInstance(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyProperty(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyProperty(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyProperty(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyProperty(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
-    qWarning()<<"выдаю любое значение свойства "<<benchmark.anyValue(test);
-    qWarning()<<"бенч!"<<benchmark.benchmarkAllClasses(test);
-    qWarning()<<(benchmark.getFunctionName() + benchmark.getDataName() + benchmark.OntologyDataToString(200, 10, 10, 14));
-    qWarning()<<"бенч!"<<benchmark.benchmarkIsMinimal(test);
-    qWarning()<<(benchmark.getFunctionName() + benchmark.getDataName() + benchmark.OntologyDataToString(200, 10, 10, 14));
-    qWarning()<<"thats all!"<<test.allClasses().count();
-
-
+//    OntologyGenerator generator;
+//    OntologyBenchmark benchmark;
+//    Ontology ontology;
+//    int classes;
+//    int classProperties;
+//    int instances;
+//    int classInstances;
+//    int time;
+//    for(int funcNum = 0; funcNum <= 15; funcNum += 1)
+//    {
+//        for(int classes = 10; classes <= 10; classes += 10)
+//        {
+//            for(int classProperties = 10; classProperties <= 100; classProperties += 10)
+//            {
+//                for(int instances = 10; instances <= 10; instances += 10)
+//                {
+//                    for(int classInstances = 10; classInstances <= 10; classInstances += 10)
+//                    {
+//                        ontology = generator.generate(classes, classProperties, instances, classInstances);
+//                        //выполняю бенчмарк метод
+//                        qWarning()<<benchmark.OntologyDataToString(classes, classProperties, instances, classInstances);
+//                        switch(funcNum)
+//                        {
+//                        case 0:
+//                            qWarning()<<"benchmarkIsMinimal";
+//                            time = benchmark.benchmarkIsMinimal(ontology);
+//                            break;
+//                        case 1:
+//                            qWarning()<<"benchmarkIsValid";
+//                            time = benchmark.benchmarkIsValid(ontology);
+//                            break;
+//                        case 2:
+//                            qWarning()<<"benchmarkMainSuperClass";
+//                            time = benchmark.benchmarkMainSuperClass(ontology);
+//                            break;
+//                        case 3:
+//                            qWarning()<<"benchmarkSuperClasses";
+//                            time = benchmark.benchmarkSuperClasses(ontology);
+//                            break;
+//                        case 4:
+//                            qWarning()<<"benchmarkSubClasses";
+//                            time = benchmark.benchmarkSubClasses(ontology);
+//                            break;
+//                        case 5:
+//                            qWarning()<<"benchmarkInstancesForNonProperties";
+//                            time = benchmark.benchmarkInstancesForNonProperties(5, ontology);
+//                            break;
+//                        case 6:
+//                            qWarning()<<"benchmarkInstancesForProperties";
+//                            time = benchmark.benchmarkInstancesForProperties(5, ontology);
+//                            break;
+//                        case 7:
+//                            qWarning()<<"benchmarkClassesForInstance";
+//                            time = benchmark.benchmarkClassesForInstance(ontology);
+//                            break;
+//                        case 8:
+//                            qWarning()<<"benchmarkAllInstances";
+//                            time = benchmark.benchmarkAllInstances(ontology);
+//                            break;
+//                        case 9:
+//                            qWarning()<<"benchmarkAllClasses";
+//                            time = benchmark.benchmarkAllClasses(ontology);
+//                            break;
+//                        case 10:
+//                            qWarning()<<"benchmarkAllClassInstances";
+//                            time = benchmark.benchmarkAllClassInstances(5, ontology);
+//                            break;
+//                        case 11:
+//                            qWarning()<<"benchmarkInstanceProperties";
+//                            time = benchmark.benchmarkInstanceProperties(ontology);
+//                            break;
+//                        case 12:
+//                            qWarning()<<"benchmarkPropertyValues";
+//                            time = benchmark.benchmarkPropertyValues(ontology);
+//                            break;
+//                        case 13:
+//                            qWarning()<<"benchmarkAnyClassInstances";
+//                            time = benchmark.benchmarkAnyClassInstances(5, ontology);
+//                            break;
+//                        case 14:
+//                            qWarning()<<"benchmarkClassProperties";
+//                            time = benchmark.benchmarkClassProperties(ontology);
+//                            break;
+//                        case 15:
+//                            qWarning()<<"setDataName";
+//                            time = benchmark.benchmarkClassInstances(ontology);
+//                            break;
+//                        }
+//                        benchmark.setTime(benchmark.getFunctionName()
+//                                          ,benchmark.OntologyDataToString(classes, classProperties, instances, classInstances)
+//                                          ,time);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    benchmark.writeFile("D:/отчёты/benchmark4.csv");
 
 
     //    qsrand(42);

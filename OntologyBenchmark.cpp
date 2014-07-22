@@ -215,8 +215,11 @@ int OntologyBenchmark::benchmarkSuperClasses(const Ontology &ontology)
 
 int OntologyBenchmark::benchmarkMainSuperClass(const Ontology &ontology)
 {
+    qWarning()<<"benchmarkMain";
     QString instanceName1 = anyInstance(ontology);
+    qWarning()<<instanceName1;
     QString instanceName2 = anyInstance(ontology);
+    qWarning()<<instanceName2;
     timeStart();
     ontology.mainSuperClass(instanceName1, instanceName2);
     functionName_ = "mainSuperClass";
@@ -245,7 +248,7 @@ int OntologyBenchmark::benchmarkIsMinimal(const Ontology &ontology)
 QString OntologyBenchmark::anyClass(const Ontology &ontology)
 {
 
-    if(!ontology.getStorage().isEmpty())
+    if(!ontology.allClasses().isEmpty())
     {
         QSet<QString> classes = ontology.allClasses();
         return classes.toList().at(qrand() % classes.count());
@@ -258,11 +261,10 @@ QString OntologyBenchmark::anyClass(const Ontology &ontology)
 
 QString OntologyBenchmark::anyInstance(const Ontology &ontology)
 {
-
-    if(!ontology.getStorage().isEmpty())
+    if(!ontology.allInstances().isEmpty())
     {
         QSet<QString> instances = ontology.allInstances();
-        return instances.toList().at(qrand() % instances.count());
+        return instances.toList().at(rand() % instances.count());
     }
     else
     {
@@ -274,10 +276,14 @@ QString OntologyBenchmark::anyInstance(const Ontology &ontology)
 QString OntologyBenchmark::anyProperty(const Ontology &ontology)
 {
 
-    if(!ontology.getStorage().isEmpty())
+    if(!ontology.allClasses().isEmpty())
     {
         QString anyClassItem = anyClass(ontology);
         QSet<QString> properties = ontology.classProperties(anyClassItem);
+        if(ontology.classProperties(anyClassItem).isEmpty())
+        {
+            return QString();
+        }
         int randomNumber = qrand();
         return properties.toList().at(randomNumber % properties.count());
     }
@@ -294,6 +300,10 @@ QString OntologyBenchmark::anyValue(const Ontology &ontology)
     {
         const QString propertyName = anyProperty(ontology);
         const QSet<QString> values = ontology.propertyValues(propertyName);
+        if(values.isEmpty())
+        {
+            return QString();
+        }
         QString value = values.toList().at(rand() % values.count());
         return value;
     }
@@ -313,7 +323,9 @@ QString OntologyBenchmark::OntologyDataToString(const int classCountSummary, con
             +"&inst(S)-"
             +QString::number(instancesCountSummary)
             +"&clInstance-"
-            +QString::number(classInstancesCount);
+            +QString::number(classInstancesCount)
+            +"&allProp-"
+            +QString::number(classCountSummary*classPropertiesCount);
 }
 
 QString OntologyBenchmark::getDataName() const

@@ -1,10 +1,17 @@
 #ifndef ONTOLOGYDATABASEREADER_H
+
 #define ONTOLOGYDATABASEREADER_H
 
-class OntologyDataBaseReader
+#include "OntologyDataBaseInterface.h"
+
+#include "Ontology.h"
+
+class OntologyDataBaseReader : public OntologyDataBaseInterface
 {
 public:
-    OntologyDataBaseReader();
+    OntologyDataBaseReader(const QString &dataBaseName);
+    Ontology readOntology(const QString &ontologyName);
+    QStringList readOntologyName();
 };
 
 #endif // ONTOLOGYDATABASEREADER_H

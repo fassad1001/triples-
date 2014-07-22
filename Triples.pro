@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core testlib
+QT       += sql
 
 QT       -= gui
 
@@ -29,7 +30,10 @@ SOURCES += main.cpp \
     OntologyBuilder.cpp \
     TOntologyBuilder.cpp \
     OntologyGenerator.cpp \
-    OntologyBenchmark.cpp
+    OntologyBenchmark.cpp \
+    OntologyDataBaseInterface.cpp \
+    TOntologyDataBaseInterface.cpp \
+    OntologyDataBaseReader.cpp
 
 HEADERS += \
     Triple.h \
@@ -45,4 +49,7 @@ HEADERS += \
     OntologyBuilder.h \
     TOntologyBuilder.h \
     OntologyGenerator.h \
-    OntologyBenchmark.h
+    OntologyBenchmark.h \
+    OntologyDataBaseInterface.h \
+    TOntologyDataBaseInterface.h \
+    OntologyDataBaseReader.h
