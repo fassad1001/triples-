@@ -21,6 +21,7 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
         if(!my_query.exec("SELECT subject_id, predicate_id, object_id FROM Triples"
                       " WHERE onotology_id = ("
                       " SELECT id FROM Names WHERE name = " + ontologyName +
+                          " AND isClass = true)"
                       " );")
                 && my_query.isActive())
         {
