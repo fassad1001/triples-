@@ -33,7 +33,10 @@ SOURCES += main.cpp \
     OntologyBenchmark.cpp \
     OntologyDataBaseInterface.cpp \
     TOntologyDataBaseInterface.cpp \
-    OntologyDataBaseReader.cpp
+    OntologyDataBaseReader.cpp \
+    TOntologyDataBaseReader.cpp \
+    OntologyDataBaseWriter.cpp \
+    TOntologyDataBaseWriter.cpp
 
 HEADERS += \
     Triple.h \
@@ -52,4 +55,7 @@ HEADERS += \
     OntologyBenchmark.h \
     OntologyDataBaseInterface.h \
     TOntologyDataBaseInterface.h \
-    OntologyDataBaseReader.h
+    OntologyDataBaseReader.h \
+    TOntologyDataBaseReader.h \
+    OntologyDataBaseWriter.h \
+    TOntologyDataBaseWriter.h

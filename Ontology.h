@@ -5,6 +5,7 @@
 #include <QtCore>
 
 #include "TripleStorage.h"
+
 #include "Class.h"
 
 class MyHash : public QHash< QString, QString >

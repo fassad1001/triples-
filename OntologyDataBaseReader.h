@@ -4,6 +4,8 @@
 
 #include "OntologyDataBaseInterface.h"
 
+#include "OntologyDataBaseWriter.h"
+
 #include "Ontology.h"
 
 class OntologyDataBaseReader : public OntologyDataBaseInterface
@@ -11,7 +13,6 @@ class OntologyDataBaseReader : public OntologyDataBaseInterface
 public:
     OntologyDataBaseReader(const QString &dataBaseName);
     Ontology readOntology(const QString &ontologyName);
-    QStringList readOntologyName();
 };
 
 #endif // ONTOLOGYDATABASEREADER_H

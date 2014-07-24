@@ -8,29 +8,44 @@ OntologyDataBaseReader::OntologyDataBaseReader(const QString &dataBaseName) :
 
 Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 {
-    //QSQLITE это имя подключения
-    QSqlDatabase sdb = QSqlDatabase::addDatabase("QSQLITE");
-    sdb.setDatabaseName(getDataBaseName());
-    //создаю БД
-    sdb.open();
-    if(sdb.isOpen())
-    {
-        //создаю запрос для подключения QSQLITE
-        QSqlQuery my_query;
-        //если открыта БД НЕуспешно
-        if(!my_query.exec("SELECT subject_id, predicate_id, object_id FROM Triples"
-                      " WHERE onotology_id = ("
-                      " SELECT id FROM Names WHERE name = " + ontologyName +
-                          " AND isClass = true)"
-                      " );")
-                && my_query.isActive())
-        {
+    QHash<int, QString> itemsNames = getNames();
+    QHash<int, QString> ontologyNames = getOntologyNames();
+    QSet<Triple> triples;
+    QSqlQuery my_query;
 
+    if(my_query.prepare("SELECT * "
+                        "FROM Triples "
+                        "WHERE ontology_id = :ontologyName;"))
+    {
+        my_query.bindValue(":ontologyName", ontologyNames.key(ontologyName));
+        my_query.exec();
+        qWarning()<<":ontologyName"<<ontologyNames.key(ontologyName);
+        qWarning()<<my_query.lastError();
+    }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+    }
+
+    if(my_query.isActive())
+    {
+        if(my_query.first())
+        {
+            do
+            {
+                QVariant subject_id = my_query.value("subject_id");
+                QVariant predicate_id = my_query.value("predicate_id");
+                QVariant object_id = my_query.value("object_id");
+                triples.insert(Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())));
+                qWarning()<<"readOntology"<<Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())).toString();
+            }
+            while(my_query.next());
         }
     }
-}
+    foreach(Triple tr, triples)
+    {
+        qWarning()<<"readOntology"<<tr.toString();
+    }
 
-QStringList OntologyDataBaseReader::readOntologyName()
-{
-
+    return Ontology(triples);
 }

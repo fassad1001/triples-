@@ -22,25 +22,33 @@ void OntologyDataBaseInterface::createTables()
                           "("
                           "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                           "name VARCHAR NOT NULL"
-                          "isClass BOOL"
                           ");")
-                && my_query.isActive())
+                || !my_query.isActive())
         {
             qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
         }
-        if(!my_query.exec("CREATE TABLE IF NOT EXISTS Triples"
+        if(!my_query.exec("CREATE TABLE IF NOT EXISTS ontologyNames"
                           "("
-                          "onotology_id INTEGER PRIMARY KEY,"
+                          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                          "name VARCHAR NOT NULL"
+                          ");")
+                || !my_query.isActive())
+        {
+            qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
+        }
+        if(!my_query.exec("CREATE TABLE IF NOT EXISTS Triples "
+                          "("
+                          "line_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                          "ontology_id INTEGER,"
                           "subject_id INTEGER NOT NULL,"
                           "predicate_id INTEGER NOT NULL,"
                           "object_id INTEGER NOT NULL,"
-                          "FOREIGN KEY(onotology_id) REFERENCES Names(id)"
+                          "FOREIGN KEY(ontology_id) REFERENCES Names(id)"
                           ");")
-                && my_query.isActive())
+                || !my_query.isActive())
         {
             qWarning()<<"Ошибка при создании таблицы Triples:"<<my_query.lastError();
         }
-        sdb.close();
     }
     else
     {
@@ -50,7 +58,85 @@ void OntologyDataBaseInterface::createTables()
     }
 }
 
+QHash<int, QString> OntologyDataBaseInterface::getNames()
+{
+    QHash<int, QString> hash;
+    QSqlQuery my_query;
+    if(my_query.exec("SELECT id, name "
+                     "FROM Names;"))
+    {
+        if(my_query.first())
+        {
+            do
+            {
+                QVariant id = my_query.value("id");
+                QVariant name = my_query.value("name");
+                hash.insert(id.toInt(), name.toString());
+            }
+            while(my_query.next());
+        }
+    }
+    return hash;
+}
+
+QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
+{
+    QHash<int, QString> hash;
+    QSqlQuery my_query;
+    if(my_query.exec("SELECT id, name "
+                     "FROM ontologyNames;"))
+    {
+        if(my_query.first())
+        {
+            do
+            {
+                QVariant id = my_query.value("id");
+                QVariant name = my_query.value("name");
+                hash.insert(id.toInt(), name.toString());
+            }
+            while(my_query.next());
+        }
+    }
+    return hash;
+}
+
 QString OntologyDataBaseInterface::getDataBaseName()
 {
     return dataBaseName_;
+}
+
+bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
+{
+    //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
+    QHash<int, QString> hash = getNames();
+    QSqlQuery my_query;
+    //---------------------------------------------------------------------------------
+    //удалить predicate если не существует
+    if(my_query.prepare("SELECT * "
+                        "FROM Triples "
+                        "WHERE ontology_id = :ontologyName;"))
+    {
+        my_query.bindValue(":ontologyName", hash.key(ontologyName));
+        my_query.exec();
+    }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+    }
+    if(!my_query.isActive())
+    {
+    }
+    else
+    {
+        if(my_query.first())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    //---------------------------------------------------------------------------------
+    //Names
 }

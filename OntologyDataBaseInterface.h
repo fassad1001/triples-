@@ -6,7 +6,10 @@ class OntologyDataBaseInterface
 public:
     OntologyDataBaseInterface(const QString &dataBaseName);
     void createTables();
+    QHash<int, QString> getNames();
     QString getDataBaseName();
+    bool isExists(const QString &ontologyName);
+    QHash<int, QString> getOntologyNames();
 private:
     QString dataBaseName_;
 };

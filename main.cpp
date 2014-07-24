@@ -20,6 +20,8 @@
 
 #include "TOntologyDataBaseInterface.h"
 
+#include "TOntologyDataBaseWriter.h"
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -39,8 +41,31 @@ int main(int argc, char *argv[])
     //    TOntologyBuilder ontologyBuilder;
     //    QTest::qExec(&ontologyBuilder);
 
-    TOntologyDataBaseInterface ontologyDataBaseInterface;
-    QTest::qExec(&ontologyDataBaseInterface);
+    TOntologyDataBaseWriter writer;
+    QTest::qExec(&writer);
+
+//    OntologyDataBaseWriter wr = OntologyDataBaseWriter("test.db");
+//    wr.insert_Names("text1");
+//    wr.insert_Names("text2");
+//    wr.insert_Triples(Triple("tr1", "tr2", "tr3"), "ontologyName1");
+
+//    wr.writeOntology("ontologyName2", Ontology(QSet<Triple>()
+//                                               <<Triple("1", "1", "1")
+//                                               <<Triple("2", "2", "2")
+//                                               <<Triple("3", "3", "3")));
+
+//    wr.writeOntology("ontologyName2", Ontology(QSet<Triple>()
+//                                               <<Triple("5", "5", "5")
+//                                               <<Triple("6", "6", "6")
+//                                               <<Triple("7", "7", "7")));
+
+
+
+//    wr.writeOntology("ontologyName3", Ontology(QSet<Triple>()
+//                                               <<Triple("4", "4", "4")
+//                                               <<Triple("5", "5", "5")
+//                                               <<Triple("6", "6", "6")));
+
 
 //    OntologyGenerator generator;
 //    OntologyBenchmark benchmark;
