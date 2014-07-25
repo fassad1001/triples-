@@ -20,6 +20,9 @@ private slots:
 
     void TestRemove_data();
     void TestRemove();
+
+    void TestWriteOntologyName_data();
+    void TestWriteOntologyName();
 };
 
 #endif // TONTOLOGYDATABASEWRITER_H

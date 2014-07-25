@@ -108,13 +108,13 @@ QString OntologyDataBaseInterface::getDataBaseName()
 bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 {
     //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
-    QHash<int, QString> hash = getNames();
+    QHash<int, QString> hash = getOntologyNames();
     QSqlQuery my_query;
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
     if(my_query.prepare("SELECT * "
-                        "FROM Triples "
-                        "WHERE ontology_id = :ontologyName;"))
+                        "FROM ontologyNames "
+                        "WHERE id = :ontologyName;"))
     {
         my_query.bindValue(":ontologyName", hash.key(ontologyName));
         my_query.exec();
@@ -139,4 +139,5 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
     }
     //---------------------------------------------------------------------------------
     //Names
+    return false;
 }

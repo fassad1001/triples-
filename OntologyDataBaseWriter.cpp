@@ -93,6 +93,7 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
         //----------------------------------------------------------------------------------
 
     }
+    return QString();
 }
 
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
@@ -241,4 +242,5 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
         //----------------------------------------------------------------------------------
 
     }
+    return QString();
 }

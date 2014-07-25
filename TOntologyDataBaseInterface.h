@@ -16,6 +16,7 @@ private slots:
     void TestOntologyDataBaseInterface_data();
     void TestOntologyDataBaseInterface();
 
+
 };
 
 #endif // TONTOLOGYDATABASEINTERFACE_H

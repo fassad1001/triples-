@@ -10,7 +10,7 @@ void TOntologyDataBaseWriter::TestWriteOntology_data()
     QTest::addColumn <QString> ("dataBaseName");
     QTest::addColumn <Ontology> ("ontology");
 
-    QTest::newRow("new DB1_1")
+    QTest::newRow("write a new ontology")
             << "ontology1"
             << "testDB1write.db"
             << (Ontology(QSet<Triple>()
@@ -18,13 +18,14 @@ void TOntologyDataBaseWriter::TestWriteOntology_data()
                          <<Triple("2", "2", "2")
                          <<Triple("3", "3", "3")));
 
-    QTest::newRow("new DB1_2")
+    QTest::newRow("rewrite ontology")
             << "ontology1"
             << "testDB1write.db"
             << (Ontology(QSet<Triple>()
                          <<Triple("4", "4", "4")
                          <<Triple("4", "4", "4")
                          <<Triple("4", "4", "4")));
+
 }
 
 void TOntologyDataBaseWriter::TestWriteOntology()
@@ -76,6 +77,33 @@ void TOntologyDataBaseWriter::TestRemove()
     writer.writeOntology(ontologyName, ontology);
     writer.remove(ontologyName);
     QCOMPARE(writer.isExists(ontologyName), false);
+    //записать онтологию в БД
+    //проверить на существование методом exists
+    //если существует то неОК
+    //если не существует то ОК
+}
+
+void TOntologyDataBaseWriter::TestWriteOntologyName_data()
+{
+    QTest::addColumn <QString> ("ontologyName");
+    QTest::addColumn <QString> ("dataBaseName");
+
+    QTest::newRow("non existed ontology")<<"Ontology123"
+                       <<"myDBv1.db";
+
+    QTest::newRow("existed ontology")<<"Ontology123"
+                       <<"myDBv1.db";
+}
+
+void TOntologyDataBaseWriter::TestWriteOntologyName()
+{
+    //исходные данные это онтология
+    QFETCH(QString, ontologyName);
+    QFETCH(QString, dataBaseName);
+
+    OntologyDataBaseWriter writer = OntologyDataBaseWriter(dataBaseName);
+    writer.insert_OntologyNames(ontologyName);
+    QCOMPARE(writer.isExists(ontologyName), true);
     //записать онтологию в БД
     //проверить на существование методом exists
     //если существует то неОК
