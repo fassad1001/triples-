@@ -20,6 +20,11 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
     QHash<int, QString> hash = getOntologyNames();
+    //выхожу из функции если заявленного имени онтологии не существует
+    if(!hash.contains(hash.key(ontologyName)))
+    {
+        return;
+    }
     QSqlQuery my_query;
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
@@ -50,7 +55,7 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на запрос к имени в Names:"<<my_query.lastError();
     }
     if(!my_query.isActive())
     {
@@ -80,11 +85,11 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
         }
         else
         {
-            qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<my_query.lastError();
+            qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<my_query.lastError();
         }
         if(!my_query.isActive())
         {
-            qWarning()<<"Ошибка при выполнениии запроса на добавление имени онтологии:"<<my_query.lastError();
+            qWarning()<<"Ошибка при выполнениии запроса на добавление имени :"<<my_query.lastError();
         }
         else
         {
@@ -110,7 +115,7 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на запрос к имени онтологии в ontologyNames:"<<my_query.lastError();
     }
     if(!my_query.isActive())
     {
@@ -153,6 +158,7 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
         //----------------------------------------------------------------------------------
 
     }
+    return QString();
 }
 
 QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QString &ontologyName)
@@ -178,7 +184,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<my_query.lastError();
     }
     if(!my_query.isActive())
     {
@@ -240,7 +246,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             return my_query.lastInsertId().toString();
         }
         //----------------------------------------------------------------------------------
-
     }
     return QString();
 }
