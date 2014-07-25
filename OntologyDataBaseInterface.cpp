@@ -9,57 +9,60 @@ OntologyDataBaseInterface::OntologyDataBaseInterface(const QString &dataBaseName
 void OntologyDataBaseInterface::createTables()
 {
     //QSQLITE это имя подключения
-    QSqlDatabase sdb = QSqlDatabase::addDatabase("QSQLITE");
-    sdb.setDatabaseName(dataBaseName_);
-    //создаю БД
-    sdb.open();
-    if(sdb.isOpen())
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "def");
+    db.setDatabaseName(dataBaseName_);
+    //открываю БД
+    if(!db.open())
     {
-        //создаю запрос для подключения QSQLITE
-        QSqlQuery my_query;
-        //если открыта БД НЕуспешно
-        if(!my_query.exec("CREATE TABLE IF NOT EXISTS Names"
-                          "("
-                          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                          "name VARCHAR NOT NULL"
-                          ");")
-                || !my_query.isActive())
-        {
-            qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
-        }
-        if(!my_query.exec("CREATE TABLE IF NOT EXISTS ontologyNames"
-                          "("
-                          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                          "name VARCHAR NOT NULL"
-                          ");")
-                || !my_query.isActive())
-        {
-            qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
-        }
-        if(!my_query.exec("CREATE TABLE IF NOT EXISTS Triples "
-                          "("
-                          "line_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                          "ontology_id INTEGER,"
-                          "subject_id INTEGER NOT NULL,"
-                          "predicate_id INTEGER NOT NULL,"
-                          "object_id INTEGER NOT NULL,"
-                          "FOREIGN KEY(ontology_id) REFERENCES Names(id)"
-                          ");")
-                || !my_query.isActive())
-        {
-            qWarning()<<"Ошибка при создании таблицы Triples:"<<my_query.lastError();
-        }
+        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+        return;
     }
-    else
+
+    //создаю запрос для подключения QSQLITE
+    QSqlQuery my_query;
+    //если открыта БД НЕуспешно
+    if(!my_query.exec("CREATE TABLE IF NOT EXISTS Names"
+                      "("
+                      "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                      "name VARCHAR NOT NULL"
+                      ");")
+            || !my_query.isActive())
     {
-        qWarning()<<"ошибка при открытии соединения :"<<sdb.lastError();
-        qWarning()<<"isOpen"<<sdb.isOpen();
-        qWarning()<<"isValid"<<sdb.isValid();
+        qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
+    }
+    if(!my_query.exec("CREATE TABLE IF NOT EXISTS ontologyNames"
+                      "("
+                      "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                      "name VARCHAR NOT NULL"
+                      ");")
+            || !my_query.isActive())
+    {
+        qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
+    }
+    if(!my_query.exec("CREATE TABLE IF NOT EXISTS Triples "
+                      "("
+                      "line_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                      "ontology_id INTEGER,"
+                      "subject_id INTEGER NOT NULL,"
+                      "predicate_id INTEGER NOT NULL,"
+                      "object_id INTEGER NOT NULL,"
+                      "FOREIGN KEY(ontology_id) REFERENCES Names(id)"
+                      ");")
+            || !my_query.isActive())
+    {
+        qWarning()<<"Ошибка при создании таблицы Triples:"<<my_query.lastError();
     }
 }
 
 QHash<int, QString> OntologyDataBaseInterface::getNames()
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+        return QHash<int, QString>();
+    }
     QHash<int, QString> hash;
     QSqlQuery my_query;
     if(my_query.exec("SELECT id, name "
@@ -81,6 +84,12 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
 
 QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+        return QHash<int, QString>();
+    }
     QHash<int, QString> hash;
     QSqlQuery my_query;
     if(my_query.exec("SELECT id, name "
@@ -107,6 +116,12 @@ QString OntologyDataBaseInterface::getDataBaseName()
 
 bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+        return false;
+    }
     //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
     QHash<int, QString> hash = getOntologyNames();
     QSqlQuery my_query;

@@ -19,6 +19,15 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        if(!db.open())
+        {
+            qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+            return;
+        }
+    }
     QHash<int, QString> hash = getOntologyNames();
     //выхожу из функции если заявленного имени онтологии не существует
     if(!hash.contains(hash.key(ontologyName)))
@@ -43,6 +52,12 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
 
 QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+        return QString();
+    }
     QSqlQuery my_query;
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
@@ -103,6 +118,12 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+        return QString();
+    }
     QSqlQuery my_query;
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
@@ -163,6 +184,15 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
 
 QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QString &ontologyName)
 {
+    QSqlDatabase db = QSqlDatabase::database("def");
+    if(!db.isOpen())
+    {
+        if(!db.open())
+        {
+            qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+            return QString();
+        }
+    }
     QHash<int, QString> names = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
     QSqlQuery my_query;
