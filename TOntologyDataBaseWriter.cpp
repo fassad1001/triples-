@@ -42,6 +42,11 @@ void TOntologyDataBaseWriter::TestWriteOntology()
     OntologyDataBaseWriter writer(dataBaseName);
     writer.writeOntology(ontologyName, ontology);
     OntologyDataBaseReader reader(dataBaseName);
+    Ontology resultOntology = reader.readOntology(ontologyName);
+    foreach(Triple triple, resultOntology.getStorage())
+    {
+        qWarning()<<"результаты:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
+    }
     //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }
@@ -49,22 +54,16 @@ void TOntologyDataBaseWriter::TestWriteOntology()
 void TOntologyDataBaseWriter::TestRemove_data()
 {
     QTest::addColumn <QString> ("ontologyName");
-    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QStringList> ("ontologyNames");
+    QTest::addColumn <QList<Ontology> > ("ontology");
 
     //проверить удаление конкретной онтологии из множества, проверить удаление несуществующей онтологии
     QTest::newRow("DB-ontology-1")
-            << "ontology1"
-            << (Ontology(QSet<Triple>()
-                         <<Triple("class1", Ontology::IS, Ontology::CLASS)
-                         <<Triple("class2", Ontology::IS, Ontology::CLASS)
-                         <<Triple("class3", Ontology::IS, Ontology::CLASS)
-                         <<Triple("class1", Ontology::CONTAINS, "class2")
-                         <<Triple("class2", Ontology::CONTAINS, "class3")
-                         <<Triple("instance1", Ontology::IS, "class2")));
-
-    QTest::newRow("DB-ontology-2")
-            << "ontology2"
-            << (Ontology(QSet<Triple>()
+            << "ontology3"
+            << (QStringList()
+                <<"ontology1"
+                <<"ontology2")
+            << (QList<Ontology>()<<(Ontology(QSet<Triple>()
                          <<Triple("class1", Ontology::IS, Ontology::CLASS)
                          <<Triple("class2", Ontology::IS, Ontology::CLASS)
                          <<Triple("class3", Ontology::IS, Ontology::CLASS)
@@ -72,12 +71,42 @@ void TOntologyDataBaseWriter::TestRemove_data()
                          <<Triple("class1", Ontology::CONTAINS, "class2")
                          <<Triple("class1", Ontology::CONTAINS, "class4")
                          <<Triple("class2", Ontology::CONTAINS, "class3")
-                         <<Triple("instance1", Ontology::IS, "class2")));
+                         <<Triple("instance1", Ontology::IS, "class2")))
+               <<(Ontology(QSet<Triple>()
+                           <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                           <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                           <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                           <<Triple("class1", Ontology::CONTAINS, "class2")
+                           <<Triple("class2", Ontology::CONTAINS, "class3")
+                           <<Triple("instance1", Ontology::IS, "class2"))));
+
+    QTest::newRow("DB-ontology-2")
+            << "ontology1"
+            << (QStringList()
+                <<"ontology1"
+                <<"ontology2")
+            << (QList<Ontology>()<<(Ontology(QSet<Triple>()
+                         <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class4", Ontology::IS, Ontology::CLASS)
+                         <<Triple("class1", Ontology::CONTAINS, "class2")
+                         <<Triple("class1", Ontology::CONTAINS, "class4")
+                         <<Triple("class2", Ontology::CONTAINS, "class3")
+                         <<Triple("instance1", Ontology::IS, "class2")))
+               <<(Ontology(QSet<Triple>()
+                           <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                           <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                           <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                           <<Triple("class1", Ontology::CONTAINS, "class2")
+                           <<Triple("class2", Ontology::CONTAINS, "class3")
+                           <<Triple("instance1", Ontology::IS, "class2"))));
 }
 
 void TOntologyDataBaseWriter::TestRemove()
 {
-    QFETCH(Ontology, ontology);
+    QFETCH(QList<Ontology>, ontology);
+    QFETCH(QStringList, ontologyNames);
     QFETCH(QString, ontologyName);
     const QString dataTag = QTest::currentDataTag();
     const QString dataBaseName = dataTag + "TestRemove.db";
@@ -91,7 +120,10 @@ void TOntologyDataBaseWriter::TestRemove()
     }
 
     OntologyDataBaseWriter writer = OntologyDataBaseWriter(dataBaseName);
-    writer.writeOntology(ontologyName, ontology);
+    for(int i = 0; i < ontology.size(); i++)
+    {
+        writer.writeOntology(ontologyNames.at(i), ontology.at(i));
+    }
     QHash<int, QString> ontologyNames1 = writer.getOntologyNames();
     QHash<int, QString> ontologyNames2 = writer.getOntologyNames();
     ontologyNames1.remove(ontologyNames2.key(ontologyName));

@@ -42,8 +42,9 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
                 QVariant subject_id = my_query.value("subject_id");
                 QVariant predicate_id = my_query.value("predicate_id");
                 QVariant object_id = my_query.value("object_id");
+                QVariant ontology_id = my_query.value("ontology_id");
                 triples.insert(Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())));
-                qWarning()<<"readOntology"<<Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())).toString();
+                qWarning()<<"readOntology"<<getNames().value(ontology_id.toInt())<<Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())).toString();
             }
             while(my_query.next());
         }

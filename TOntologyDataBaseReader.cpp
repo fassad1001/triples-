@@ -6,7 +6,23 @@ TOntologyDataBaseReader::TOntologyDataBaseReader()
 
 void TOntologyDataBaseReader::TestReadOntology_data()
 {
+    QTest::addColumn <Ontology> ("ontology");
+    QTest::addColumn <QString> ("ontologyName");
 
+    //проверить удаление конкретной онтологии из множества, проверить удаление несуществующей онтологии
+    QTest::newRow("full-ontology")
+    << (Ontology(QSet<Triple>()
+                 <<Triple("class1", Ontology::IS, Ontology::CLASS)
+                 <<Triple("class2", Ontology::IS, Ontology::CLASS)
+                 <<Triple("class3", Ontology::IS, Ontology::CLASS)
+                 <<Triple("class1", Ontology::CONTAINS, "class2")
+                 <<Triple("class2", Ontology::CONTAINS, "class3")
+                 <<Triple("instance1", Ontology::IS, "class2")))
+       <<"ontology1";
+
+    QTest::newRow("empty-ontology")
+    << (Ontology(QSet<Triple>()))
+        <<"ontology1";
 }
 
 void TOntologyDataBaseReader::TestReadOntology()

@@ -162,7 +162,7 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
     QSqlDatabase db1 = QSqlDatabase::database();
     if(db1.isOpen())
     {
-        qWarning()<<":) DB is opened adrealy! Use with care :)";
+//        qWarning()<<":) DB is opened adrealy! Use with care :)";
         return db1;
     }
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -178,7 +178,7 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
     }
     else
     {
-        qWarning()<<"DB is opened adrealy! Use with care :)";
+//        qWarning()<<"DB is opened adrealy! Use with care :)";
         return db;
     }
 }

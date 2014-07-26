@@ -44,6 +44,8 @@ int main(int argc, char *argv[])
     TOntologyDataBaseWriter writer;
     QTest::qExec(&writer);
 
+
+
 //    OntologyDataBaseWriter wr = OntologyDataBaseWriter("test.db");
 //    wr.insert_Names("text1");
 //    wr.insert_Names("text2");

@@ -6,12 +6,6 @@ TOntologyDataBaseInterface::TOntologyDataBaseInterface()
 
 void TOntologyDataBaseInterface::TestOntologyDataBaseInterface_data()
 {
-    QTest::addColumn <QString> ("dbFileName");
-
-    QTest::newRow("new DB1") << "testDB1.db";
-    QTest::newRow("create again1") << "testDB.db1";
-    QTest::newRow("new DB1") << "testDB2.db";
-    QTest::newRow("create again1") << "testDB2.db";
 }
 
 void TOntologyDataBaseInterface::TestOntologyDataBaseInterface()

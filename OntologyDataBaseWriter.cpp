@@ -19,15 +19,6 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        if(!db.open())
-//        {
-//            qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//            return;
-//        }
-//    }
     QSqlQuery my_query = getQuery(getDataBaseName());
     QHash<int, QString> hash = getOntologyNames();
     //выхожу из функции если заявленного имени онтологии не существует
@@ -48,16 +39,21 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
     {
         qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
     }
+    if(my_query.prepare("DELETE "
+                        "FROM ontologyNames "
+                        "WHERE name = :ontologyName;"))
+    {
+        my_query.bindValue(":ontologyName", ontologyName);
+        my_query.exec();
+    }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+    }
 }
 
 QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return QString();
-//    }
     QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
@@ -184,32 +180,24 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
 
 QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QString &ontologyName)
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        if(!db.open())
-//        {
-//            qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//            return QString();
-//        }
-//    }
     QHash<int, QString> names = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
     QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     //вернуть значение существующего если получится
-    if(my_query.prepare("SELECT line_id "
+    if(my_query.prepare("SELECT * "
                         "FROM Triples "
                         "WHERE "
                         "subject_id = :subject "
                         "AND predicate_id = :predicate "
                         "AND object_id = :object "
-                        "AND ontology_id = :onontology;"))
+                        "AND ontology_id = :ontology;"))
     {
         my_query.bindValue(":subject", names.key(triple.subject()));
         my_query.bindValue(":predicate", names.key(triple.predicate()));
         my_query.bindValue(":object", names.key(triple.object()));
-        my_query.bindValue(":onontology", names.key(ontologyName));
+        my_query.bindValue(":ontology", names.key(ontologyName));
+        qWarning()<<"делаю выборку из БД для значений"<<triple.subject()<<triple.predicate()<<triple.object();
         my_query.exec();
     }
     else
@@ -252,7 +240,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             {
                 insert_Names(triple.object());
             }
-            if(names.key(ontologyName) == int())
+            if(ontologyNames.key(ontologyName) == int())
             {
                 insert_OntologyNames(ontologyName);
             }
@@ -261,6 +249,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             my_query.bindValue(":subject_id", names.key(triple.subject()));
             my_query.bindValue(":predicate_id", names.key(triple.predicate()));
             my_query.bindValue(":object_id", names.key(triple.object()));
+            qWarning()<<"запись"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
             my_query.exec();
         }
         else
