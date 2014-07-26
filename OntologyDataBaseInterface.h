@@ -10,6 +10,8 @@ public:
     QString getDataBaseName();
     bool isExists(const QString &ontologyName);
     QHash<int, QString> getOntologyNames();
+    QSqlQuery getQuery(const QString &fileName);
+    QSqlDatabase getDataBase(const QString &fileName);
 private:
     QString dataBaseName_;
 };

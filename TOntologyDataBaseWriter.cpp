@@ -30,7 +30,7 @@ void TOntologyDataBaseWriter::TestWriteOntology()
     QFETCH(Ontology, ontology);
     QFETCH(QString, ontologyName);
     const QString dataTag = QTest::currentDataTag();
-    const QString dataBaseName = dataTag + "TOntologyDataBaseWriter::TestWriteOntology.db";
+    const QString dataBaseName = dataTag + "TestWriteOntology.db";
 
     if(QFile::exists(dataBaseName))
     {
@@ -80,7 +80,7 @@ void TOntologyDataBaseWriter::TestRemove()
     QFETCH(Ontology, ontology);
     QFETCH(QString, ontologyName);
     const QString dataTag = QTest::currentDataTag();
-    const QString dataBaseName = dataTag + "TOntologyDataBaseWriter::TestRemove.db";
+    const QString dataBaseName = dataTag + "TestRemove.db";
 
     if(QFile::exists(dataBaseName))
     {
@@ -95,9 +95,11 @@ void TOntologyDataBaseWriter::TestRemove()
     QHash<int, QString> ontologyNames1 = writer.getOntologyNames();
     QHash<int, QString> ontologyNames2 = writer.getOntologyNames();
     ontologyNames1.remove(ontologyNames2.key(ontologyName));
-    const QHash<int, QString> compareHash = ontologyNames1;
+    qWarning()<<"хеш с удалением :"<<ontologyNames1;
+    const QHash<int, QString> compareHash = ontologyNames1;  
     writer.remove(ontologyName);
     const QHash<int, QString> realHash = writer.getOntologyNames();
+    qWarning()<<"хеш полученный от функции :"<<realHash;
     QCOMPARE(compareHash, realHash);
 }
 
@@ -115,7 +117,7 @@ void TOntologyDataBaseWriter::TestWriteOntologyName()
     QFETCH(QString, ontologyName);
 
     const QString dataTag = QTest::currentDataTag();
-    const QString dataBaseName = dataTag + "TOntologyDataBaseWriter::TestRemove.db";
+    const QString dataBaseName = dataTag + "TestRemove.db";
 
     if(QFile::exists(dataBaseName))
     {

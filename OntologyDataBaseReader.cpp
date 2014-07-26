@@ -8,16 +8,16 @@ OntologyDataBaseReader::OntologyDataBaseReader(const QString &dataBaseName) :
 
 Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 {
-    QSqlDatabase db = QSqlDatabase::database("def");
-    if(!db.isOpen())
-    {
-        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-        return Ontology();
-    }
+//    QSqlDatabase db = QSqlDatabase::database("def");
+//    if(!db.isOpen())
+//    {
+//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+//        return Ontology();
+//    }
     QHash<int, QString> itemsNames = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
     QSet<Triple> triples;
-    QSqlQuery my_query;
+    QSqlQuery my_query = getQuery(getDataBaseName());
 
     if(my_query.prepare("SELECT * "
                         "FROM Triples "

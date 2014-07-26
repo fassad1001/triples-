@@ -26,7 +26,7 @@ void TOntologyDataBaseInterface::TestOntologyDataBaseInterface()
         if(!QFile::remove(dbFileName))
         {
             //тест падает
-            testIsOk = false;
+            QFAIL("не могу удалить файл БД");
         }
     }
     //создаю БД
@@ -40,7 +40,7 @@ void TOntologyDataBaseInterface::TestOntologyDataBaseInterface()
     else
     {
         //тест не пройден
-        testIsOk = false;
+        QFAIL("файл БД не был создан");
     }
 
     //если ошибок не было и БД была создана тест пройден

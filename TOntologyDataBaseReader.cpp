@@ -14,8 +14,18 @@ void TOntologyDataBaseReader::TestReadOntology()
     //входные данные это онтология, имя онтологии, имя файла БД
     QFETCH(Ontology, ontology);
     QFETCH(QString, ontologyName);
-    QFETCH(QString, dataBaseName);
+    const QString dataTag = QTest::currentDataTag();
+    const QString dataBaseName = dataTag + "TestReadOntology.db";
     //пишу онтологию с именем
+    if(QFile::exists(dataBaseName))
+    {
+        //пытаюсь удалить и если не получается
+        if(!QFile::remove(dataBaseName))
+        {
+            //тест падает
+            QFAIL("не могу удалить файл БД");
+        }
+    }
     OntologyDataBaseWriter writer = OntologyDataBaseWriter(dataBaseName);
     writer.writeOntology(ontologyName, ontology);
     //читаю

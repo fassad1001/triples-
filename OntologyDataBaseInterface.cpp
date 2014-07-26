@@ -10,17 +10,17 @@ void OntologyDataBaseInterface::createTables()
 {
     //QSQLITE это имя подключения
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "def");
-    db.setDatabaseName(dataBaseName_);
-    //открываю БД
-    if(!db.open())
-    {
-        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-        return;
-    }
+//    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "def");
+//    db.setDatabaseName(dataBaseName_);
+//    //открываю БД
+//    if(!db.open())
+//    {
+//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+//        return;
+//    }
 
     //создаю запрос для подключения QSQLITE
-    QSqlQuery my_query;
+    QSqlQuery my_query = getQuery(dataBaseName_);
     //если открыта БД НЕуспешно
     if(!my_query.exec("CREATE TABLE IF NOT EXISTS Names"
                       "("
@@ -57,14 +57,14 @@ void OntologyDataBaseInterface::createTables()
 
 QHash<int, QString> OntologyDataBaseInterface::getNames()
 {
-    QSqlDatabase db = QSqlDatabase::database("def");
-    if(!db.isOpen())
-    {
-        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-        return QHash<int, QString>();
-    }
+//    QSqlDatabase db = QSqlDatabase::database("def");
+//    if(!db.isOpen())
+//    {
+//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+//        return QHash<int, QString>();
+//    }
     QHash<int, QString> hash;
-    QSqlQuery my_query;
+    QSqlQuery my_query = getQuery(getDataBaseName());
     if(my_query.exec("SELECT id, name "
                      "FROM Names;"))
     {
@@ -84,14 +84,14 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
 
 QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
 {
-    QSqlDatabase db = QSqlDatabase::database("def");
-    if(!db.isOpen())
-    {
-        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-        return QHash<int, QString>();
-    }
+//    QSqlDatabase db = QSqlDatabase::database("def");
+//    if(!db.isOpen())
+//    {
+//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+//        return QHash<int, QString>();
+//    }
     QHash<int, QString> hash;
-    QSqlQuery my_query;
+    QSqlQuery my_query = getQuery(getDataBaseName());
     if(my_query.exec("SELECT id, name "
                      "FROM ontologyNames;"))
     {
@@ -116,15 +116,15 @@ QString OntologyDataBaseInterface::getDataBaseName()
 
 bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 {
-    QSqlDatabase db = QSqlDatabase::database("def");
-    if(!db.isOpen())
-    {
-        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-        return false;
-    }
+//    QSqlDatabase db = QSqlDatabase::database("def");
+//    if(!db.isOpen())
+//    {
+//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
+//        return false;
+//    }
     //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
     QHash<int, QString> hash = getOntologyNames();
-    QSqlQuery my_query;
+    QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
     if(my_query.prepare("SELECT * "
@@ -155,4 +155,35 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
     //---------------------------------------------------------------------------------
     //Names
     return false;
+}
+
+QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
+{
+    QSqlDatabase db1 = QSqlDatabase::database();
+    if(db1.isOpen())
+    {
+        qWarning()<<":) DB is opened adrealy! Use with care :)";
+        return db1;
+    }
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(fileName);
+    if(!db.isOpen())
+    {
+        qWarning()<<"i open DB for you :"<<db.open();
+        if(!db.isOpen())
+        {
+            qWarning()<<"Error of opening DB:"<<db.lastError();
+        }
+        return db;
+    }
+    else
+    {
+        qWarning()<<"DB is opened adrealy! Use with care :)";
+        return db;
+    }
+}
+
+QSqlQuery OntologyDataBaseInterface::getQuery(const QString &fileName)
+{
+    return QSqlQuery(getDataBase(fileName));
 }
