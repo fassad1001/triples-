@@ -41,131 +41,128 @@ int main(int argc, char *argv[])
     //    TOntologyBuilder ontologyBuilder;
     //    QTest::qExec(&ontologyBuilder);
 
-    TOntologyDataBaseWriter writer;
-    QTest::qExec(&writer);
+        TOntologyDataBaseWriter writer;
+        QTest::qExec(&writer);
 
 
-
+//    QFile::remove("test.db");
 //    OntologyDataBaseWriter wr = OntologyDataBaseWriter("test.db");
-//    wr.insert_Names("text1");
-//    wr.insert_Names("text2");
-//    wr.insert_Triples(Triple("tr1", "tr2", "tr3"), "ontologyName1");
 
 //    wr.writeOntology("ontologyName2", Ontology(QSet<Triple>()
 //                                               <<Triple("1", "1", "1")
 //                                               <<Triple("2", "2", "2")
-//                                               <<Triple("3", "3", "3")));
-
-//    wr.writeOntology("ontologyName2", Ontology(QSet<Triple>()
+//                                               <<Triple("3", "3", "3")
 //                                               <<Triple("5", "5", "5")
 //                                               <<Triple("6", "6", "6")
 //                                               <<Triple("7", "7", "7")));
 
 
-
 //    wr.writeOntology("ontologyName3", Ontology(QSet<Triple>()
-//                                               <<Triple("4", "4", "4")
+//                                               <<Triple("1", "1", "1")
+//                                               <<Triple("2", "2", "2")
+//                                               <<Triple("3", "3", "3")
 //                                               <<Triple("5", "5", "5")
-//                                               <<Triple("6", "6", "6")));
+//                                               <<Triple("6", "6", "6")
+//                                               <<Triple("7", "7", "7")));
 
 
-//    OntologyGenerator generator;
-//    OntologyBenchmark benchmark;
-//    Ontology ontology;
-//    int classes;
-//    int classProperties;
-//    int instances;
-//    int classInstances;
-//    int time;
-//    for(int funcNum = 0; funcNum <= 15; funcNum += 1)
-//    {
-//        for(int classes = 10; classes <= 10; classes += 10)
-//        {
-//            for(int classProperties = 10; classProperties <= 100; classProperties += 10)
-//            {
-//                for(int instances = 10; instances <= 10; instances += 10)
-//                {
-//                    for(int classInstances = 10; classInstances <= 10; classInstances += 10)
-//                    {
-//                        ontology = generator.generate(classes, classProperties, instances, classInstances);
-//                        //выполняю бенчмарк метод
-//                        qWarning()<<benchmark.OntologyDataToString(classes, classProperties, instances, classInstances);
-//                        switch(funcNum)
-//                        {
-//                        case 0:
-//                            qWarning()<<"benchmarkIsMinimal";
-//                            time = benchmark.benchmarkIsMinimal(ontology);
-//                            break;
-//                        case 1:
-//                            qWarning()<<"benchmarkIsValid";
-//                            time = benchmark.benchmarkIsValid(ontology);
-//                            break;
-//                        case 2:
-//                            qWarning()<<"benchmarkMainSuperClass";
-//                            time = benchmark.benchmarkMainSuperClass(ontology);
-//                            break;
-//                        case 3:
-//                            qWarning()<<"benchmarkSuperClasses";
-//                            time = benchmark.benchmarkSuperClasses(ontology);
-//                            break;
-//                        case 4:
-//                            qWarning()<<"benchmarkSubClasses";
-//                            time = benchmark.benchmarkSubClasses(ontology);
-//                            break;
-//                        case 5:
-//                            qWarning()<<"benchmarkInstancesForNonProperties";
-//                            time = benchmark.benchmarkInstancesForNonProperties(5, ontology);
-//                            break;
-//                        case 6:
-//                            qWarning()<<"benchmarkInstancesForProperties";
-//                            time = benchmark.benchmarkInstancesForProperties(5, ontology);
-//                            break;
-//                        case 7:
-//                            qWarning()<<"benchmarkClassesForInstance";
-//                            time = benchmark.benchmarkClassesForInstance(ontology);
-//                            break;
-//                        case 8:
-//                            qWarning()<<"benchmarkAllInstances";
-//                            time = benchmark.benchmarkAllInstances(ontology);
-//                            break;
-//                        case 9:
-//                            qWarning()<<"benchmarkAllClasses";
-//                            time = benchmark.benchmarkAllClasses(ontology);
-//                            break;
-//                        case 10:
-//                            qWarning()<<"benchmarkAllClassInstances";
-//                            time = benchmark.benchmarkAllClassInstances(5, ontology);
-//                            break;
-//                        case 11:
-//                            qWarning()<<"benchmarkInstanceProperties";
-//                            time = benchmark.benchmarkInstanceProperties(ontology);
-//                            break;
-//                        case 12:
-//                            qWarning()<<"benchmarkPropertyValues";
-//                            time = benchmark.benchmarkPropertyValues(ontology);
-//                            break;
-//                        case 13:
-//                            qWarning()<<"benchmarkAnyClassInstances";
-//                            time = benchmark.benchmarkAnyClassInstances(5, ontology);
-//                            break;
-//                        case 14:
-//                            qWarning()<<"benchmarkClassProperties";
-//                            time = benchmark.benchmarkClassProperties(ontology);
-//                            break;
-//                        case 15:
-//                            qWarning()<<"setDataName";
-//                            time = benchmark.benchmarkClassInstances(ontology);
-//                            break;
-//                        }
-//                        benchmark.setTime(benchmark.getFunctionName()
-//                                          ,benchmark.OntologyDataToString(classes, classProperties, instances, classInstances)
-//                                          ,time);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    benchmark.writeFile("D:/отчёты/benchmark4.csv");
+    //    OntologyGenerator generator;
+    //    OntologyBenchmark benchmark;
+    //    Ontology ontology;
+    //    int classes;
+    //    int classProperties;
+    //    int instances;
+    //    int classInstances;
+    //    int time;
+    //    for(int funcNum = 0; funcNum <= 15; funcNum += 1)
+    //    {
+    //        for(int classes = 10; classes <= 10; classes += 10)
+    //        {
+    //            for(int classProperties = 10; classProperties <= 100; classProperties += 10)
+    //            {
+    //                for(int instances = 10; instances <= 10; instances += 10)
+    //                {
+    //                    for(int classInstances = 10; classInstances <= 10; classInstances += 10)
+    //                    {
+    //                        ontology = generator.generate(classes, classProperties, instances, classInstances);
+    //                        //выполняю бенчмарк метод
+    //                        qWarning()<<benchmark.OntologyDataToString(classes, classProperties, instances, classInstances);
+    //                        switch(funcNum)
+    //                        {
+    //                        case 0:
+    //                            qWarning()<<"benchmarkIsMinimal";
+    //                            time = benchmark.benchmarkIsMinimal(ontology);
+    //                            break;
+    //                        case 1:
+    //                            qWarning()<<"benchmarkIsValid";
+    //                            time = benchmark.benchmarkIsValid(ontology);
+    //                            break;
+    //                        case 2:
+    //                            qWarning()<<"benchmarkMainSuperClass";
+    //                            time = benchmark.benchmarkMainSuperClass(ontology);
+    //                            break;
+    //                        case 3:
+    //                            qWarning()<<"benchmarkSuperClasses";
+    //                            time = benchmark.benchmarkSuperClasses(ontology);
+    //                            break;
+    //                        case 4:
+    //                            qWarning()<<"benchmarkSubClasses";
+    //                            time = benchmark.benchmarkSubClasses(ontology);
+    //                            break;
+    //                        case 5:
+    //                            qWarning()<<"benchmarkInstancesForNonProperties";
+    //                            time = benchmark.benchmarkInstancesForNonProperties(5, ontology);
+    //                            break;
+    //                        case 6:
+    //                            qWarning()<<"benchmarkInstancesForProperties";
+    //                            time = benchmark.benchmarkInstancesForProperties(5, ontology);
+    //                            break;
+    //                        case 7:
+    //                            qWarning()<<"benchmarkClassesForInstance";
+    //                            time = benchmark.benchmarkClassesForInstance(ontology);
+    //                            break;
+    //                        case 8:
+    //                            qWarning()<<"benchmarkAllInstances";
+    //                            time = benchmark.benchmarkAllInstances(ontology);
+    //                            break;
+    //                        case 9:
+    //                            qWarning()<<"benchmarkAllClasses";
+    //                            time = benchmark.benchmarkAllClasses(ontology);
+    //                            break;
+    //                        case 10:
+    //                            qWarning()<<"benchmarkAllClassInstances";
+    //                            time = benchmark.benchmarkAllClassInstances(5, ontology);
+    //                            break;
+    //                        case 11:
+    //                            qWarning()<<"benchmarkInstanceProperties";
+    //                            time = benchmark.benchmarkInstanceProperties(ontology);
+    //                            break;
+    //                        case 12:
+    //                            qWarning()<<"benchmarkPropertyValues";
+    //                            time = benchmark.benchmarkPropertyValues(ontology);
+    //                            break;
+    //                        case 13:
+    //                            qWarning()<<"benchmarkAnyClassInstances";
+    //                            time = benchmark.benchmarkAnyClassInstances(5, ontology);
+    //                            break;
+    //                        case 14:
+    //                            qWarning()<<"benchmarkClassProperties";
+    //                            time = benchmark.benchmarkClassProperties(ontology);
+    //                            break;
+    //                        case 15:
+    //                            qWarning()<<"setDataName";
+    //                            time = benchmark.benchmarkClassInstances(ontology);
+    //                            break;
+    //                        }
+    //                        benchmark.setTime(benchmark.getFunctionName()
+    //                                          ,benchmark.OntologyDataToString(classes, classProperties, instances, classInstances)
+    //                                          ,time);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    benchmark.writeFile("D:/отчёты/benchmark4.csv");
 
 
     //    qsrand(42);

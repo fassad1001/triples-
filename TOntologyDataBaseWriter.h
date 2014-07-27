@@ -18,6 +18,9 @@ private slots:
     void TestWriteOntology_data();
     void TestWriteOntology();
 
+    void TestReWriteOntology_data();
+    void TestReWriteOntology();
+
     void TestRemove_data();
     void TestRemove();
 

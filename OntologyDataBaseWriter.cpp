@@ -245,6 +245,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
                 insert_OntologyNames(ontologyName);
             }
             names = getNames();
+            ontologyNames = getOntologyNames();
             my_query.bindValue(":ontology_id", ontologyNames.key(ontologyName));
             my_query.bindValue(":subject_id", names.key(triple.subject()));
             my_query.bindValue(":predicate_id", names.key(triple.predicate()));
