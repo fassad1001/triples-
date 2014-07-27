@@ -184,7 +184,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
         my_query.bindValue(":predicate", names.key(triple.predicate()));
         my_query.bindValue(":object", names.key(triple.object()));
         my_query.bindValue(":ontology", names.key(ontologyName));
-        qWarning()<<"делаю выборку из БД для значений"<<triple.subject()<<triple.predicate()<<triple.object();
         my_query.exec();
     }
     else
@@ -236,7 +235,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             my_query.bindValue(":subject_id", names.key(triple.subject()));
             my_query.bindValue(":predicate_id", names.key(triple.predicate()));
             my_query.bindValue(":object_id", names.key(triple.object()));
-            qWarning()<<"запись"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
             my_query.exec();
         }
         else
