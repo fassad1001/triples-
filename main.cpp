@@ -22,6 +22,8 @@
 
 #include "TOntologyDataBaseWriter.h"
 
+#include "TOntologyDataBaseReader.h"
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -43,6 +45,9 @@ int main(int argc, char *argv[])
 
         TOntologyDataBaseWriter writer;
         QTest::qExec(&writer);
+
+        TOntologyDataBaseReader reader;
+        QTest::qExec(&reader);
 
 
 //    QFile::remove("test.db");
