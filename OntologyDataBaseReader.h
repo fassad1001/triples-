@@ -12,6 +12,7 @@ class OntologyDataBaseReader : public OntologyDataBaseInterface
 {
 public:
     OntologyDataBaseReader(const QString &dataBaseName);
+
     Ontology readOntology(const QString &ontologyName);
 };
 

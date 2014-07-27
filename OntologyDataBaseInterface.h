@@ -5,11 +5,16 @@ class OntologyDataBaseInterface
 {
 public:
     OntologyDataBaseInterface(const QString &dataBaseName);
+
     void createTables();
-    QHash<int, QString> getNames();
-    QString getDataBaseName();
+
     bool isExists(const QString &ontologyName);
+
+    QHash<int, QString> getNames();
     QHash<int, QString> getOntologyNames();
+
+    QString getDataBaseName();
+
     QSqlQuery getQuery(const QString &fileName);
     QSqlDatabase getDataBase(const QString &fileName);
 private:
