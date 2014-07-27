@@ -21,13 +21,11 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
     QSqlQuery my_query = getQuery(getDataBaseName());
     QHash<int, QString> hash = getOntologyNames();
-    //выхожу из функции если заявленного имени онтологии не существует
     if(!hash.contains(hash.key(ontologyName)))
     {
         return;
     }
     //---------------------------------------------------------------------------------
-    //удалить predicate если не существует
     if(my_query.prepare("DELETE "
                         "FROM Triples "
                         "WHERE ontology_id = :ontologyName;"))
@@ -56,7 +54,6 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
     QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
-    //удалить predicate если не существует
     if(my_query.prepare("SELECT id "
                         "FROM Names "
                         "WHERE name = :nameToInsert;"))
@@ -86,7 +83,6 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     //---------------------------------------------------------------------------------
     if(!my_query.first())
     {
-        //добавить сабджект если он не существует
         if(my_query.prepare("INSERT "
                             "INTO Names "
                             "VALUES (null, :nameToInsert);"))
@@ -114,15 +110,8 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return QString();
-//    }
     QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
-    //удалить predicate если не существует
     if(my_query.prepare("SELECT id "
                         "FROM ontologyNames "
                         "WHERE name = :nameToInsert;"))
@@ -152,7 +141,6 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     //---------------------------------------------------------------------------------
     if(!my_query.first())
     {
-        //добавить сабджект если он не существует
         if(my_query.prepare("INSERT "
                             "INTO ontologyNames "
                             "VALUES (null, :nameToInsert);"))
@@ -184,7 +172,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
     QHash<int, QString> ontologyNames = getOntologyNames();
     QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
-    //вернуть значение существующего если получится
     if(my_query.prepare("SELECT * "
                         "FROM Triples "
                         "WHERE "
@@ -222,7 +209,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
     //---------------------------------------------------------------------------------
     if(!my_query.first())
     {
-        //добавить тройку
         if(my_query.prepare("INSERT "
                             "INTO Triples "
                             "VALUES (null, :ontology_id, :subject_id"

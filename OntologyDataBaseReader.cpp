@@ -8,12 +8,6 @@ OntologyDataBaseReader::OntologyDataBaseReader(const QString &dataBaseName) :
 
 Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return Ontology();
-//    }
     QHash<int, QString> itemsNames = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
     QSet<Triple> triples;
@@ -44,7 +38,6 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
                 QVariant object_id = my_query.value("object_id");
                 QVariant ontology_id = my_query.value("ontology_id");
                 triples.insert(Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())));
-//                qWarning()<<"readOntology"<<getOntologyNames().value(ontology_id.toInt())<<Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())).toString();
             }
             while(my_query.next());
         }
