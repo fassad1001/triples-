@@ -72,12 +72,11 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     {
         if(my_query.first())
         {
-            do
+            while(my_query.next())
             {
                 QVariant dbValue = my_query.value("id").toString();
                 return dbValue.toString();
             }
-            while(my_query.next());
         }
     }
     //---------------------------------------------------------------------------------
@@ -130,12 +129,11 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     {
         if(my_query.first())
         {
-            do
+            while(my_query.next())
             {
                 QVariant dbValue = my_query.value("id").toString();
                 return dbValue.toString();
             }
-            while(my_query.next());
         }
     }
     //---------------------------------------------------------------------------------
@@ -197,12 +195,11 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
     {
         if(my_query.first())
         {
-            do
+            while(my_query.next())
             {
                 QVariant dbValue = my_query.value("line_id").toString();
                 return dbValue.toString();
             }
-            while(my_query.next());
         }
     }
     //---------------------------------------------------------------------------------

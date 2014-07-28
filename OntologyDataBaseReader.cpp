@@ -31,15 +31,15 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
     {
         if(my_query.first())
         {
-            do
+            while(my_query.next())
             {
-                QVariant subject_id = my_query.value("subject_id");
+                const int subjectID = my_query.value("subject_id").toInt();
+                const QString subject = itemsNames.value(subjectID);
                 QVariant predicate_id = my_query.value("predicate_id");
                 QVariant object_id = my_query.value("object_id");
                 QVariant ontology_id = my_query.value("ontology_id");
                 triples.insert(Triple(itemsNames.value(subject_id.toInt()), itemsNames.value(predicate_id.toInt()), itemsNames.value(object_id.toInt())));
             }
-            while(my_query.next());
         }
     }
     foreach(Triple tr, triples)

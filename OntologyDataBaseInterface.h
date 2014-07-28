@@ -1,22 +1,25 @@
 #ifndef ONTOLOGYDATABASEINTERFACE_H
+
 #define ONTOLOGYDATABASEINTERFACE_H
+
 #include <QtSql>
+
 class OntologyDataBaseInterface
 {
 public:
     OntologyDataBaseInterface(const QString &dataBaseName);
 
-    void createTables();
-
     bool isExists(const QString &ontologyName);
+protected:
+    QSqlQuery getQuery(const QString &fileName);
+    QSqlDatabase getDataBase(const QString &fileName);
+
+    QString getDataBaseName();
 
     QHash<int, QString> getNames();
     QHash<int, QString> getOntologyNames();
 
-    QString getDataBaseName();
-
-    QSqlQuery getQuery(const QString &fileName);
-    QSqlDatabase getDataBase(const QString &fileName);
+    void createTables();
 private:
     QString dataBaseName_;
 };

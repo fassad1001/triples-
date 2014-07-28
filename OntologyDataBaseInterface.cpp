@@ -8,17 +8,6 @@ OntologyDataBaseInterface::OntologyDataBaseInterface(const QString &dataBaseName
 
 void OntologyDataBaseInterface::createTables()
 {
-    //QSQLITE это имя подключения
-
-//    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "def");
-//    db.setDatabaseName(dataBaseName_);
-//    //открываю БД
-//    if(!db.open())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return;
-//    }
-
     //создаю запрос для подключения QSQLITE
     QSqlQuery my_query = getQuery(dataBaseName_);
     //если открыта БД НЕуспешно
@@ -57,12 +46,6 @@ void OntologyDataBaseInterface::createTables()
 
 QHash<int, QString> OntologyDataBaseInterface::getNames()
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return QHash<int, QString>();
-//    }
     QHash<int, QString> hash;
     QSqlQuery my_query = getQuery(getDataBaseName());
     if(my_query.exec("SELECT id, name "
@@ -70,13 +53,12 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
     {
         if(my_query.first())
         {
-            do
+            while(my_query.next())
             {
-                QVariant id = my_query.value("id");
-                QVariant name = my_query.value("name");
-                hash.insert(id.toInt(), name.toString());
+                const int id = my_query.value("id").toInt();
+                const QString name = my_query.value("name").toString();
+                hash.insert(id, name);
             }
-            while(my_query.next());
         }
     }
     return hash;
@@ -84,12 +66,6 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
 
 QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return QHash<int, QString>();
-//    }
     QHash<int, QString> hash;
     QSqlQuery my_query = getQuery(getDataBaseName());
     if(my_query.exec("SELECT id, name "
@@ -97,13 +73,12 @@ QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
     {
         if(my_query.first())
         {
-            do
+            while(my_query.next())
             {
                 QVariant id = my_query.value("id");
                 QVariant name = my_query.value("name");
                 hash.insert(id.toInt(), name.toString());
             }
-            while(my_query.next());
         }
     }
     return hash;
@@ -116,12 +91,6 @@ QString OntologyDataBaseInterface::getDataBaseName()
 
 bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 {
-//    QSqlDatabase db = QSqlDatabase::database("def");
-//    if(!db.isOpen())
-//    {
-//        qWarning()<<"ошибка открытия соединения для "<<Q_FUNC_INFO<<db.lastError();
-//        return false;
-//    }
     //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
     QHash<int, QString> hash = getOntologyNames();
     QSqlQuery my_query = getQuery(getDataBaseName());

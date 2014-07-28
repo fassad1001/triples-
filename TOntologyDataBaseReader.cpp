@@ -9,7 +9,6 @@ void TOntologyDataBaseReader::TestReadOntology_data()
     QTest::addColumn <Ontology> ("ontology");
     QTest::addColumn <QString> ("ontologyName");
 
-    //проверить удаление конкретной онтологии из множества, проверить удаление несуществующей онтологии
     QTest::newRow("full-ontology")
     << (Ontology(QSet<Triple>()
                  <<Triple("class1", Ontology::IS, Ontology::CLASS)
