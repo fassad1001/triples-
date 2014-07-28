@@ -51,10 +51,31 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 
 void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString &ontologyName)
 {
-
+    //у меня есть имя онтологии
+    //есть все тройки для этой онтологии
+    //все тройки перебираю и отправляю в файл
 }
 
-void OntologyDataBaseReader::importFromCSV(const QString &fileName, const QString &ontologyName)
+void OntologyDataBaseReader::importFromCSV(const QString &fileName)
 {
+    //у меня есть файл
+    //
+    QSet<Triple> triples;
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) {
+        return QString();
+    }
 
+    QTextStream in(&file);
+
+    while(!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList triplesLine = line.split(",");
+        const QString subject = triplesLine.at(0);
+        const QString predicate = triplesLine.at(1);
+        const QString object = triplesLine.at(2);
+        triples += Triple(subject, predicate, object);
+    }
+    return triples;
+    file.close();
 }
