@@ -17,7 +17,7 @@ public:
 
     void exportToCSV(const QString &fileName, const QString &ontologyName);
 
-    void importFromCSV(const QString &fileName, const QString &ontologyName);
+    QSet<Triple> importFromCSV(const QString &fileName);
 
 };
 

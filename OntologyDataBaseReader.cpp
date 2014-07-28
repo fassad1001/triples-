@@ -54,16 +54,26 @@ void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString 
     //у меня есть имя онтологии
     //есть все тройки для этой онтологии
     //все тройки перебираю и отправляю в файл
+    Ontology triples = readOntology(ontologyName);
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    foreach(Triple triple, triples.getStorage())
+    {
+        out << triple.toString() + "\n";
+    }
+    // optional, as QFile destructor will already do it:
+    file.close();
 }
 
-void OntologyDataBaseReader::importFromCSV(const QString &fileName)
+QSet<Triple> OntologyDataBaseReader::importFromCSV(const QString &fileName)
 {
     //у меня есть файл
     //
     QSet<Triple> triples;
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly)) {
-        return QString();
+        return QSet<Triple>();
     }
 
     QTextStream in(&file);
