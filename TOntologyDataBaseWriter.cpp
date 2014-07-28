@@ -29,6 +29,7 @@ void TOntologyDataBaseWriter::TestWriteOntology()
 {
     QFETCH(Ontology, ontology);
     QFETCH(QString, ontologyName);
+
     const QString dataTag = QTest::currentDataTag();
     const QString dataBaseName = dataTag + "TestWriteOntology.db";
 
@@ -39,14 +40,18 @@ void TOntologyDataBaseWriter::TestWriteOntology()
             QFAIL("can't remove testing database");
         }
     }
+
     OntologyDataBaseWriter writer(dataBaseName);
     writer.writeOntology(ontologyName, ontology);
+
     OntologyDataBaseReader reader(dataBaseName);
     Ontology resultOntology = reader.readOntology(ontologyName);
+
     foreach(Triple triple, resultOntology.getStorage())
     {
         qWarning()<<"изначально:"<<ontologyName<<triple.toString();
     }
+
     //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }
@@ -107,6 +112,7 @@ void TOntologyDataBaseWriter::TestReWriteOntology()
     QFETCH(Ontology, defaultOntology);
     QFETCH(Ontology, ontology);
     QFETCH(QString, ontologyName);
+
     const QString dataTag = QTest::currentDataTag();
     const QString dataBaseName = dataTag + "TestWriteOntology.db";
 
@@ -117,11 +123,15 @@ void TOntologyDataBaseWriter::TestReWriteOntology()
             QFAIL("can't remove testing database");
         }
     }
+
     OntologyDataBaseWriter writer(dataBaseName);
+
     writer.writeOntology(ontologyName, defaultOntology);
     writer.writeOntology(ontologyName, ontology);
+
     OntologyDataBaseReader reader(dataBaseName);
     Ontology resultOntology = reader.readOntology(ontologyName);
+
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }
 
@@ -182,6 +192,7 @@ void TOntologyDataBaseWriter::TestRemove()
     QFETCH(QList<Ontology>, ontology);
     QFETCH(QStringList, ontologyNames);
     QFETCH(QString, ontologyName);
+
     const QString dataTag = QTest::currentDataTag();
     const QString dataBaseName = dataTag + "TestRemove.db";
 
@@ -198,12 +209,18 @@ void TOntologyDataBaseWriter::TestRemove()
     {
         writer.writeOntology(ontologyNames.at(i), ontology.at(i));
     }
+
     QSet<QString> ontologyNamesCompare = writer.getOntologys();
     ontologyNamesCompare -= ontologyName;
+
     qWarning()<<"сэт с удалением :"<<ontologyNamesCompare;
+
     QSet<QString> compareSet = ontologyNamesCompare;
     writer.remove(ontologyName);
+
     const QSet<QString> realHash = writer.getOntologys();
+
     qWarning()<<"сэт полученный от функции :"<<realHash;
+
     QCOMPARE(compareSet, realHash);
 }
