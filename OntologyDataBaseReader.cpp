@@ -8,10 +8,12 @@ OntologyDataBaseReader::OntologyDataBaseReader(const QString &dataBaseName) :
 
 Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 {
-    QHash<int, QString> itemsNames = getNames();
-    QHash<int, QString> ontologyNames = getOntologyNames();
+    const QHash<int, QString> itemsNames = getNames();
+    const QHash<int, QString> ontologyNames = getOntologyNames();
+
+    const QSqlQuery my_query = getQuery(getDataBaseName());
+
     QSet<Triple> triples;
-    QSqlQuery my_query = getQuery(getDataBaseName());
 
     if(my_query.prepare("SELECT * "
                         "FROM Triples "

@@ -9,7 +9,7 @@ OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
 {
     remove(ontologyName);
-    QSet<Triple> writingOntology = ontology.getStorage();
+    const QSet<Triple> writingOntology = ontology.getStorage();
     foreach(Triple triple, writingOntology)
     {
         insert_Triples(triple, ontologyName);
@@ -19,8 +19,8 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
-    QSqlQuery my_query = getQuery(getDataBaseName());
-    QHash<int, QString> hash = getOntologyNames();
+    const QSqlQuery my_query = getQuery(getDataBaseName());
+    const QHash<int, QString> hash = getOntologyNames();
     if(!hash.contains(hash.key(ontologyName)))
     {
         return;
@@ -52,7 +52,7 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
 
 QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    const QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(my_query.prepare("SELECT id "
                         "FROM Names "
@@ -109,7 +109,7 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    const QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(my_query.prepare("SELECT id "
                         "FROM ontologyNames "
@@ -168,7 +168,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
 {
     QHash<int, QString> names = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    const QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(my_query.prepare("SELECT * "
                         "FROM Triples "
@@ -197,7 +197,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
         {
             while(my_query.next())
             {
-                QVariant dbValue = my_query.value("line_id").toString();
+                const QVariant dbValue = my_query.value("line_id").toString();
                 return dbValue.toString();
             }
         }

@@ -9,7 +9,7 @@ OntologyDataBaseInterface::OntologyDataBaseInterface(const QString &dataBaseName
 void OntologyDataBaseInterface::createTables()
 {
     //создаю запрос для подключения QSQLITE
-    QSqlQuery my_query = getQuery(dataBaseName_);
+    const QSqlQuery my_query = getQuery(dataBaseName_);
     //если открыта БД НЕуспешно
     if(!my_query.exec("CREATE TABLE IF NOT EXISTS Names"
                       "("
@@ -46,8 +46,8 @@ void OntologyDataBaseInterface::createTables()
 
 QHash<int, QString> OntologyDataBaseInterface::getNames()
 {
-    QHash<int, QString> hash;
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    const QHash<int, QString> hash;
+    const QSqlQuery my_query = getQuery(getDataBaseName());
     if(my_query.exec("SELECT id, name "
                      "FROM Names;"))
     {
@@ -66,8 +66,8 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
 
 QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
 {
-    QHash<int, QString> hash;
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    const QHash<int, QString> hash;
+    const QSqlQuery my_query = getQuery(getDataBaseName());
     if(my_query.exec("SELECT id, name "
                      "FROM ontologyNames;"))
     {
@@ -75,8 +75,8 @@ QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
         {
             while(my_query.next())
             {
-                QVariant id = my_query.value("id");
-                QVariant name = my_query.value("name");
+                const QVariant id = my_query.value("id");
+                const QVariant name = my_query.value("name");
                 hash.insert(id.toInt(), name.toString());
             }
         }
@@ -92,8 +92,8 @@ QString OntologyDataBaseInterface::getDataBaseName()
 bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 {
     //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
-    QHash<int, QString> hash = getOntologyNames();
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    const QHash<int, QString> hash = getOntologyNames();
+    const QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
     if(my_query.prepare("SELECT * "
@@ -128,13 +128,13 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 
 QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
 {
-    QSqlDatabase db1 = QSqlDatabase::database();
+    const QSqlDatabase db1 = QSqlDatabase::database();
     if(db1.isOpen())
     {
 //        qWarning()<<":) DB is opened adrealy! Use with care :)";
         return db1;
     }
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    const QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(fileName);
     if(!db.isOpen())
     {
