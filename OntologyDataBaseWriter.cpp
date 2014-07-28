@@ -19,7 +19,7 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
-    const QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery my_query = getQuery(getDataBaseName());
     const QHash<int, QString> hash = getOntologyNames();
     if(!hash.contains(hash.key(ontologyName)))
     {
@@ -30,7 +30,8 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
                         "FROM Triples "
                         "WHERE ontology_id = :ontologyName;"))
     {
-        my_query.bindValue(":ontologyName", hash.key(ontologyName));
+        const int ontologyID = hash.key(ontologyName);
+        my_query.bindValue(":ontologyName", ontologyID);
         my_query.exec();
     }
     else
@@ -52,7 +53,7 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
 
 QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
-    const QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(my_query.prepare("SELECT id "
                         "FROM Names "
@@ -98,7 +99,7 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
-    const QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(my_query.prepare("SELECT id "
                         "FROM ontologyNames "
@@ -146,7 +147,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
 {
     QHash<int, QString> names = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
-    const QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery my_query = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(my_query.prepare("SELECT * "
                         "FROM Triples "
@@ -156,10 +157,18 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
                         "AND object_id = :object "
                         "AND ontology_id = :ontology;"))
     {
-        my_query.bindValue(":subject", names.key(triple.subject()));
-        my_query.bindValue(":predicate", names.key(triple.predicate()));
-        my_query.bindValue(":object", names.key(triple.object()));
-        my_query.bindValue(":ontology", names.key(ontologyName));
+        const int subjectID = names.key(triple.subject());
+        my_query.bindValue(":subject", subjectID);
+
+        const int predicateID = names.key(triple.predicate());
+        my_query.bindValue(":predicate", predicateID);
+
+        const int objectID = names.key(triple.object());
+        my_query.bindValue(":object", objectID);
+
+        const int ontologyID = ontologyNames.key(ontologyName);
+        my_query.bindValue(":ontology", ontologyID);
+
         my_query.exec();
 
         if(my_query.first())
@@ -201,10 +210,18 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             }
             names = getNames();
             ontologyNames = getOntologyNames();
-            my_query.bindValue(":ontology_id", ontologyNames.key(ontologyName));
-            my_query.bindValue(":subject_id", names.key(triple.subject()));
-            my_query.bindValue(":predicate_id", names.key(triple.predicate()));
-            my_query.bindValue(":object_id", names.key(triple.object()));
+            const int ontologyID = ontologyNames.key(ontologyName);
+            my_query.bindValue(":ontology_id", ontologyID);
+
+            const int subjectID = names.key(triple.subject());
+            my_query.bindValue(":subject_id", subjectID);
+
+            const int predicateID = names.key(triple.predicate());
+            my_query.bindValue(":predicate_id", predicateID);
+
+            const int objectID = names.key(triple.object());
+            my_query.bindValue(":object_id", objectID);
+
             my_query.exec();
 
             return my_query.lastInsertId().toString();

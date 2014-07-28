@@ -203,8 +203,8 @@ void TOntologyDataBaseWriter::TestRemove()
     {
         writer.writeOntology(ontologyNames.at(i), ontology.at(i));
     }
-    QHash<int, QString> ontologyNames1 = writer.getOntologyNames();
-    QHash<int, QString> ontologyNames2 = writer.getOntologyNames();
+    QHash<int, QString> ontologyNames1 = getOntologyNames();
+    QHash<int, QString> ontologyNames2 = getOntologyNames();
     ontologyNames1.remove(ontologyNames2.key(ontologyName));
     qWarning()<<"хеш с удалением :"<<ontologyNames1;
     const QHash<int, QString> compareHash = ontologyNames1;  
