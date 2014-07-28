@@ -122,15 +122,6 @@ void TOntologyDataBaseWriter::TestReWriteOntology()
     writer.writeOntology(ontologyName, ontology);
     OntologyDataBaseReader reader(dataBaseName);
     Ontology resultOntology = reader.readOntology(ontologyName);
-    foreach(Triple triple, resultOntology.getStorage())
-    {
-        qWarning()<<"из записанной БД:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
-    }
-//    foreach(Triple triple, ontology)
-//    {
-//        qWarning()<<"входящая Онтология:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
-//    }
-    //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }
 
