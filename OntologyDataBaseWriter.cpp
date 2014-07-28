@@ -27,8 +27,8 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
     }
     //---------------------------------------------------------------------------------
     if(myQuery.prepare("DELETE "
-                        "FROM Triples "
-                        "WHERE ontology_id = :ontologyName;"))
+                       "FROM Triples "
+                       "WHERE ontology_id = :ontologyName;"))
     {
         const int ontologyID = hash.key(ontologyName);
         myQuery.bindValue(":ontologyName", ontologyID);
@@ -39,8 +39,8 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
         qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<myQuery.lastError();
     }
     if(myQuery.prepare("DELETE "
-                        "FROM ontologyNames "
-                        "WHERE name = :ontologyName;"))
+                       "FROM ontologyNames "
+                       "WHERE name = :ontologyName;"))
     {
         myQuery.bindValue(":ontologyName", ontologyName);
         myQuery.exec();
@@ -56,20 +56,17 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(myQuery.prepare("SELECT id "
-                        "FROM Names "
-                        "WHERE name = :nameToInsert;"))
+                       "FROM Names "
+                       "WHERE name = :nameToInsert;"))
     {
         myQuery.bindValue(":nameToInsert", nameToInsert);
         myQuery.exec();
 
-        if(myQuery.first())
+        while(myQuery.next())
         {
-            while(myQuery.next())
-            {
-                QString dbValue = myQuery.value("id").toString();
-                qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<dbValue;
-                return dbValue;
-            }
+            QString dbValue = myQuery.value("id").toString();
+            qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<dbValue;
+            return dbValue;
         }
     }
     else
@@ -80,8 +77,8 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     if(!myQuery.first())
     {
         if(myQuery.prepare("INSERT "
-                            "INTO Names "
-                            "VALUES (null, :nameToInsert);"))
+                           "INTO Names "
+                           "VALUES (null, :nameToInsert);"))
         {
             myQuery.bindValue(":nameToInsert", nameToInsert);
             myQuery.exec();
@@ -105,8 +102,8 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(myQuery.prepare("SELECT id "
-                        "FROM ontologyNames "
-                        "WHERE name = :nameToInsert;"))
+                       "FROM ontologyNames "
+                       "WHERE name = :nameToInsert;"))
     {
         myQuery.bindValue(":nameToInsert", nameToInsert);
         myQuery.exec();
@@ -129,8 +126,8 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     if(!myQuery.first())
     {
         if(myQuery.prepare("INSERT "
-                            "INTO ontologyNames "
-                            "VALUES (null, :nameToInsert);"))
+                           "INTO ontologyNames "
+                           "VALUES (null, :nameToInsert);"))
         {
             myQuery.bindValue(":nameToInsert", nameToInsert);
             myQuery.exec();
@@ -155,12 +152,12 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
     QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(myQuery.prepare("SELECT * "
-                        "FROM Triples "
-                        "WHERE "
-                        "subject_id = :subject "
-                        "AND predicate_id = :predicate "
-                        "AND object_id = :object "
-                        "AND ontology_id = :ontology;"))
+                       "FROM Triples "
+                       "WHERE "
+                       "subject_id = :subject "
+                       "AND predicate_id = :predicate "
+                       "AND object_id = :object "
+                       "AND ontology_id = :ontology;"))
     {
         const int subjectID = names.key(triple.subject());
         myQuery.bindValue(":subject", subjectID);
@@ -193,9 +190,9 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
     if(!myQuery.first())
     {
         if(myQuery.prepare("INSERT "
-                            "INTO Triples "
-                            "VALUES (null, :ontology_id, :subject_id"
-                            ", :predicate_id, :object_id);"))
+                           "INTO Triples "
+                           "VALUES (null, :ontology_id, :subject_id"
+                           ", :predicate_id, :object_id);"))
         {
             qWarning()<<"запись:"<<triple.toString();
             if(names.key(triple.subject()) == int())
