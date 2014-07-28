@@ -23,36 +23,28 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
         my_query.exec();
         qWarning()<<":ontologyName"<<ontologyNames.key(ontologyName);
 
-        if(my_query.first())
+        while(my_query.next())
         {
-            while(my_query.next())
-            {
-                const int subjectID = my_query.value("subject_id").toInt();
-                const QString subject = itemsNames.value(subjectID);
+            const int subjectID = my_query.value("subject_id").toInt();
+            const QString subject = itemsNames.value(subjectID);
 
-                const int predicateID = my_query.value("predicate_id").toInt();
-                const QString predicate = itemsNames.value(predicateID);
+            const int predicateID = my_query.value("predicate_id").toInt();
+            const QString predicate = itemsNames.value(predicateID);
 
-                const int objectID = my_query.value("object_id").toInt();
-                const QString object = itemsNames.value(objectID);
+            const int objectID = my_query.value("object_id").toInt();
+            const QString object = itemsNames.value(objectID);
 
-                const int ontologyID = my_query.value("ontology_id").toInt();
-                const QString ontology = ontologyNames.value(ontologyID);
+            const int ontologyID = my_query.value("ontology_id").toInt();
+            const QString ontology = ontologyNames.value(ontologyID);
 
-                triples.insert(Triple(subject, predicate, object));
-            }
+            qWarning()<<"читаю"<<Triple(subject, predicate, object).toString();
+            triples.insert(Triple(subject, predicate, object));
         }
+
     }
     else
     {
         qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
     }
-
-
-    foreach(Triple tr, triples)
-    {
-        qWarning()<<"readOntology"<<tr.toString();
-    }
-
     return Ontology(triples);
 }

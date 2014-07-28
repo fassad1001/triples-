@@ -45,7 +45,7 @@ void TOntologyDataBaseWriter::TestWriteOntology()
     Ontology resultOntology = reader.readOntology(ontologyName);
     foreach(Triple triple, resultOntology.getStorage())
     {
-        qWarning()<<"результаты:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
+        qWarning()<<"изначально:"<<ontologyName<<triple.toString();
     }
     //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
@@ -124,8 +124,12 @@ void TOntologyDataBaseWriter::TestReWriteOntology()
     Ontology resultOntology = reader.readOntology(ontologyName);
     foreach(Triple triple, resultOntology.getStorage())
     {
-        qWarning()<<"результаты:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
+        qWarning()<<"из записанной БД:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
     }
+//    foreach(Triple triple, ontology)
+//    {
+//        qWarning()<<"входящая Онтология:"<<ontologyName<<triple.subject()<<triple.predicate()<<triple.object();
+//    }
     //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }
@@ -203,42 +207,12 @@ void TOntologyDataBaseWriter::TestRemove()
     {
         writer.writeOntology(ontologyNames.at(i), ontology.at(i));
     }
-    QHash<int, QString> ontologyNames1 = getOntologyNames();
-    QHash<int, QString> ontologyNames2 = getOntologyNames();
-    ontologyNames1.remove(ontologyNames2.key(ontologyName));
-    qWarning()<<"хеш с удалением :"<<ontologyNames1;
-    const QHash<int, QString> compareHash = ontologyNames1;  
+    QSet<QString> ontologyNamesCompare = writer.getOntologys();
+    ontologyNamesCompare -= ontologyName;
+    qWarning()<<"сэт с удалением :"<<ontologyNamesCompare;
+    QSet<QString> compareSet = ontologyNamesCompare;
     writer.remove(ontologyName);
-    const QHash<int, QString> realHash = writer.getOntologyNames();
-    qWarning()<<"хеш полученный от функции :"<<realHash;
-    QCOMPARE(compareHash, realHash);
-}
-
-void TOntologyDataBaseWriter::TestWriteOntologyName_data()
-{
-    QTest::addColumn <QString> ("ontologyName");
-
-    QTest::newRow("non-existed-ontology")<<"Ontology1";
-
-    QTest::newRow("existed-ontology")<<"Ontology2";
-}
-
-void TOntologyDataBaseWriter::TestWriteOntologyName()
-{
-    QFETCH(QString, ontologyName);
-
-    const QString dataTag = QTest::currentDataTag();
-    const QString dataBaseName = dataTag + "TestRemove.db";
-
-    if(QFile::exists(dataBaseName))
-    {
-        if(!QFile::remove(dataBaseName))
-        {
-            QFAIL("can't remove testing database");
-        }
-    }
-
-    OntologyDataBaseWriter writer = OntologyDataBaseWriter(dataBaseName);
-    writer.insert_OntologyNames(ontologyName);
-    QCOMPARE(writer.isExists(ontologyName), true);
+    const QSet<QString> realHash = writer.getOntologys();
+    qWarning()<<"сэт полученный от функции :"<<realHash;
+    QCOMPARE(compareSet, realHash);
 }

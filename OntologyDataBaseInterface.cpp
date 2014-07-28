@@ -48,15 +48,22 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
     if(my_query.exec("SELECT id, name "
                      "FROM Names;"))
     {
-        if(my_query.first())
+        qWarning()<<"=============================================";
+        qWarning()<<"====";
+        qWarning()<<"==";
+        qWarning()<<"получаю хеш с именами:";
+        while(my_query.next())
         {
-            while(my_query.next())
-            {
-                const int id = my_query.value("id").toInt();
-                const QString name = my_query.value("name").toString();
-                hash.insert(id, name);
-            }
+            const int id = my_query.value("id").toInt();
+            const QString name = my_query.value("name").toString();
+            qWarning()<<id<<name;
+            hash.insert(id, name);
         }
+        qWarning()<<"хеш с именами получен!";
+        qWarning()<<"==";
+        qWarning()<<"====";
+        qWarning()<<"=============================================";
+
     }
     return hash;
 }
@@ -68,15 +75,21 @@ QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
     if(my_query.exec("SELECT id, name "
                      "FROM ontologyNames;"))
     {
-        if(my_query.first())
-        {
+            qWarning()<<"=============================================";
+            qWarning()<<"====";
+            qWarning()<<"==";
+            qWarning()<<"получаю хеш с именамиОнтологий:";
             while(my_query.next())
             {
                 const QVariant id = my_query.value("id");
                 const QVariant name = my_query.value("name");
+                qWarning()<<id<<name;
                 hash.insert(id.toInt(), name.toString());
             }
-        }
+            qWarning()<<"хеш с именамиОнтологий получен!";
+            qWarning()<<"==";
+            qWarning()<<"====";
+            qWarning()<<"=============================================";
     }
     return hash;
 }
@@ -116,12 +129,23 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
     return false;
 }
 
+QSet<QString> OntologyDataBaseInterface::getOntologys()
+{
+    QSet<QString> resultOntologys;
+    QHash<int, QString> ontologys = getOntologyNames();
+    foreach(QString ontology, ontologys.values())
+    {
+        resultOntologys += ontology;
+    }
+    return resultOntologys;
+}
+
 QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
 {
     QSqlDatabase db1 = QSqlDatabase::database();
     if(db1.isOpen())
     {
-//        qWarning()<<":) DB is opened adrealy! Use with care :)";
+        //        qWarning()<<":) DB is opened adrealy! Use with care :)";
         return db1;
     }
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -137,7 +161,7 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
     }
     else
     {
-//        qWarning()<<"DB is opened adrealy! Use with care :)";
+        //        qWarning()<<"DB is opened adrealy! Use with care :)";
         return db;
     }
 }

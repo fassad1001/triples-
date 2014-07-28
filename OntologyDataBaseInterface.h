@@ -10,6 +10,8 @@ public:
     OntologyDataBaseInterface(const QString &dataBaseName);
 
     bool isExists(const QString &ontologyName);
+
+    QSet<QString> getOntologys();
 protected:
     QSqlQuery getQuery(const QString &fileName);
     QSqlDatabase getDataBase(const QString &fileName);
