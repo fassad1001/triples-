@@ -19,54 +19,54 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery myQuery = getQuery(getDataBaseName());
     const QHash<int, QString> hash = getOntologyNames();
     if(!hash.contains(hash.key(ontologyName)))
     {
         return;
     }
     //---------------------------------------------------------------------------------
-    if(my_query.prepare("DELETE "
+    if(myQuery.prepare("DELETE "
                         "FROM Triples "
                         "WHERE ontology_id = :ontologyName;"))
     {
         const int ontologyID = hash.key(ontologyName);
-        my_query.bindValue(":ontologyName", ontologyID);
-        my_query.exec();
+        myQuery.bindValue(":ontologyName", ontologyID);
+        myQuery.exec();
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<myQuery.lastError();
     }
-    if(my_query.prepare("DELETE "
+    if(myQuery.prepare("DELETE "
                         "FROM ontologyNames "
                         "WHERE name = :ontologyName;"))
     {
-        my_query.bindValue(":ontologyName", ontologyName);
-        my_query.exec();
+        myQuery.bindValue(":ontologyName", ontologyName);
+        myQuery.exec();
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<myQuery.lastError();
     }
 }
 
 QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
-    if(my_query.prepare("SELECT id "
+    if(myQuery.prepare("SELECT id "
                         "FROM Names "
                         "WHERE name = :nameToInsert;"))
     {
-        my_query.bindValue(":nameToInsert", nameToInsert);
-        my_query.exec();
+        myQuery.bindValue(":nameToInsert", nameToInsert);
+        myQuery.exec();
 
-        if(my_query.first())
+        if(myQuery.first())
         {
-            while(my_query.next())
+            while(myQuery.next())
             {
-                QString dbValue = my_query.value("id").toString();
+                QString dbValue = myQuery.value("id").toString();
                 qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<dbValue;
                 return dbValue;
             }
@@ -74,25 +74,25 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на запрос к имени в Names:"<<myQuery.lastError();
     }
     //---------------------------------------------------------------------------------
-    if(!my_query.first())
+    if(!myQuery.first())
     {
-        if(my_query.prepare("INSERT "
+        if(myQuery.prepare("INSERT "
                             "INTO Names "
                             "VALUES (null, :nameToInsert);"))
         {
-            my_query.bindValue(":nameToInsert", nameToInsert);
-            my_query.exec();
+            myQuery.bindValue(":nameToInsert", nameToInsert);
+            myQuery.exec();
 
 
-            qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<my_query.lastInsertId().toString();
-            return my_query.lastInsertId().toString();
+            qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<myQuery.lastInsertId().toString();
+            return myQuery.lastInsertId().toString();
         }
         else
         {
-            qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<my_query.lastError();
+            qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<myQuery.lastError();
         }
         //----------------------------------------------------------------------------------
 
@@ -102,20 +102,20 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
-    if(my_query.prepare("SELECT id "
+    if(myQuery.prepare("SELECT id "
                         "FROM ontologyNames "
                         "WHERE name = :nameToInsert;"))
     {
-        my_query.bindValue(":nameToInsert", nameToInsert);
-        my_query.exec();
+        myQuery.bindValue(":nameToInsert", nameToInsert);
+        myQuery.exec();
 
-        if(my_query.first())
+        if(myQuery.first())
         {
-            while(my_query.next())
+            while(myQuery.next())
             {
-                QString dbValue = my_query.value("id").toString();
+                QString dbValue = myQuery.value("id").toString();
                 qWarning()<<"запись значенияОнтологии"<<nameToInsert<<"с айди"<<dbValue;
                 return dbValue;
             }
@@ -123,24 +123,24 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к имени онтологии в ontologyNames:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на запрос к имени онтологии в ontologyNames:"<<myQuery.lastError();
     }
     //---------------------------------------------------------------------------------
-    if(!my_query.first())
+    if(!myQuery.first())
     {
-        if(my_query.prepare("INSERT "
+        if(myQuery.prepare("INSERT "
                             "INTO ontologyNames "
                             "VALUES (null, :nameToInsert);"))
         {
-            my_query.bindValue(":nameToInsert", nameToInsert);
-            my_query.exec();
+            myQuery.bindValue(":nameToInsert", nameToInsert);
+            myQuery.exec();
 
-            qWarning()<<"запись значенияОнтологии"<<nameToInsert<<"с айди"<<my_query.lastInsertId().toString();
-            return my_query.lastInsertId().toString();
+            qWarning()<<"запись значенияОнтологии"<<nameToInsert<<"с айди"<<myQuery.lastInsertId().toString();
+            return myQuery.lastInsertId().toString();
         }
         else
         {
-            qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<my_query.lastError();
+            qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<myQuery.lastError();
         }
         //----------------------------------------------------------------------------------
 
@@ -152,9 +152,9 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
 {
     QHash<int, QString> names = getNames();
     QHash<int, QString> ontologyNames = getOntologyNames();
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
-    if(my_query.prepare("SELECT * "
+    if(myQuery.prepare("SELECT * "
                         "FROM Triples "
                         "WHERE "
                         "subject_id = :subject "
@@ -163,36 +163,36 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
                         "AND ontology_id = :ontology;"))
     {
         const int subjectID = names.key(triple.subject());
-        my_query.bindValue(":subject", subjectID);
+        myQuery.bindValue(":subject", subjectID);
 
         const int predicateID = names.key(triple.predicate());
-        my_query.bindValue(":predicate", predicateID);
+        myQuery.bindValue(":predicate", predicateID);
 
         const int objectID = names.key(triple.object());
-        my_query.bindValue(":object", objectID);
+        myQuery.bindValue(":object", objectID);
 
         const int ontologyID = ontologyNames.key(ontologyName);
-        my_query.bindValue(":ontology", ontologyID);
+        myQuery.bindValue(":ontology", ontologyID);
 
-        my_query.exec();
+        myQuery.exec();
 
-        if(my_query.first())
+        if(myQuery.first())
         {
-            while(my_query.next())
+            while(myQuery.next())
             {
-                const QVariant dbValue = my_query.value("line_id").toString();
+                const QVariant dbValue = myQuery.value("line_id").toString();
                 return dbValue.toString();
             }
         }
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<myQuery.lastError();
     }
     //---------------------------------------------------------------------------------
-    if(!my_query.first())
+    if(!myQuery.first())
     {
-        if(my_query.prepare("INSERT "
+        if(myQuery.prepare("INSERT "
                             "INTO Triples "
                             "VALUES (null, :ontology_id, :subject_id"
                             ", :predicate_id, :object_id);"))
@@ -218,28 +218,28 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             ontologyNames = getOntologyNames();
 
             const int ontologyID = ontologyNames.key(ontologyName);
-            my_query.bindValue(":ontology_id", ontologyID);
+            myQuery.bindValue(":ontology_id", ontologyID);
 
             const int subjectID = names.key(triple.subject());
-            my_query.bindValue(":subject_id", subjectID);
+            myQuery.bindValue(":subject_id", subjectID);
 
             const int predicateID = names.key(triple.predicate());
-            my_query.bindValue(":predicate_id", predicateID);
+            myQuery.bindValue(":predicate_id", predicateID);
 
             const int objectID = names.key(triple.object());
-            my_query.bindValue(":object_id", objectID);
+            myQuery.bindValue(":object_id", objectID);
 
             qWarning()<<"subject"<<subjectID<<names.value(subjectID);
             qWarning()<<"predicate"<<predicateID<<names.value(predicateID);
             qWarning()<<"object"<<objectID<<names.value(objectID);
 
-            my_query.exec();
+            myQuery.exec();
 
-            return my_query.lastInsertId().toString();
+            return myQuery.lastInsertId().toString();
         }
         else
         {
-            qWarning()<<"Ошибка при подготовке запроса на добавление тройки:"<<my_query.lastError();
+            qWarning()<<"Ошибка при подготовке запроса на добавление тройки:"<<myQuery.lastError();
         }
         //----------------------------------------------------------------------------------
     }
