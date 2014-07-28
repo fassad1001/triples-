@@ -173,13 +173,10 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
 
         myQuery.exec();
 
-        if(myQuery.first())
+        while(myQuery.next())
         {
-            while(myQuery.next())
-            {
-                const QVariant dbValue = myQuery.value("line_id").toString();
-                return dbValue.toString();
-            }
+            const QVariant dbValue = myQuery.value("line_id").toString();
+            return dbValue.toString();
         }
     }
     else
