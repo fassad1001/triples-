@@ -9,25 +9,25 @@ OntologyDataBaseInterface::OntologyDataBaseInterface(const QString &dataBaseName
 void OntologyDataBaseInterface::createTables()
 {
     //создаю запрос для подключения QSQLITE
-    QSqlQuery my_query = getQuery(dataBaseName_);
+    QSqlQuery myQuery = getQuery(dataBaseName_);
     //если открыта БД НЕуспешно
-    if(!my_query.exec("CREATE TABLE IF NOT EXISTS Names"
+    if(!myQuery.exec("CREATE TABLE IF NOT EXISTS Names"
                       "("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "name VARCHAR NOT NULL"
                       ");"))
     {
-        qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при создании таблицы Names:"<<myQuery.lastError();
     }
-    if(!my_query.exec("CREATE TABLE IF NOT EXISTS ontologyNames"
+    if(!myQuery.exec("CREATE TABLE IF NOT EXISTS ontologyNames"
                       "("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "name VARCHAR NOT NULL"
                       ");"))
     {
-        qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при создании таблицы Names:"<<myQuery.lastError();
     }
-    if(!my_query.exec("CREATE TABLE IF NOT EXISTS Triples "
+    if(!myQuery.exec("CREATE TABLE IF NOT EXISTS Triples "
                       "("
                       "line_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "ontology_id INTEGER,"
@@ -37,25 +37,25 @@ void OntologyDataBaseInterface::createTables()
                       "FOREIGN KEY(ontology_id) REFERENCES Names(id)"
                       ");"))
     {
-        qWarning()<<"Ошибка при создании таблицы Triples:"<<my_query.lastError();
+        qWarning()<<"Ошибка при создании таблицы Triples:"<<myQuery.lastError();
     }
 }
 
 QHash<int, QString> OntologyDataBaseInterface::getNames()
 {
     QHash<int, QString> hash;
-    QSqlQuery my_query = getQuery(getDataBaseName());
-    if(my_query.exec("SELECT id, name "
+    QSqlQuery myQuery = getQuery(getDataBaseName());
+    if(myQuery.exec("SELECT id, name "
                      "FROM Names;"))
     {
         qWarning()<<"=============================================";
         qWarning()<<"====";
         qWarning()<<"==";
         qWarning()<<"получаю хеш с именами:";
-        while(my_query.next())
+        while(myQuery.next())
         {
-            const int id = my_query.value("id").toInt();
-            const QString name = my_query.value("name").toString();
+            const int id = myQuery.value("id").toInt();
+            const QString name = myQuery.value("name").toString();
             qWarning()<<id<<name;
             hash.insert(id, name);
         }
@@ -71,18 +71,18 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
 QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
 {
     QHash<int, QString> hash;
-    QSqlQuery my_query = getQuery(getDataBaseName());
-    if(my_query.exec("SELECT id, name "
+    QSqlQuery myQuery = getQuery(getDataBaseName());
+    if(myQuery.exec("SELECT id, name "
                      "FROM ontologyNames;"))
     {
             qWarning()<<"=============================================";
             qWarning()<<"====";
             qWarning()<<"==";
             qWarning()<<"получаю хеш с именамиОнтологий:";
-            while(my_query.next())
+            while(myQuery.next())
             {
-                const QVariant id = my_query.value("id");
-                const QVariant name = my_query.value("name");
+                const QVariant id = myQuery.value("id");
+                const QVariant name = myQuery.value("name");
                 qWarning()<<id<<name;
                 hash.insert(id.toInt(), name.toString());
             }
@@ -103,17 +103,17 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
 {
     //выполнить запрос на существование записей в которых айди равен айдишнику текстового поля из
     const QHash<int, QString> hash = getOntologyNames();
-    QSqlQuery my_query = getQuery(getDataBaseName());
+    QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     //удалить predicate если не существует
-    if(my_query.prepare("SELECT * "
+    if(myQuery.prepare("SELECT * "
                         "FROM ontologyNames "
                         "WHERE id = :ontologyName;"))
     {
-        my_query.bindValue(":ontologyName", hash.key(ontologyName));
-        my_query.exec();
+        myQuery.bindValue(":ontologyName", hash.key(ontologyName));
+        myQuery.exec();
 
-        if(my_query.first())
+        if(myQuery.first())
         {
             return true;
         }
@@ -124,7 +124,7 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<myQuery.lastError();
     }
     return false;
 }
