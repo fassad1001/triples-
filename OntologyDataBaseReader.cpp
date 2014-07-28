@@ -48,3 +48,13 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
     }
     return Ontology(triples);
 }
+
+void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString &ontologyName)
+{
+
+}
+
+void OntologyDataBaseReader::importFromCSV(const QString &fileName, const QString &ontologyName)
+{
+
+}

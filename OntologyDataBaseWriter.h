@@ -13,6 +13,7 @@ public:
 
     void writeOntology(const QString &ontologyName, const Ontology &ontology);
     void remove(const QString &ontologyName);
+
 protected:
     QString insert_Names(const QString &nameToInsert);
     QString insert_Triples(const Triple &triple, const QString &ontologyName);
