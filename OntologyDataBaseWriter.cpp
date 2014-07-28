@@ -60,16 +60,7 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     {
         my_query.bindValue(":nameToInsert", nameToInsert);
         my_query.exec();
-    }
-    else
-    {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к имени в Names:"<<my_query.lastError();
-    }
-    if(!my_query.isActive())
-    {
-    }
-    else
-    {
+
         if(my_query.first())
         {
             while(my_query.next())
@@ -78,6 +69,10 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
                 return dbValue.toString();
             }
         }
+    }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на запрос к имени в Names:"<<my_query.lastError();
     }
     //---------------------------------------------------------------------------------
     if(!my_query.first())
@@ -88,18 +83,12 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
         {
             my_query.bindValue(":nameToInsert", nameToInsert);
             my_query.exec();
+
+            return my_query.lastInsertId().toString();
         }
         else
         {
             qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<my_query.lastError();
-        }
-        if(!my_query.isActive())
-        {
-            qWarning()<<"Ошибка при выполнениии запроса на добавление имени :"<<my_query.lastError();
-        }
-        else
-        {
-            return my_query.lastInsertId().toString();
         }
         //----------------------------------------------------------------------------------
 
@@ -117,16 +106,7 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     {
         my_query.bindValue(":nameToInsert", nameToInsert);
         my_query.exec();
-    }
-    else
-    {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к имени онтологии в ontologyNames:"<<my_query.lastError();
-    }
-    if(!my_query.isActive())
-    {
-    }
-    else
-    {
+
         if(my_query.first())
         {
             while(my_query.next())
@@ -135,6 +115,10 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
                 return dbValue.toString();
             }
         }
+    }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на запрос к имени онтологии в ontologyNames:"<<my_query.lastError();
     }
     //---------------------------------------------------------------------------------
     if(!my_query.first())
@@ -145,18 +129,12 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
         {
             my_query.bindValue(":nameToInsert", nameToInsert);
             my_query.exec();
+
+            return my_query.lastInsertId().toString();
         }
         else
         {
             qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<my_query.lastError();
-        }
-        if(!my_query.isActive())
-        {
-            qWarning()<<"Ошибка при выполнениии запроса на добавление имени онтологии:"<<my_query.lastError();
-        }
-        else
-        {
-            return my_query.lastInsertId().toString();
         }
         //----------------------------------------------------------------------------------
 
@@ -183,16 +161,7 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
         my_query.bindValue(":object", names.key(triple.object()));
         my_query.bindValue(":ontology", names.key(ontologyName));
         my_query.exec();
-    }
-    else
-    {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<my_query.lastError();
-    }
-    if(!my_query.isActive())
-    {
-    }
-    else
-    {
+
         if(my_query.first())
         {
             while(my_query.next())
@@ -201,6 +170,10 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
                 return dbValue.toString();
             }
         }
+    }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<my_query.lastError();
     }
     //---------------------------------------------------------------------------------
     if(!my_query.first())
@@ -233,18 +206,12 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
             my_query.bindValue(":predicate_id", names.key(triple.predicate()));
             my_query.bindValue(":object_id", names.key(triple.object()));
             my_query.exec();
+
+            return my_query.lastInsertId().toString();
         }
         else
         {
             qWarning()<<"Ошибка при подготовке запроса на добавление тройки:"<<my_query.lastError();
-        }
-        if(!my_query.isActive())
-        {
-            qWarning()<<"Ошибка при выполнениии запроса на добавление тройки:"<<my_query.lastError();
-        }
-        else
-        {
-            return my_query.lastInsertId().toString();
         }
         //----------------------------------------------------------------------------------
     }

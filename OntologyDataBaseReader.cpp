@@ -22,15 +22,7 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
         my_query.bindValue(":ontologyName", ontologyNames.key(ontologyName));
         my_query.exec();
         qWarning()<<":ontologyName"<<ontologyNames.key(ontologyName);
-        qWarning()<<my_query.lastError();
-    }
-    else
-    {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
-    }
 
-    if(my_query.isActive())
-    {
         if(my_query.first())
         {
             while(my_query.next())
@@ -44,6 +36,12 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
             }
         }
     }
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+    }
+
+
     foreach(Triple tr, triples)
     {
         qWarning()<<"readOntology"<<tr.toString();

@@ -15,8 +15,7 @@ void OntologyDataBaseInterface::createTables()
                       "("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "name VARCHAR NOT NULL"
-                      ");")
-            || !my_query.isActive())
+                      ");"))
     {
         qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
     }
@@ -24,8 +23,7 @@ void OntologyDataBaseInterface::createTables()
                       "("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "name VARCHAR NOT NULL"
-                      ");")
-            || !my_query.isActive())
+                      ");"))
     {
         qWarning()<<"Ошибка при создании таблицы Names:"<<my_query.lastError();
     }
@@ -37,8 +35,7 @@ void OntologyDataBaseInterface::createTables()
                       "predicate_id INTEGER NOT NULL,"
                       "object_id INTEGER NOT NULL,"
                       "FOREIGN KEY(ontology_id) REFERENCES Names(id)"
-                      ");")
-            || !my_query.isActive())
+                      ");"))
     {
         qWarning()<<"Ошибка при создании таблицы Triples:"<<my_query.lastError();
     }
@@ -102,16 +99,7 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
     {
         my_query.bindValue(":ontologyName", hash.key(ontologyName));
         my_query.exec();
-    }
-    else
-    {
-        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
-    }
-    if(!my_query.isActive())
-    {
-    }
-    else
-    {
+
         if(my_query.first())
         {
             return true;
@@ -121,8 +109,10 @@ bool OntologyDataBaseInterface::isExists(const QString &ontologyName)
             return false;
         }
     }
-    //---------------------------------------------------------------------------------
-    //Names
+    else
+    {
+        qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<my_query.lastError();
+    }
     return false;
 }
 
