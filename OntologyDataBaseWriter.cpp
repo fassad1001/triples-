@@ -251,6 +251,8 @@ Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName, const QS
         const QString object = triplesLine.at(2);
         triples += Triple(subject, predicate, object);
     }
-    return Ontology(triples);
     file.close();
+    const Ontology ontology = Ontology(triples);
+    writeOntology(ontologyName, ontology);
+    return ontology;
 }

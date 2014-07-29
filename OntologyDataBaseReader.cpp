@@ -61,6 +61,5 @@ void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString 
     {
         out << triple.toString() + "\n";
     }
-    // optional, as QFile destructor will already do it:
     file.close();
 }
