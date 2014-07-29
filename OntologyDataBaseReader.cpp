@@ -64,27 +64,3 @@ void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString 
     // optional, as QFile destructor will already do it:
     file.close();
 }
-
-QSet<Triple> OntologyDataBaseReader::importFromCSV(const QString &fileName)
-{
-    //у меня есть файл
-    //
-    QSet<Triple> triples;
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly)) {
-        return QSet<Triple>();
-    }
-
-    QTextStream in(&file);
-
-    while(!in.atEnd()) {
-        QString line = in.readLine();
-        QStringList triplesLine = line.split(",");
-        const QString subject = triplesLine.at(0);
-        const QString predicate = triplesLine.at(1);
-        const QString object = triplesLine.at(2);
-        triples += Triple(subject, predicate, object);
-    }
-    return triples;
-    file.close();
-}

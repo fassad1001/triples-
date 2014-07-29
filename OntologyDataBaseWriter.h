@@ -14,10 +14,12 @@ public:
     void writeOntology(const QString &ontologyName, const Ontology &ontology);
     void remove(const QString &ontologyName);
 
+    Ontology importFromCSV(const QString &fileName, const QString ontologyName);
 protected:
     QString insert_Names(const QString &nameToInsert);
     QString insert_Triples(const Triple &triple, const QString &ontologyName);
     QString insert_OntologyNames(const QString &nameToInsert);
+
 };
 
 #endif // ONTOLOGYDATABASEWRITER_H
