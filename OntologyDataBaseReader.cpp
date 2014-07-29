@@ -37,7 +37,6 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
             const int ontologyID = myQuery.value("ontology_id").toInt();
             const QString ontology = ontologyNames.value(ontologyID);
 
-            qWarning()<<"читаю"<<Triple(subject, predicate, object).toString();
             triples.insert(Triple(subject, predicate, object));
         }
 
