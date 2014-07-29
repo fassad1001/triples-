@@ -187,7 +187,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
                            "VALUES (null, :ontology_id, :subject_id"
                            ", :predicate_id, :object_id);"))
         {
-            qWarning()<<"запись:"<<triple.toString();
             if(names.key(triple.subject()) == int())
             {
                 insert_Names(triple.subject());
@@ -218,10 +217,6 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
 
             const int objectID = names.key(triple.object());
             myQuery.bindValue(":object_id", objectID);
-
-            qWarning()<<"subject"<<subjectID<<names.value(subjectID);
-            qWarning()<<"predicate"<<predicateID<<names.value(predicateID);
-            qWarning()<<"object"<<objectID<<names.value(objectID);
 
             myQuery.exec();
 
