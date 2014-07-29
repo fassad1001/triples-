@@ -65,7 +65,6 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
         while(myQuery.next())
         {
             QString dbValue = myQuery.value("id").toString();
-            qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<dbValue;
             return dbValue;
         }
     }
@@ -84,7 +83,6 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
             myQuery.exec();
 
 
-            qWarning()<<"запись значения"<<nameToInsert<<"с айди"<<myQuery.lastInsertId().toString();
             return myQuery.lastInsertId().toString();
         }
         else
@@ -113,7 +111,6 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
             while(myQuery.next())
             {
                 QString dbValue = myQuery.value("id").toString();
-                qWarning()<<"запись значенияОнтологии"<<nameToInsert<<"с айди"<<dbValue;
                 return dbValue;
             }
         }
@@ -132,7 +129,6 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
             myQuery.bindValue(":nameToInsert", nameToInsert);
             myQuery.exec();
 
-            qWarning()<<"запись значенияОнтологии"<<nameToInsert<<"с айди"<<myQuery.lastInsertId().toString();
             return myQuery.lastInsertId().toString();
         }
         else
