@@ -14,10 +14,11 @@ class OntologyDataBaseBenchmark : public OntologyBenchmark
 {
 public:
     OntologyDataBaseBenchmark();
-    int exportToCSVBenchmark(const int &size);
-    int importFromCSVBenchmark(const int &size);
-protected:
+    int exportToCSVBenchmark(const Ontology &ontology);
+    int importFromCSVBenchmark(const Ontology &ontology);
+    void commit();
     Ontology generate(const int &size);
+protected:
 };
 
 #endif // ONTOLOGYDATABASEBENCHMARK_H

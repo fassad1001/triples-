@@ -9,6 +9,7 @@ public:
     OntologyBenchmark();
     void timeStart();
     int getTime();
+    int getLocalTime();
     void resetStatistic();
 
     int getMaxTime() const;
@@ -47,6 +48,7 @@ protected:
     QString getDataName() const;
     QString getFunctionName() const;
     void setFunctionName(const QString &functionName);
+    void setTimeLocal(int time);
 private:
 
     QTime time_; //хранит время которое было затрачено на ту или иную функцию с данными
@@ -54,6 +56,7 @@ private:
     bool start_;//говорит о том что метод start для счётчика был выполнен
     QString dataName_; //хранит в себе имя последних испльзованных данных
     QString functionName_; //хранит в себе имя последней тестируемой функции
+    int intTime_;
 
 };
 

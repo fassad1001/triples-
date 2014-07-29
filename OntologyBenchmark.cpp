@@ -23,6 +23,11 @@ int OntologyBenchmark::getTime()
     return time_.restart();
 }
 
+int OntologyBenchmark::getLocalTime()
+{
+    return intTime_;
+}
+
 void OntologyBenchmark::resetStatistic()
 {
     timeCollection_.clear();
@@ -341,6 +346,11 @@ QString OntologyBenchmark::getFunctionName() const
 void OntologyBenchmark::setFunctionName(const QString &functionName)
 {
     functionName_ = functionName;
+}
+
+void OntologyBenchmark::setTimeLocal(int time)
+{
+    intTime_ = time;
 }
 
 void OntologyBenchmark::setDataName(const QString &dataName)

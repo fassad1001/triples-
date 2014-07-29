@@ -24,6 +24,8 @@
 
 #include "TOntologyDataBaseReader.h"
 
+#include "OntologyDataBaseBenchmark.h"
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -43,11 +45,11 @@ int main(int argc, char *argv[])
     //    TOntologyBuilder ontologyBuilder;
     //    QTest::qExec(&ontologyBuilder);
 
-        TOntologyDataBaseWriter writer;
-        QTest::qExec(&writer);
+//        TOntologyDataBaseWriter writer;
+//        QTest::qExec(&writer);
 
-        TOntologyDataBaseReader reader;
-        QTest::qExec(&reader);
+//        TOntologyDataBaseReader reader;
+//        QTest::qExec(&reader);
 
 
 //    QFile::remove("test.db");
@@ -69,7 +71,22 @@ int main(int argc, char *argv[])
 //                                               <<Triple("5", "5", "5")
 //                                               <<Triple("6", "6", "6")
 //                                               <<Triple("7", "7", "7")));
-
+    OntologyDataBaseBenchmark benchmark;
+    qWarning()<<"start benchmark";
+    for(int i = 5; i<= 100; i += 5)
+    {
+        const Ontology ontology = benchmark.generate(i);
+        qWarning()<<"i="<<QString::number(i);
+        qWarning()<<benchmark.exportToCSVBenchmark(ontology);
+        benchmark.commit();
+        qWarning()<<"commit";
+        qWarning()<<benchmark.importFromCSVBenchmark(ontology);
+        benchmark.commit();
+        qWarning()<<"commit";
+    }
+    const QString fileName = "D:/отчёты/benchmark.csv";
+    QFile::remove(fileName);
+    benchmark.writeFile(fileName);
 
     //    OntologyGenerator generator;
     //    OntologyBenchmark benchmark;

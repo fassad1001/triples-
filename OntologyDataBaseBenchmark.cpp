@@ -4,37 +4,40 @@ OntologyDataBaseBenchmark::OntologyDataBaseBenchmark()
 {
 }
 
-int OntologyDataBaseBenchmark::exportToCSVBenchmark(const int &size)
+int OntologyDataBaseBenchmark::exportToCSVBenchmark(const Ontology &ontology)
 {
     setFunctionName("exportToCSVBenchmark");
+    const int size = ontology.allClasses().count();
     setDataName(QString::number(size));
     //генерирую имя онтологии
     const QString dataBaseName = getFunctionName() + getDataName() + ".db";
     const QString ontologyName = "ontology" + QString::number(size);
     const QString fileName = "exportToCSVBenchmark" + QString::number(size) + ".csv";
-    //генерирую онтологию
-    const Ontology ontology = generate(size);
     //пишу ее в БД
     OntologyDataBaseWriter(dataBaseName).writeOntology(ontologyName, ontology);
+    qWarning()<<"пишу онтологию";
     //начинаю таймер
+    qWarning()<<"начинаю считать";
     timeStart();
     //пишу в CSV
     OntologyDataBaseReader(dataBaseName).exportToCSV(fileName, ontologyName);
     //останавливаю таймер
     //возвращаю результат
-    return getTime();
+    const int time = getTime();
+    qWarning()<<"заканчиваю считать";
+    setTimeLocal(time);
+    return time;
 }
 
-int OntologyDataBaseBenchmark::importFromCSVBenchmark(const int &size)
+int OntologyDataBaseBenchmark::importFromCSVBenchmark(const Ontology &ontology)
 {
     setFunctionName("importFromCSVBenchmark");
+    const int size = ontology.allClasses().count();
     setDataName(QString::number(size));
     //генерирую имя онтологии
     const QString dataBaseName = getFunctionName() + getDataName() + ".db";
     const QString ontologyName = "ontology" + QString::number(size);
     const QString fileName = "exportToCSVBenchmark" + QString::number(size) + ".csv";
-    //генерирую онтологию
-    const Ontology ontology = generate(size);
     //пишу ее в БД
     OntologyDataBaseWriter(dataBaseName).writeOntology(ontologyName, ontology);
     //пишу в CSV
@@ -44,10 +47,17 @@ int OntologyDataBaseBenchmark::importFromCSVBenchmark(const int &size)
     OntologyDataBaseWriter(dataBaseName).importFromCSV(fileName, ontologyName);
     //останавливаю таймер
     //возвращаю результат
-    return getTime();
+    const int time = getTime();
+    setTimeLocal(time);
+    return time;
+}
+
+void OntologyDataBaseBenchmark::commit()
+{
+    setTime(getFunctionName(), getDataName(), getLocalTime());
 }
 
 Ontology OntologyDataBaseBenchmark::generate(const int &size)
 {
-    return OntologyGenerator().generate(size, 40, 30, 4);
+    return OntologyGenerator().generate(size, 0, 1, 0);
 }
