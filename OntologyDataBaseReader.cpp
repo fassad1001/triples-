@@ -21,7 +21,6 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
     {
         myQuery.bindValue(":ontologyName", ontologyNames.key(ontologyName));
         myQuery.exec();
-        qWarning()<<":ontologyName"<<ontologyNames.key(ontologyName);
 
         while(myQuery.next())
         {
@@ -50,9 +49,6 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 
 void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString &ontologyName)
 {
-    //у меня есть имя онтологии
-    //есть все тройки для этой онтологии
-    //все тройки перебираю и отправляю в файл
     Ontology triples = readOntology(ontologyName);
     QFile file(fileName);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
