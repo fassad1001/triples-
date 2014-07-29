@@ -65,6 +65,14 @@ public:
     bool isMinimal(QSet<Pair> &redundantPairs) const;
 
     void minimalize();
+
+    void print();
+    bool operator ==(const Ontology &ontology) const
+    {
+        QSet<Triple> first = getStorage();
+        QSet<Triple> second = ontology.getStorage();
+        return (first == second);
+    }
 };
 Q_DECLARE_METATYPE(Ontology)
 

@@ -18,6 +18,8 @@ private slots:
     void TestReadOntology_data();
     void TestReadOntology();
 
+    void TestImportCSV_data();
+    void TestImportCSV();
 };
 
 #endif // TONTOLOGYDATABASEREADER_H

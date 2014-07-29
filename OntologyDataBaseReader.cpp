@@ -59,7 +59,10 @@ void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString 
     QTextStream out(&file);
     foreach(Triple triple, triples.getStorage())
     {
-        out << triple.toString() + "\n";
+        const QString subject = triple.subject();
+        const QString predicate = triple.predicate();
+        const QString object = triple.object();
+        out << subject + "," + predicate + "," + object + "\n";
     }
     file.close();
 }

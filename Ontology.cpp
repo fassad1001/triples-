@@ -515,3 +515,12 @@ void Ontology::minimalize()
     }
 }
 
+void Ontology::print()
+{
+    const QSet<Triple> triples = getStorage();
+    foreach(Triple triple, triples)
+    {
+        qWarning()<<triple.toString();
+    }
+}
+
