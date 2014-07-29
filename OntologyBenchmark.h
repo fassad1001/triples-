@@ -15,18 +15,11 @@ public:
     int getMinTime() const;
     int getAverageTime() const;
 
-    QString anyClass(const Ontology &ontology);
-    QString anyInstance(const Ontology &ontology);
-    QString anyProperty(const Ontology &ontology);
-    QString anyValue(const Ontology &ontology);
 
     QString OntologyDataToString(const int classCountSummary
                                  , const int classPropertiesCount
                                  , const int instancesCountSummary
                                  , const int classInstancesCount);
-    QString getDataName() const;
-    QString getFunctionName() const;
-    void setFunctionName(const QString &functionName);
 
     int benchmarkIsMinimal(const Ontology &ontology);
     int benchmarkIsValid(const Ontology &ontology);
@@ -45,7 +38,17 @@ public:
     int benchmarkClassProperties(const Ontology &ontology);
     int benchmarkClassInstances(const Ontology &ontology);
     void setDataName(const QString &dataName);
+protected:
+    QString anyClass(const Ontology &ontology);
+    QString anyInstance(const Ontology &ontology);
+    QString anyProperty(const Ontology &ontology);
+    QString anyValue(const Ontology &ontology);
+
+    QString getDataName() const;
+    QString getFunctionName() const;
+    void setFunctionName(const QString &functionName);
 private:
+
     QTime time_; //хранит время которое было затрачено на ту или иную функцию с данными
     QSet<int> timeCollection_; //хранит коллеуцию времени для выведения статистики
     bool start_;//говорит о том что метод start для счётчика был выполнен
