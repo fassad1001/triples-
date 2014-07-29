@@ -48,10 +48,6 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
     if(myQuery.exec("SELECT id, name "
                      "FROM Names;"))
     {
-        qWarning()<<"=============================================";
-        qWarning()<<"====";
-        qWarning()<<"==";
-        qWarning()<<"получаю хеш с именами:";
         while(myQuery.next())
         {
             const int id = myQuery.value("id").toInt();
@@ -59,11 +55,6 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
             qWarning()<<id<<name;
             hash.insert(id, name);
         }
-        qWarning()<<"хеш с именами получен!";
-        qWarning()<<"==";
-        qWarning()<<"====";
-        qWarning()<<"=============================================";
-
     }
     return hash;
 }
@@ -75,10 +66,6 @@ QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
     if(myQuery.exec("SELECT id, name "
                      "FROM ontologyNames;"))
     {
-            qWarning()<<"=============================================";
-            qWarning()<<"====";
-            qWarning()<<"==";
-            qWarning()<<"получаю хеш с именамиОнтологий:";
             while(myQuery.next())
             {
                 const QVariant id = myQuery.value("id");
@@ -86,10 +73,6 @@ QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
                 qWarning()<<id<<name;
                 hash.insert(id.toInt(), name.toString());
             }
-            qWarning()<<"хеш с именамиОнтологий получен!";
-            qWarning()<<"==";
-            qWarning()<<"====";
-            qWarning()<<"=============================================";
     }
     return hash;
 }
