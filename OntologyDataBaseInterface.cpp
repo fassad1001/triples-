@@ -52,7 +52,6 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
         {
             const int id = myQuery.value("id").toInt();
             const QString name = myQuery.value("name").toString();
-            qWarning()<<id<<name;
             hash.insert(id, name);
         }
     }
@@ -70,7 +69,6 @@ QHash<int, QString> OntologyDataBaseInterface::getOntologyNames()
             {
                 const QVariant id = myQuery.value("id");
                 const QVariant name = myQuery.value("name");
-                qWarning()<<id<<name;
                 hash.insert(id.toInt(), name.toString());
             }
     }
