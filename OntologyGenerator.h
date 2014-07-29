@@ -10,7 +10,7 @@ public:
                           , const int classPropertiesCount
                           , const int instancesCountSummary
                           , const int classInstancesCount);
-
+private:
     QString generateClass() const;
     QString generateInstance() const;
     QString generateProperty() const;
