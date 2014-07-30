@@ -8,6 +8,8 @@ OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
 
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
 {
+    QSqlQuery myQuery = getQuery(getDataBaseName());
+    myQuery.exec("BEGIN;");
     remove(ontologyName);
     QHash<int, QString> names;
     QHash<int, QString> ontologyNames = getOntologyNames();
@@ -46,6 +48,7 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
 
         insert_Triples(subjectID, predicateID, objectID, ontologyID);
     }
+    myQuery.exec("END;");
 
 }
 
