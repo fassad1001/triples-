@@ -8,12 +8,11 @@ OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
 
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
 {
-    QSqlQuery myQuery = getQuery(getDataBaseName());
-    myQuery.exec("BEGIN;");
     remove(ontologyName);
     QHash<int, QString> names;
+    QSqlQuery myQuery = getQuery(getDataBaseName());
+    myQuery.exec("BEGIN;");
     QHash<int, QString> ontologyNames = getOntologyNames();
-
     if(ontologyNames.key(ontologyName) == int())
     {
         insert_OntologyNames(ontologyName);
@@ -49,7 +48,6 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
         insert_Triples(subjectID, predicateID, objectID, ontologyID);
     }
     myQuery.exec("END;");
-
 }
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
@@ -183,6 +181,7 @@ Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName, const QS
     }
     file.close();
     const Ontology ontology = Ontology(triples);
+
     writeOntology(ontologyName, ontology);
     return ontology;
 }
