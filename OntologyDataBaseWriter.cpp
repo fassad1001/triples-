@@ -84,43 +84,20 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
 QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
-    //---------------------------------------------------------------------------------
-    if(myQuery.prepare("SELECT id "
-                       "FROM Names "
-                       "WHERE name = :nameToInsert;"))
+
+    if(myQuery.prepare("INSERT OR IGNORE "
+                       "INTO Names "
+                       "VALUES (null, :nameToInsert);"))
     {
         myQuery.bindValue(":nameToInsert", nameToInsert);
         myQuery.exec();
 
-        while(myQuery.next())
-        {
-            QString dbValue = myQuery.value("id").toString();
-            return dbValue;
-        }
+
+        return myQuery.lastInsertId().toString();
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к имени в Names:"<<myQuery.lastError();
-    }
-    //---------------------------------------------------------------------------------
-    if(!myQuery.first())
-    {
-        if(myQuery.prepare("INSERT "
-                           "INTO Names "
-                           "VALUES (null, :nameToInsert);"))
-        {
-            myQuery.bindValue(":nameToInsert", nameToInsert);
-            myQuery.exec();
-
-
-            return myQuery.lastInsertId().toString();
-        }
-        else
-        {
-            qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<myQuery.lastError();
-        }
-        //----------------------------------------------------------------------------------
-
+        qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<myQuery.lastError();
     }
     return QString();
 }
@@ -128,45 +105,19 @@ QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
-    //---------------------------------------------------------------------------------
-    if(myQuery.prepare("SELECT id "
-                       "FROM ontologyNames "
-                       "WHERE name = :nameToInsert;"))
+
+    if(myQuery.prepare("INSERT OR IGNORE "
+                       "INTO ontologyNames "
+                       "VALUES (null, :nameToInsert);"))
     {
         myQuery.bindValue(":nameToInsert", nameToInsert);
         myQuery.exec();
 
-        if(myQuery.first())
-        {
-            while(myQuery.next())
-            {
-                QString dbValue = myQuery.value("id").toString();
-                return dbValue;
-            }
-        }
+        return myQuery.lastInsertId().toString();
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к имени онтологии в ontologyNames:"<<myQuery.lastError();
-    }
-    //---------------------------------------------------------------------------------
-    if(!myQuery.first())
-    {
-        if(myQuery.prepare("INSERT "
-                           "INTO ontologyNames "
-                           "VALUES (null, :nameToInsert);"))
-        {
-            myQuery.bindValue(":nameToInsert", nameToInsert);
-            myQuery.exec();
-
-            return myQuery.lastInsertId().toString();
-        }
-        else
-        {
-            qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<myQuery.lastError();
-        }
-        //----------------------------------------------------------------------------------
-
+        qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<myQuery.lastError();
     }
     return QString();
 }
