@@ -9,10 +9,40 @@ OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
 {
     remove(ontologyName);
+    QHash<int, QString> names = getNames();
+    QHash<int, QString> ontologyNames = getOntologyNames();
+
+    if(ontologyNames.key(ontologyName) == int())
+    {
+        insert_OntologyNames(ontologyName);
+    }
+
+    ontologyNames = getOntologyNames();
+
     const QSet<Triple> writingOntology = ontology.getStorage();
     foreach(Triple triple, writingOntology)
     {
-        insert_Triples(triple, ontologyName);
+        if(names.key(triple.subject()) == int())
+        {
+            insert_Names(triple.subject());
+        }
+        if(names.key(triple.predicate()) == int())
+        {
+            insert_Names(triple.predicate());
+        }
+        if(names.key(triple.object()) == int())
+        {
+            insert_Names(triple.object());
+        }
+
+        names = getNames();
+
+        const int ontologyID = ontologyNames.key(ontologyName);
+        const int subjectID = names.key(triple.subject());
+        const int predicateID = names.key(triple.predicate());
+        const int objectID = names.key(triple.object());
+
+        insert_Triples(subjectID, predicateID, objectID, ontologyID);
     }
 
 }
@@ -141,10 +171,11 @@ QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert
     return QString();
 }
 
-QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QString &ontologyName)
+void OntologyDataBaseWriter::insert_Triples(const int &subjectID,
+                                               const int &predicateID, const int &objectID,
+                                               const int &ontologyID)
 {
-    QHash<int, QString> names = getNames();
-    QHash<int, QString> ontologyNames = getOntologyNames();
+
     QSqlQuery myQuery = getQuery(getDataBaseName());
     //---------------------------------------------------------------------------------
     if(myQuery.prepare("SELECT * "
@@ -155,80 +186,45 @@ QString OntologyDataBaseWriter::insert_Triples(const Triple &triple, const QStri
                        "AND object_id = :object "
                        "AND ontology_id = :ontology;"))
     {
-        const int subjectID = names.key(triple.subject());
         myQuery.bindValue(":subject", subjectID);
-
-        const int predicateID = names.key(triple.predicate());
         myQuery.bindValue(":predicate", predicateID);
-
-        const int objectID = names.key(triple.object());
-        myQuery.bindValue(":object", objectID);
-
-        const int ontologyID = ontologyNames.key(ontologyName);
+        myQuery.bindValue(":object", objectID);;
         myQuery.bindValue(":ontology", ontologyID);
 
         myQuery.exec();
-
-        while(myQuery.next())
-        {
-            const QVariant dbValue = myQuery.value("line_id").toString();
-            return dbValue.toString();
-        }
     }
     else
     {
         qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<myQuery.lastError();
+        return;
     }
     //---------------------------------------------------------------------------------
     if(!myQuery.first())
     {
         if(myQuery.prepare("INSERT "
                            "INTO Triples "
-                           "VALUES (null, :ontology_id, :subject_id"
-                           ", :predicate_id, :object_id);"))
+                           "VALUES (null, :ontology_id, :subject_id "
+                           ", :predicate_id, :object_id) "
+                           "ON CONFLICT IGNORE;"))
         {
-            if(names.key(triple.subject()) == int())
-            {
-                insert_Names(triple.subject());
-            }
-            if(names.key(triple.predicate()) == int())
-            {
-                insert_Names(triple.predicate());
-            }
-            if(names.key(triple.object()) == int())
-            {
-                insert_Names(triple.object());
-            }
-            if(ontologyNames.key(ontologyName) == int())
-            {
-                insert_OntologyNames(ontologyName);
-            }
-            names = getNames();
-            ontologyNames = getOntologyNames();
 
-            const int ontologyID = ontologyNames.key(ontologyName);
             myQuery.bindValue(":ontology_id", ontologyID);
-
-            const int subjectID = names.key(triple.subject());
             myQuery.bindValue(":subject_id", subjectID);
-
-            const int predicateID = names.key(triple.predicate());
             myQuery.bindValue(":predicate_id", predicateID);
-
-            const int objectID = names.key(triple.object());
             myQuery.bindValue(":object_id", objectID);
 
             myQuery.exec();
 
-            return myQuery.lastInsertId().toString();
+            return;
         }
         else
         {
             qWarning()<<"Ошибка при подготовке запроса на добавление тройки:"<<myQuery.lastError();
+            return;
         }
         //----------------------------------------------------------------------------------
     }
-    return QString();
+    return;
 }
 
 Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName, const QString ontologyName)

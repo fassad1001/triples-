@@ -45,11 +45,11 @@ int main(int argc, char *argv[])
     //    TOntologyBuilder ontologyBuilder;
     //    QTest::qExec(&ontologyBuilder);
 
-//        TOntologyDataBaseWriter writer;
-//        QTest::qExec(&writer);
+        TOntologyDataBaseWriter writer;
+        QTest::qExec(&writer);
 
-//        TOntologyDataBaseReader reader;
-//        QTest::qExec(&reader);
+        TOntologyDataBaseReader reader;
+        QTest::qExec(&reader);
 
 
 //    QFile::remove("test.db");
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 //                                               <<Triple("7", "7", "7")));
     OntologyDataBaseBenchmark benchmark;
     qWarning()<<"start benchmark";
-    for(int i = 5; i<= 100; i += 5)
+    for(int i = 100; i<= 1000; i += 100)
     {
         const Ontology ontology = benchmark.generate(i);
         qWarning()<<"i="<<QString::number(i);
