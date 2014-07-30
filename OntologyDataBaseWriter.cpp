@@ -177,53 +177,28 @@ void OntologyDataBaseWriter::insert_Triples(const int &subjectID,
 {
 
     QSqlQuery myQuery = getQuery(getDataBaseName());
-    //---------------------------------------------------------------------------------
-    if(myQuery.prepare("SELECT * "
-                       "FROM Triples "
-                       "WHERE "
-                       "subject_id = :subject "
-                       "AND predicate_id = :predicate "
-                       "AND object_id = :object "
-                       "AND ontology_id = :ontology;"))
+
+    if(myQuery.prepare("INSERT OR IGNORE "
+                       "INTO Triples "
+                       "VALUES (null, :ontology_id, :subject_id "
+                       ", :predicate_id, :object_id);"))
     {
-        myQuery.bindValue(":subject", subjectID);
-        myQuery.bindValue(":predicate", predicateID);
-        myQuery.bindValue(":object", objectID);;
-        myQuery.bindValue(":ontology", ontologyID);
+
+        myQuery.bindValue(":ontology_id", ontologyID);
+        myQuery.bindValue(":subject_id", subjectID);
+        myQuery.bindValue(":predicate_id", predicateID);
+        myQuery.bindValue(":object_id", objectID);
 
         myQuery.exec();
+
+        return;
     }
     else
     {
-        qWarning()<<"Ошибка при подготовке запроса на запрос к тройке:"<<myQuery.lastError();
+        qWarning()<<"Ошибка при подготовке запроса на добавление тройки:"<<myQuery.lastError();
         return;
     }
-    //---------------------------------------------------------------------------------
-    if(!myQuery.first())
-    {
-        if(myQuery.prepare("INSERT "
-                           "INTO Triples "
-                           "VALUES (null, :ontology_id, :subject_id "
-                           ", :predicate_id, :object_id) "
-                           "ON CONFLICT IGNORE;"))
-        {
-
-            myQuery.bindValue(":ontology_id", ontologyID);
-            myQuery.bindValue(":subject_id", subjectID);
-            myQuery.bindValue(":predicate_id", predicateID);
-            myQuery.bindValue(":object_id", objectID);
-
-            myQuery.exec();
-
-            return;
-        }
-        else
-        {
-            qWarning()<<"Ошибка при подготовке запроса на добавление тройки:"<<myQuery.lastError();
-            return;
-        }
-        //----------------------------------------------------------------------------------
-    }
+    //----------------------------------------------------------------------------------
     return;
 }
 

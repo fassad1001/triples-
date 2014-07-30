@@ -22,7 +22,6 @@ Ontology OntologyGenerator::generate(const int ClassCountSummary
     {
         //если есть классы для подклассов
         //если количество классов > 0
-        qWarning()<<"сгенерировано классов : "<<classes.size();
         if(classes.count() > 0)
         {
             className = generateClass();
