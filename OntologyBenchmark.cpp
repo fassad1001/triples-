@@ -220,11 +220,8 @@ int OntologyBenchmark::benchmarkSuperClasses(const Ontology &ontology)
 
 int OntologyBenchmark::benchmarkMainSuperClass(const Ontology &ontology)
 {
-    qWarning()<<"benchmarkMain";
     QString instanceName1 = anyInstance(ontology);
-    qWarning()<<instanceName1;
     QString instanceName2 = anyInstance(ontology);
-    qWarning()<<instanceName2;
     timeStart();
     ontology.mainSuperClass(instanceName1, instanceName2);
     functionName_ = "mainSuperClass";

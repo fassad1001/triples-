@@ -16,11 +16,11 @@ public:
 
     Ontology importFromCSV(const QString &fileName, const QString ontologyName);
 protected:
-    QString insert_Names(const QString &nameToInsert);
+    void insert_Names(const QString &nameToInsert);
     void insert_Triples(const int &subjectID,
                            const int &predicateID, const int &objectID,
                            const int &ontologyID);
-    QString insert_OntologyNames(const QString &nameToInsert);
+    void insert_OntologyNames(const QString &nameToInsert);
 
 };
 

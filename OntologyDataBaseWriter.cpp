@@ -9,7 +9,7 @@ OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
 {
     remove(ontologyName);
-    QHash<int, QString> names = getNames();
+    QHash<int, QString> names;
     QHash<int, QString> ontologyNames = getOntologyNames();
 
     if(ontologyNames.key(ontologyName) == int())
@@ -18,7 +18,6 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
     }
 
     ontologyNames = getOntologyNames();
-
     const QSet<Triple> writingOntology = ontology.getStorage();
     foreach(Triple triple, writingOntology)
     {
@@ -34,8 +33,11 @@ void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const On
         {
             insert_Names(triple.object());
         }
+    }
 
-        names = getNames();
+    names = getNames();
+    foreach(Triple triple, writingOntology)
+    {
 
         const int ontologyID = ontologyNames.key(ontologyName);
         const int subjectID = names.key(triple.subject());
@@ -67,6 +69,7 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
     else
     {
         qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<myQuery.lastError();
+        return;
     }
     if(myQuery.prepare("DELETE "
                        "FROM ontologyNames "
@@ -74,62 +77,63 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
     {
         myQuery.bindValue(":ontologyName", ontologyName);
         myQuery.exec();
+        return;
     }
     else
     {
         qWarning()<<"Ошибка при подготовке запроса на удаление имени в Names:"<<myQuery.lastError();
+        return;
     }
 }
 
-QString OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
+void OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
-
-    if(myQuery.prepare("INSERT OR IGNORE "
+    if(myQuery.prepare("INSERT "
                        "INTO Names "
                        "VALUES (null, :nameToInsert);"))
     {
         myQuery.bindValue(":nameToInsert", nameToInsert);
         myQuery.exec();
 
-
-        return myQuery.lastInsertId().toString();
+        return;
     }
     else
     {
         qWarning()<<"Ошибка при подготовке запроса на добавление имени :"<<myQuery.lastError();
+        return;
     }
-    return QString();
+    return;
 }
 
-QString OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
+void OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
 
-    if(myQuery.prepare("INSERT OR IGNORE "
+    if(myQuery.prepare("INSERT "
                        "INTO ontologyNames "
                        "VALUES (null, :nameToInsert);"))
     {
         myQuery.bindValue(":nameToInsert", nameToInsert);
         myQuery.exec();
-
-        return myQuery.lastInsertId().toString();
+        return;
     }
     else
     {
         qWarning()<<"Ошибка при подготовке запроса на добавление имени онтологии:"<<myQuery.lastError();
+        return;
     }
-    return QString();
+    return;
+
 }
 
 void OntologyDataBaseWriter::insert_Triples(const int &subjectID,
-                                               const int &predicateID, const int &objectID,
-                                               const int &ontologyID)
+                                            const int &predicateID, const int &objectID,
+                                            const int &ontologyID)
 {
-
     QSqlQuery myQuery = getQuery(getDataBaseName());
 
-    if(myQuery.prepare("INSERT OR IGNORE "
+    if(myQuery.prepare("INSERT "
                        "INTO Triples "
                        "VALUES (null, :ontology_id, :subject_id "
                        ", :predicate_id, :object_id);"))
@@ -159,13 +163,14 @@ Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName, const QS
     //
     QSet<Triple> triples;
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly)) {
+    if(!file.open(QIODevice::ReadOnly))
+    {
         return QSet<Triple>();
     }
 
     QTextStream in(&file);
-
-    while(!in.atEnd()) {
+    while(!in.atEnd())
+    {
         QString line = in.readLine();
         QStringList triplesLine = line.split(",");
         const QString subject = triplesLine.at(0);

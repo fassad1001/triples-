@@ -77,12 +77,10 @@ int main(int argc, char *argv[])
     {
         const Ontology ontology = benchmark.generate(i);
         qWarning()<<"i="<<QString::number(i);
-        qWarning()<<benchmark.exportToCSVBenchmark(ontology);
+        qWarning()<<"exportToCSVBenchmark"<<benchmark.exportToCSVBenchmark(ontology);
         benchmark.commit();
-        qWarning()<<"commit";
-        qWarning()<<benchmark.importFromCSVBenchmark(ontology);
+        qWarning()<<"importFromCSVBenchmark"<<benchmark.importFromCSVBenchmark(ontology);
         benchmark.commit();
-        qWarning()<<"commit";
     }
     const QString fileName = "D:/отчёты/benchmark.csv";
     QFile::remove(fileName);

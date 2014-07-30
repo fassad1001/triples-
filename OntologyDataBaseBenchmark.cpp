@@ -15,16 +15,13 @@ int OntologyDataBaseBenchmark::exportToCSVBenchmark(const Ontology &ontology)
     const QString fileName = "exportToCSVBenchmark" + QString::number(size) + ".csv";
     //пишу ее в БД
     OntologyDataBaseWriter(dataBaseName).writeOntology(ontologyName, ontology);
-    qWarning()<<"пишу онтологию";
     //начинаю таймер
-    qWarning()<<"начинаю считать";
     timeStart();
     //пишу в CSV
     OntologyDataBaseReader(dataBaseName).exportToCSV(fileName, ontologyName);
     //останавливаю таймер
     //возвращаю результат
     const int time = getTime();
-    qWarning()<<"заканчиваю считать";
     setTimeLocal(time);
     return time;
 }

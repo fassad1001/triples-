@@ -111,11 +111,6 @@ void TOntologyDataBaseReader::TestImportCSV()
     reader.exportToCSV(fileName, ontologyName);
     //прочитать онтологию из файла
     Ontology compareOntology = writer.importFromCSV(fileName, ontologyName);
-    //отладочная печать
-    qWarning()<<"записывал:";
-    ontology.print();
-    qWarning()<<"получил на выходе:";
-    compareOntology.print();
     //сравнить прочитанное с тем что записывали
     QCOMPARE(ontology == compareOntology, true);
 }

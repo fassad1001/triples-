@@ -47,11 +47,6 @@ void TOntologyDataBaseWriter::TestWriteOntology()
     OntologyDataBaseReader reader(dataBaseName);
     Ontology resultOntology = reader.readOntology(ontologyName);
 
-    foreach(Triple triple, resultOntology.getStorage())
-    {
-        qWarning()<<"изначально:"<<ontologyName<<triple.toString();
-    }
-
     //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }
@@ -213,14 +208,10 @@ void TOntologyDataBaseWriter::TestRemove()
     QSet<QString> ontologyNamesCompare = writer.getOntologys();
     ontologyNamesCompare -= ontologyName;
 
-    qWarning()<<"сэт с удалением :"<<ontologyNamesCompare;
-
     QSet<QString> compareSet = ontologyNamesCompare;
     writer.remove(ontologyName);
 
     const QSet<QString> realHash = writer.getOntologys();
-
-    qWarning()<<"сэт полученный от функции :"<<realHash;
 
     QCOMPARE(compareSet, realHash);
 }
