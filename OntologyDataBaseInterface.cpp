@@ -29,12 +29,11 @@ void OntologyDataBaseInterface::createTables()
     }
     if(!myQuery.exec("CREATE TABLE IF NOT EXISTS Triples "
                       "("
-                      "line_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "ontology_id INTEGER,"
                       "subject_id INTEGER NOT NULL,"
                       "predicate_id INTEGER NOT NULL,"
                       "object_id INTEGER NOT NULL,"
-                      "FOREIGN KEY(ontology_id) REFERENCES Names(id)"
+                      "PRIMARY KEY(ontology_id, subject_id, predicate_id,object_id)"
                       ");"))
     {
         qWarning()<<"Ошибка при создании таблицы Triples:"<<myQuery.lastError();

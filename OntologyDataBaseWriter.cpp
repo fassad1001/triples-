@@ -154,7 +154,7 @@ void OntologyDataBaseWriter::insert_Triples(QString ontologyID, QSet<Triple> Tri
 
     if(myQuery.prepare("INSERT "
                        "INTO Triples "
-                       "VALUES (null, :ontology_id, :subject_id "
+                       "VALUES (:ontology_id, :subject_id "
                        ", :predicate_id, :object_id);"))
     {
         foreach(Triple triple, TripleIDs)

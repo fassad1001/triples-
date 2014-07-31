@@ -1,7 +1,5 @@
 #include <QCoreApplication>
 
-#include <QCryptographicHash>
-
 #include "TTriples.h"
 
 #include "TPair.h"
@@ -30,61 +28,61 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    //    TTriples Ttriples;
-    //    QTest::qExec(&Ttriples);
+    TTriples Ttriples;
+    QTest::qExec(&Ttriples);
 
-    //    TPair pair;
-    //    QTest::qExec(&pair);
+    TPair pair;
+    QTest::qExec(&pair);
 
-    //    TTripleStorage TtripleStorage;
-    //    QTest::qExec(&TtripleStorage);
+    TTripleStorage TtripleStorage;
+    QTest::qExec(&TtripleStorage);
 
-    //    TOntology ontology;
-    //    QTest::qExec(&ontology);
+    TOntology ontology;
+    QTest::qExec(&ontology);
 
-    //    TOntologyBuilder ontologyBuilder;
-    //    QTest::qExec(&ontologyBuilder);
+    TOntologyBuilder ontologyBuilder;
+    QTest::qExec(&ontologyBuilder);
 
-        TOntologyDataBaseWriter writer;
-        QTest::qExec(&writer);
+    TOntologyDataBaseWriter writer;
+    QTest::qExec(&writer);
 
-        TOntologyDataBaseReader reader;
-        QTest::qExec(&reader);
-
-
-//    QFile::remove("test.db");
-//    OntologyDataBaseWriter wr = OntologyDataBaseWriter("test.db");
-
-//    wr.writeOntology("ontologyName2", Ontology(QSet<Triple>()
-//                                               <<Triple("1", "1", "1")
-//                                               <<Triple("2", "2", "2")
-//                                               <<Triple("3", "3", "3")
-//                                               <<Triple("5", "5", "5")
-//                                               <<Triple("6", "6", "6")
-//                                               <<Triple("7", "7", "7")));
+    TOntologyDataBaseReader reader;
+    QTest::qExec(&reader);
 
 
-//    wr.writeOntology("ontologyName3", Ontology(QSet<Triple>()
-//                                               <<Triple("1", "1", "1")
-//                                               <<Triple("2", "2", "2")
-//                                               <<Triple("3", "3", "3")
-//                                               <<Triple("5", "5", "5")
-//                                               <<Triple("6", "6", "6")
-//                                               <<Triple("7", "7", "7")));
-    OntologyDataBaseBenchmark benchmark;
-    qWarning()<<"start benchmark";
-    for(int i = 100; i<= 1000; i += 100)
-    {
-        const Ontology ontology = benchmark.generate(i);
-        qWarning()<<"i="<<QString::number(i);
-        qWarning()<<"exportToCSVBenchmark"<<benchmark.exportToCSVBenchmark(ontology);
-        benchmark.commit();
-        qWarning()<<"importFromCSVBenchmark"<<benchmark.importFromCSVBenchmark(ontology);
-        benchmark.commit();
-    }
-    const QString fileName = "D:/отчёты/benchmark.csv";
-    QFile::remove(fileName);
-    benchmark.writeFile(fileName);
+    //    QFile::remove("test.db");
+    //    OntologyDataBaseWriter wr = OntologyDataBaseWriter("test.db");
+
+    //    wr.writeOntology("ontologyName2", Ontology(QSet<Triple>()
+    //                                               <<Triple("1", "1", "1")
+    //                                               <<Triple("2", "2", "2")
+    //                                               <<Triple("3", "3", "3")
+    //                                               <<Triple("5", "5", "5")
+    //                                               <<Triple("6", "6", "6")
+    //                                               <<Triple("7", "7", "7")));
+
+
+    //    wr.writeOntology("ontologyName3", Ontology(QSet<Triple>()
+    //                                               <<Triple("1", "1", "1")
+    //                                               <<Triple("2", "2", "2")
+    //                                               <<Triple("3", "3", "3")
+    //                                               <<Triple("5", "5", "5")
+    //                                               <<Triple("6", "6", "6")
+    //                                               <<Triple("7", "7", "7")));
+        OntologyDataBaseBenchmark benchmark;
+        qWarning()<<"start benchmark";
+        for(int i = 100; i<= 1000; i += 100)
+        {
+            const Ontology ontology = benchmark.generate(i);
+            qWarning()<<"i="<<QString::number(i);
+            qWarning()<<"exportToCSVBenchmark"<<benchmark.exportToCSVBenchmark(ontology);
+            benchmark.commit();
+            qWarning()<<"importFromCSVBenchmark"<<benchmark.importFromCSVBenchmark(ontology);
+            benchmark.commit();
+        }
+        const QString fileName = "D:/отчёты/benchmark.csv";
+        QFile::remove(fileName);
+        benchmark.writeFile(fileName);
 
     //    OntologyGenerator generator;
     //    OntologyBenchmark benchmark;
