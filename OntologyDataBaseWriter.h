@@ -16,11 +16,9 @@ public:
 
     Ontology importFromCSV(const QString &fileName, const QString ontologyName);
 protected:
-    void insert_Names(const QString &nameToInsert);
-    void insert_Triples(const int &subjectID,
-                           const int &predicateID, const int &objectID,
-                           const int &ontologyID);
-    void insert_OntologyNames(const QString &nameToInsert);
+    void insert_Names(const QSet<QString> &namesToInsert);
+    void insert_Triples(QString ontologyID, QSet<Triple> TripleIDs);
+    void insert_OntologyNames(const QSet<QString> &namesToInsert);
 
 };
 

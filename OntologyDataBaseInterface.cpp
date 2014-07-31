@@ -45,6 +45,7 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
 {
     QHash<int, QString> hash;
     QSqlQuery myQuery = getQuery(getDataBaseName());
+    myQuery.exec("BEGIN;");
     if(myQuery.exec("SELECT id, name "
                      "FROM Names;"))
     {
@@ -54,6 +55,7 @@ QHash<int, QString> OntologyDataBaseInterface::getNames()
             const QString name = myQuery.value("name").toString();
             hash.insert(id, name);
         }
+        myQuery.exec("END;");
     }
     return hash;
 }

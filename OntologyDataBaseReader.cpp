@@ -35,7 +35,6 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 
             const int ontologyID = myQuery.value("ontology_id").toInt();
             const QString ontology = ontologyNames.value(ontologyID);
-
             triples.insert(Triple(subject, predicate, object));
         }
 
@@ -49,10 +48,7 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
 
 void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString &ontologyName)
 {
-    QSqlQuery myQuery = getQuery(getDataBaseName());
-    myQuery.exec("BEGIN;");
     Ontology triples = readOntology(ontologyName);
-    myQuery.exec("END;");
     QFile file(fileName);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);

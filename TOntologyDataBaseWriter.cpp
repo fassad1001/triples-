@@ -43,10 +43,8 @@ void TOntologyDataBaseWriter::TestWriteOntology()
 
     OntologyDataBaseWriter writer(dataBaseName);
     writer.writeOntology(ontologyName, ontology);
-
     OntologyDataBaseReader reader(dataBaseName);
     Ontology resultOntology = reader.readOntology(ontologyName);
-
     //если прочитал из БД то же что и записал то все правильно
     QCOMPARE(reader.readOntology(ontologyName), ontology);
 }

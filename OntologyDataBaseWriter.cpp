@@ -9,51 +9,54 @@ OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
 {
     remove(ontologyName);
-    QHash<int, QString> names;
-    QSqlQuery myQuery = getQuery(getDataBaseName());
-    myQuery.exec("BEGIN;");
     QHash<int, QString> ontologyNames = getOntologyNames();
     if(ontologyNames.key(ontologyName) == int())
     {
-        insert_OntologyNames(ontologyName);
+        insert_OntologyNames(QSet<QString>()<<ontologyName);
     }
 
     ontologyNames = getOntologyNames();
+    QSet<QString> namesToInsert;
     const QSet<Triple> writingOntology = ontology.getStorage();
+    QHash<int, QString> names;
     foreach(Triple triple, writingOntology)
     {
         if(names.key(triple.subject()) == int())
         {
-            insert_Names(triple.subject());
+            namesToInsert += triple.subject();
         }
         if(names.key(triple.predicate()) == int())
         {
-            insert_Names(triple.predicate());
+            namesToInsert += triple.predicate();
         }
         if(names.key(triple.object()) == int())
         {
-            insert_Names(triple.object());
+            namesToInsert += triple.object();
         }
     }
-
+    insert_Names(namesToInsert);
     names = getNames();
+
+    QSet<Triple> triplesOfIDs;
+    const QString ontologyID = QString::number(ontologyNames.key(ontologyName));
     foreach(Triple triple, writingOntology)
     {
-
-        const int ontologyID = ontologyNames.key(ontologyName);
-        const int subjectID = names.key(triple.subject());
-        const int predicateID = names.key(triple.predicate());
-        const int objectID = names.key(triple.object());
-
-        insert_Triples(subjectID, predicateID, objectID, ontologyID);
+        const QString subjectID = QString::number(names.key(triple.subject()));
+        const QString predicateID = QString::number(names.key(triple.predicate()));
+        const QString objectID = QString::number(names.key(triple.object()));
+        triplesOfIDs += Triple(subjectID, predicateID, objectID);
     }
-    myQuery.exec("END;");
+    insert_Triples(ontologyID, triplesOfIDs);
 }
 
 void OntologyDataBaseWriter::remove(const QString &ontologyName)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
+
     const QHash<int, QString> hash = getOntologyNames();
+
+    myQuery.exec("BEGIN;");
+
     if(!hash.contains(hash.key(ontologyName)))
     {
         return;
@@ -78,6 +81,7 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
     {
         myQuery.bindValue(":ontologyName", ontologyName);
         myQuery.exec();
+        myQuery.exec("END;");
         return;
     }
     else
@@ -87,15 +91,21 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
     }
 }
 
-void OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
+void OntologyDataBaseWriter::insert_Names(const QSet<QString> &namesToInsert)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
+    myQuery.exec("BEGIN;");
     if(myQuery.prepare("INSERT "
                        "INTO Names "
                        "VALUES (null, :nameToInsert);"))
     {
-        myQuery.bindValue(":nameToInsert", nameToInsert);
-        myQuery.exec();
+        foreach(QString nameToInsert, namesToInsert)
+        {
+            myQuery.bindValue(":nameToInsert", nameToInsert);
+            myQuery.exec();
+        }
+
+        myQuery.exec("END;");
 
         return;
     }
@@ -107,16 +117,24 @@ void OntologyDataBaseWriter::insert_Names(const QString &nameToInsert)
     return;
 }
 
-void OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
+void OntologyDataBaseWriter::insert_OntologyNames(const QSet<QString> &namesToInsert)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
+
+    myQuery.exec("BEGIN;");
 
     if(myQuery.prepare("INSERT "
                        "INTO ontologyNames "
                        "VALUES (null, :nameToInsert);"))
     {
-        myQuery.bindValue(":nameToInsert", nameToInsert);
-        myQuery.exec();
+        foreach(QString nameToInsert, namesToInsert)
+        {
+            myQuery.bindValue(":nameToInsert", nameToInsert);
+            myQuery.exec();
+        }
+
+        myQuery.exec("END;");
+
         return;
     }
     else
@@ -128,24 +146,29 @@ void OntologyDataBaseWriter::insert_OntologyNames(const QString &nameToInsert)
 
 }
 
-void OntologyDataBaseWriter::insert_Triples(const int &subjectID,
-                                            const int &predicateID, const int &objectID,
-                                            const int &ontologyID)
+void OntologyDataBaseWriter::insert_Triples(QString ontologyID, QSet<Triple> TripleIDs)
 {
     QSqlQuery myQuery = getQuery(getDataBaseName());
+
+    myQuery.exec("BEGIN;");
 
     if(myQuery.prepare("INSERT "
                        "INTO Triples "
                        "VALUES (null, :ontology_id, :subject_id "
                        ", :predicate_id, :object_id);"))
     {
+        foreach(Triple triple, TripleIDs)
+        {
+            myQuery.bindValue(":ontology_id", ontologyID);
+            myQuery.bindValue(":subject_id", triple.subject());
+            myQuery.bindValue(":predicate_id", triple.predicate());
+            myQuery.bindValue(":object_id", triple.object());
+            myQuery.exec();
 
-        myQuery.bindValue(":ontology_id", ontologyID);
-        myQuery.bindValue(":subject_id", subjectID);
-        myQuery.bindValue(":predicate_id", predicateID);
-        myQuery.bindValue(":object_id", objectID);
+        }
 
-        myQuery.exec();
+
+        myQuery.exec("END;");
 
         return;
     }
