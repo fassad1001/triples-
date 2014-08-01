@@ -28,23 +28,23 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    TTriples Ttriples;
-    QTest::qExec(&Ttriples);
+//    TTriples Ttriples;
+//    QTest::qExec(&Ttriples);
 
-    TPair pair;
-    QTest::qExec(&pair);
+//    TPair pair;
+//    QTest::qExec(&pair);
 
-    TTripleStorage TtripleStorage;
-    QTest::qExec(&TtripleStorage);
+//    TTripleStorage TtripleStorage;
+//    QTest::qExec(&TtripleStorage);
 
-    TOntology ontology;
-    QTest::qExec(&ontology);
+//    TOntology ontology;
+//    QTest::qExec(&ontology);
 
-    TOntologyBuilder ontologyBuilder;
-    QTest::qExec(&ontologyBuilder);
+//    TOntologyBuilder ontologyBuilder;
+//    QTest::qExec(&ontologyBuilder);
 
-    TOntologyDataBaseWriter writer;
-    QTest::qExec(&writer);
+//    TOntologyDataBaseWriter writer;
+//    QTest::qExec(&writer);
 
     TOntologyDataBaseReader reader;
     QTest::qExec(&reader);

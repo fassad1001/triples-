@@ -134,7 +134,14 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
     db.setDatabaseName(fileName);
     if(!db.isOpen())
     {
+
         qWarning()<<"i open DB for you :"<<db.open();
+        QSqlQuery query(db);
+        if(query.exec("PRAGMA auto_vacuum = 1;"))
+        {
+            qWarning()<<"Maximum PRAGMA ACTIVATED!";
+        }
+
         if(!db.isOpen())
         {
             qWarning()<<"Error of opening DB:"<<db.lastError();
