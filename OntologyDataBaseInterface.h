@@ -4,6 +4,8 @@
 
 #include <QtSql>
 
+#include "Ontology.h"
+
 class OntologyDataBaseInterface
 {
 public:
@@ -22,6 +24,8 @@ protected:
     QHash<int, QString> getOntologyNames();
 
     void createTables();
+    static QHash<QString, QString> systemValueUserValue;
+
 private:
     QString dataBaseName_;
 };

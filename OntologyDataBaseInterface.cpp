@@ -137,10 +137,15 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
 
         qWarning()<<"i open DB for you :"<<db.open();
         QSqlQuery query(db);
-        if(query.exec("PRAGMA count_changes = false;"))
-        {
-            qWarning()<<"Maximum PRAGMA ACTIVATED!";
-        }
+
+        //безопасно
+        query.exec("PRAGMA auto_vacuum = 0");
+        query.exec("PRAGMA cache_size = -20000;");
+        query.exec("PRAGMA temp_store = MEMORY;");
+        query.exec("PRAGMA locking_mode = EXCLUSIVE;");
+        query.exec("PRAGMA wal_autocheckpoint = 0;");
+        query.exec("PRAGMA journal_mode = OFF;");
+        query.exec("PRAGMA cache_spill= true;");
 
         if(!db.isOpen())
         {
@@ -150,7 +155,7 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
     }
     else
     {
-        //        qWarning()<<"DB is opened adrealy! Use with care :)";
+        //qWarning()<<"DB is opened adrealy! Use with care :)";
         return db;
     }
 }

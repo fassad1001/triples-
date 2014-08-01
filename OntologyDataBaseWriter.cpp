@@ -3,7 +3,6 @@
 OntologyDataBaseWriter::OntologyDataBaseWriter(const QString &dataBaseName) :
     OntologyDataBaseInterface(dataBaseName)
 {
-
 }
 
 void OntologyDataBaseWriter::writeOntology(const QString &ontologyName, const Ontology &ontology)
@@ -82,6 +81,7 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
         myQuery.bindValue(":ontologyName", ontologyName);
         myQuery.exec();
         myQuery.exec("END;");
+        myQuery.exec("VACUUM;");
         return;
     }
     else
@@ -104,7 +104,6 @@ void OntologyDataBaseWriter::insert_Names(const QSet<QString> &namesToInsert)
             myQuery.bindValue(":nameToInsert", nameToInsert);
             myQuery.exec();
         }
-
         myQuery.exec("END;");
 
         return;
@@ -181,7 +180,9 @@ void OntologyDataBaseWriter::insert_Triples(QString ontologyID, QSet<Triple> Tri
     return;
 }
 
-Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName, const QString ontologyName)
+Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName,
+                                               const QString ontologyName,
+                                               const QHash<QString, QString> SystemValueUserValue)
 {
     //у меня есть файл
     //
@@ -198,9 +199,18 @@ Ontology OntologyDataBaseWriter::importFromCSV(const QString &fileName, const QS
         QString line = in.readLine();
         QStringList triplesLine = line.split(",");
         const QString subject = triplesLine.at(0);
-        const QString predicate = triplesLine.at(1);
+        const QString userPredicate = triplesLine.at(1);
+        QString systemPredicate;
+        if(!SystemValueUserValue.key(userPredicate).isNull())
+        {
+            systemPredicate = SystemValueUserValue.key(userPredicate);
+        }
+        else
+        {
+            systemPredicate = userPredicate;
+        }
         const QString object = triplesLine.at(2);
-        triples += Triple(subject, predicate, object);
+        triples += Triple(subject, systemPredicate, object);
     }
     file.close();
     const Ontology ontology = Ontology(triples);

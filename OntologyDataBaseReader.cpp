@@ -3,7 +3,6 @@
 OntologyDataBaseReader::OntologyDataBaseReader(const QString &dataBaseName) :
     OntologyDataBaseInterface(dataBaseName)
 {
-
 }
 
 Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
@@ -16,8 +15,8 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
     QSet<Triple> triples;
 
     if(myQuery.prepare("SELECT * "
-                        "FROM Triples "
-                        "WHERE ontology_id = :ontologyName;"))
+                       "FROM Triples "
+                       "WHERE ontology_id = :ontologyName;"))
     {
         myQuery.bindValue(":ontologyName", ontologyNames.key(ontologyName));
         myQuery.exec();
@@ -46,7 +45,9 @@ Ontology OntologyDataBaseReader::readOntology(const QString &ontologyName)
     return Ontology(triples);
 }
 
-void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString &ontologyName)
+void OntologyDataBaseReader::exportToCSV(const QString &fileName,
+                                         const QString &ontologyName,
+                                         const QHash<QString, QString> SystemValueUserValue)
 {
     Ontology triples = readOntology(ontologyName);
     QFile file(fileName);
@@ -55,9 +56,18 @@ void OntologyDataBaseReader::exportToCSV(const QString &fileName, const QString 
     foreach(Triple triple, triples.getStorage())
     {
         const QString subject = triple.subject();
-        const QString predicate = triple.predicate();
+        const QString systemPredicate = triple.predicate();
+        QString userPredicate;
+        if(!SystemValueUserValue.value(systemPredicate).isNull())
+        {
+            userPredicate = SystemValueUserValue.value(systemPredicate);
+        }
+        else
+        {
+            userPredicate = systemPredicate;
+        }
         const QString object = triple.object();
-        out << subject + "," + predicate + "," + object + "\n";
+        out << subject + "," + userPredicate + "," + object + "\n";
     }
     file.close();
 }

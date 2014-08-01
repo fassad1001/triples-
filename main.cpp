@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     //                                               <<Triple("7", "7", "7")));
         OntologyDataBaseBenchmark benchmark;
         qWarning()<<"start benchmark";
-        for(int i = 100; i<= 1000; i += 100)
+        for(int i = 1000; i<= 1000; i += 1000)
         {
             const Ontology ontology = benchmark.generate(i);
             qWarning()<<"i="<<QString::number(i);

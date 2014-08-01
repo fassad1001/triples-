@@ -13,6 +13,14 @@ int OntologyDataBaseBenchmark::exportToCSVBenchmark(const Ontology &ontology)
     const QString dataBaseName = getFunctionName() + getDataName() + ".db";
     const QString ontologyName = "ontology" + QString::number(size);
     const QString fileName = "exportToCSVBenchmark" + QString::number(size) + ".csv";
+    if(QFile::exists(dataBaseName))
+    {
+        //пытаюсь удалить и если не получается
+        if(!QFile::remove(dataBaseName))
+        {
+            qWarning()<<"не могу удалить файл БД";
+        }
+    }
     //пишу ее в БД
     OntologyDataBaseWriter(dataBaseName).writeOntology(ontologyName, ontology);
     //начинаю таймер
@@ -35,6 +43,14 @@ int OntologyDataBaseBenchmark::importFromCSVBenchmark(const Ontology &ontology)
     const QString dataBaseName = getFunctionName() + getDataName() + ".db";
     const QString ontologyName = "ontology" + QString::number(size);
     const QString fileName = "exportToCSVBenchmark" + QString::number(size) + ".csv";
+    if(QFile::exists(dataBaseName))
+    {
+        //пытаюсь удалить и если не получается
+        if(!QFile::remove(dataBaseName))
+        {
+            qWarning()<<"не могу удалить файл БД";
+        }
+    }
     //пишу ее в БД
     OntologyDataBaseWriter(dataBaseName).writeOntology(ontologyName, ontology);
     //пишу в CSV
