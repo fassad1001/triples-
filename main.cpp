@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 //    TOntologyBuilder ontologyBuilder;
 //    QTest::qExec(&ontologyBuilder);
 
-//    TOntologyDataBaseWriter writer;
-//    QTest::qExec(&writer);
+    TOntologyDataBaseWriter writer;
+    QTest::qExec(&writer);
 
     TOntologyDataBaseReader reader;
     QTest::qExec(&reader);

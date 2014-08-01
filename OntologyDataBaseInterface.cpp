@@ -137,7 +137,7 @@ QSqlDatabase OntologyDataBaseInterface::getDataBase(const QString &fileName)
 
         qWarning()<<"i open DB for you :"<<db.open();
         QSqlQuery query(db);
-        if(query.exec("PRAGMA auto_vacuum = 1;"))
+        if(query.exec("PRAGMA auto_vacuum = 2;"))
         {
             qWarning()<<"Maximum PRAGMA ACTIVATED!";
         }

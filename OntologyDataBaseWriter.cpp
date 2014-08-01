@@ -82,6 +82,7 @@ void OntologyDataBaseWriter::remove(const QString &ontologyName)
         myQuery.bindValue(":ontologyName", ontologyName);
         myQuery.exec();
         myQuery.exec("END;");
+        myQuery.exec("VACUUM;");
         return;
     }
     else
